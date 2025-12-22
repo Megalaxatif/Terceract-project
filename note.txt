@@ -1,0 +1,28 @@
+-mettre une variable globale pour la racine du projet
+
+-faire un minigame test avec des boutons "gagner" et "perdre"
+
+-exemple de dialogue avec pnj:
+
+<file: conversation-pnj1> # nom du fichier dans lequel on est
+
+<start> "bonjour que voulez vous ?" </start>
+<answer1: "du pain">
+    <msg : "super ! j'ai plein de pain chez moi je peux t'en donner ! où est ce que tu veux qu'on ce retrouve ?">
+    <answer1.1: "chez moi ça ira">
+        <msg :"super on ce retrouve chez toi alors">
+        <game_properties>
+            meeting_location = "chez le joueur"
+        <game_properties>
+    </answer1.1>
+    <answer1.2: "chez toi">
+        <msg :"parfait, rendez vous chez moi">
+        <game_properties>
+            meeting_location = "chez le pnj"
+        </game_properties>
+    </answer1.2>
+</answer1>
+<answer2: "ta viande, bebs">
+    <msg : "ah ça... stv tu peux venir dans le chateau à 15h">
+</answer2>
+<end>

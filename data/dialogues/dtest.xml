@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<conversation id="dtest">
+
+	<start>
+		Hi, what do you want?
+	</start>
+
+	<choice id="1" text="Launch a minigame">
+		<message>
+			Which one?
+		</message>
+
+		<choice id="1.1" text="The first one.">
+			<message>
+				super on se retrouve chez toi alors
+			</message>
+			<choice id="1.1.1" text="pourquoi 1 ?">
+				<message>
+					test1
+				</message>
+			</choice>
+
+			<choice id="1.1.2" text="pourquoi 2 ?">
+				<message>
+					test2
+				</message>
+			</choice>
+		</choice>
+
+		<choice id="1.2" text="The second one.">
+			<message>
+				Perfect, I launch it!
+			</message>
+			<game_properties>
+				<launch_mini_game>test.py</launch_mini_game>
+			</game_properties>
+		</choice>
+	</choice>
+
+	<choice id="2" text="Nothing, bye.">
+		<message>
+			Ok, bye.
+		</message>
+	</choice>
+
+<end/>
+
+</conversation>
+
