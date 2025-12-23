@@ -32,9 +32,11 @@ class Game:
         self.entities = pygame.sprite.Group()
 
         self.name = "game"
-        self.current_mini_game = "game"
-
+        self.current_mini_game = "menu"
+        
+        # init minigames
         self.mini_game_test = Test(self)
+        self.mini_game_menu = Menu(self)
 
         self.player1 = Player(
             None,
@@ -265,6 +267,9 @@ class Game:
                 self.game_running = False
                 pygame.quit()
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.current_mini_game = "menu"
 
         if self.current_mini_game == "game":
             player = self.player1 if self.network.is_host else self.player2
@@ -276,16 +281,12 @@ class Game:
 
             for entity in self.get_entities():
                 if entity.is_entity_displayed():
-                    self.screen.blit(
-                        entity.sprite,
-                        (entity.get_posX(), entity.get_posY())
-                    )
-                    entity.npc_interact(
-                        player,
-                        self.screen,
-                        self,
-                        entity.mini_game_access
-                    )
+                    self.screen.blit(entity.sprite, (entity.get_posX(), entity.get_posY()))
+                    entity.npc_interact(player, self.screen, self, entity.mini_game_access)
+
+        elif self.current_mini_game == "menu":
+            self.mini_game_menu.update()
+
         else:
             self.mini_game_test.update()
 
