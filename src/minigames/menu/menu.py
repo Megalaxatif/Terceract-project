@@ -5,18 +5,9 @@ from pathlib import Path
 class Menu:
     def __init__(self, game_context):
         self.game_context = game_context
-
-<<<<<<< HEAD
-        self.screen = pygame.display.set_mode(
-            (self.game_context.screen.get_size())
-        )
-=======
-        pygame.init()
-
         self.SCREEN_WIDTH = 1080
         self.SCREEN_HEIGHT = 720
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
->>>>>>> inventory
         pygame.display.set_caption("Main Menu")
 
         self.game_paused = True
