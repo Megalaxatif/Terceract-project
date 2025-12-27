@@ -5,7 +5,7 @@ from game import Game
 pygame.init()
 
 # window
-pygame.display.set_caption("Cyberfrog Diaries")
+pygame.display.set_caption("The Griefing Cube")
 screen = pygame.display.set_mode((1080, 720), pygame.RESIZABLE)
 
 # game

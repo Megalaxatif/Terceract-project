@@ -13,13 +13,14 @@ from network import Network_manager
 from minigames import *
 from pathlib import Path
 
-
 root_dir = Path(__file__).resolve().parent.parent
 
 
 class Game:
     def __init__(self, screen):
         self.screen = screen
+        self.delta_h = 1
+        self.delta_w = 1
         self.fullscreen = True
         self.FPS = 60
         self.clock = pygame.time.Clock()
@@ -37,6 +38,7 @@ class Game:
         # init minigames
         self.mini_game_test = Test(self)
         self.mini_game_menu = Menu(self)
+        self.mini_game_inventory = Inventory(self, 600, 100, 5, 3, 100)
 
         self.player1 = Player(
             None,
@@ -261,6 +263,9 @@ class Game:
     def update(self):
         self.screen.fill((0, 0, 0))
         coeff = self.clock.tick(self.FPS) / 40
+        
+        self.delta_h = self.screen.get_height() / 720
+        self.delta_w = self.screen.get_width() / 1080
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -270,6 +275,11 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.current_mini_game = "menu"
+                if event.key == pygame.K_i:
+                    self.mini_game_inventory.display = not self.mini_game_inventory.display
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if self.mini_game_inventory.display:
+                    self.mini_game_inventory.handle_click(event.pos)
 
         if self.current_mini_game == "game":
             player = self.player1 if self.network.is_host else self.player2
@@ -289,6 +299,9 @@ class Game:
 
         else:
             self.mini_game_test.update()
+        
+        if self.mini_game_inventory.display:
+            self.mini_game_inventory.update()
 
         pygame.display.flip()
 
