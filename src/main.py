@@ -5,8 +5,8 @@ from game import Game
 pygame.init()
 
 # window
-pygame.display.set_caption("Cyberfrog Diaries")
-screen = pygame.display.set_mode((1920, 1080), pygame.RESIZABLE)
+pygame.display.set_caption("The Grief Cube")
+screen = pygame.display.set_mode((1080, 720), pygame.RESIZABLE)
 
 # game
 game = Game(screen)

@@ -25,6 +25,8 @@ RIGHT_WALL = 3
 class Game:
     def __init__(self, screen):
         self.screen = screen
+        self.delta_h = 1
+        self.delta_w = 1
         self.fullscreen = True
         self.FPS = 60
         self.clock = pygame.time.Clock()
@@ -37,6 +39,7 @@ class Game:
         self.current_mini_game = "menu"
         
         self.mini_game_menu = Menu(self)
+        self.mini_game_inventory = Inventory(self, 600, 100, 5, 3, 100)
 
         # new things ------------
         self.back_wall_R1  = Back_wall_R1(self)
@@ -288,7 +291,10 @@ class Game:
 
     def update(self):
         self.screen.fill((0, 0, 0))
-        #coeff = self.clock.tick(self.FPS) / 40
+        coeff = self.clock.tick(self.FPS) / 40
+        
+        self.delta_h = self.screen.get_height() / 720
+        self.delta_w = self.screen.get_width() / 1080
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -304,6 +310,11 @@ class Game:
                     self.change_wall("right")
                 elif event.key == pygame.K_UP:
                     self.change_room()
+                if event.key == pygame.K_i:
+                    self.mini_game_inventory.display = not self.mini_game_inventory.display
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if self.mini_game_inventory.display:
+                    self.mini_game_inventory.handle_click(event.pos)
 
         if self.current_mini_game == "game":
             #player = self.player1 if self.network.is_host else self.player2
@@ -320,6 +331,12 @@ class Game:
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()
+
+        else:
+            self.mini_game_test.update()
+        
+        if self.mini_game_inventory.display:
+            self.mini_game_inventory.update()
 
         pygame.display.flip()
 
