@@ -7,13 +7,8 @@ class Menu:
     def __init__(self, game_context):
         self.game_context = game_context
 
-        # pygame
-        pygame.init()
-
-        self.SCREEN_WIDTH = 1080
-        self.SCREEN_HEIGHT = 720
         self.screen = pygame.display.set_mode(
-            (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+            (self.game_context.screen.get_size())
         )
         pygame.display.set_caption("Main Menu")
 
@@ -83,8 +78,8 @@ class Menu:
             if self.options_button.draw(self.screen):
                 self.menu_state = "options"
             if self.quit_button.draw(self.screen):
-                pygame.quit()
-
+                pygame.event.post(pygame.event.Event(pygame.QUIT)) # quit properly without crash
+                return
         elif self.menu_state == "options":
             if self.video_button.draw(self.screen):
                 print("Video Settings")
