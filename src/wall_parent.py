@@ -12,7 +12,7 @@ class Wall:
         self.entities = None # TODO: change this
         
     #TODO: reuse the code of cyberfrog to make a function that moves an object centered on 
-    #the mouse position and that check collisions with the screen border and the other object in entities
+    #the mouse position and that check collisions with the screen border and the other objects in entities
     def move_object(self):
         pass
 
