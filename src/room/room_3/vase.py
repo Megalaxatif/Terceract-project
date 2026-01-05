@@ -1,6 +1,6 @@
 import pygame
 
-class Vase(pygame.sprite.Sprite):
+class Vase(pygame.sprite.Sprite)
     def __init__(self, initial_posx: int | None, initial_posy: int | None, sprite_path : str | None):
         super().__init__()
         if sprite_path is not None:

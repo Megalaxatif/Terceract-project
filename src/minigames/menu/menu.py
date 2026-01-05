@@ -11,7 +11,8 @@ class Menu:
         pygame.display.set_caption("Main Menu")
 
         self.game_paused = True
-        self.menu_state = "main"
+        self.menu_state = "menu"
+        self.button_lock = False
 
         self.font = pygame.font.SysFont("arialblack", 40)
         self.TEXT_COL = (255, 255, 255)
@@ -160,27 +161,59 @@ class Menu:
         self.SCREEN_WIDTH = 1080 * self.game_context.delta_w
         self.SCREEN_HEIGHT = 720 * self.game_context.delta_h
 
-        if self.menu_state == "main":
-            if self.resume_button.draw(self.screen):
-                self.game_context.current_mini_game = "game"
-            if self.options_button.draw(self.screen):
-                self.menu_state = "options"
-            if self.quit_button.draw(self.screen):
-                pygame.event.post(pygame.event.Event(pygame.QUIT)) # quit properly without crash
-                return
-        elif self.menu_state == "options":
-            if self.video_button.draw(self.screen):
-                print("Video Settings")
-            if self.audio_button.draw(self.screen):
-                print("Audio Settings")
-            if self.keys_button.draw(self.screen):
-                print("Change Key Bindings")
-            if self.back_button.draw(self.screen):
-                self.menu_state = "main"
+        if not hasattr(self, "pressed"):
+            self.pressed = False  # initialise une fois
 
-        else:
-            self.draw_text_centered("Press SPACE to pause", self.SCREEN_HEIGHT // 2)
-        
+        # --- AFFICHAGE DES BOUTONS ---
+        if self.menu_state == "menu":
+            resume_hover = self.resume_button.draw(self.screen)
+            options_hover = self.options_button.draw(self.screen)
+            quit_hover = self.quit_button.draw(self.screen)
+        elif self.menu_state == "options":
+            video_hover = self.video_button.draw(self.screen)
+            audio_hover = self.audio_button.draw(self.screen)
+            keys_hover = self.keys_button.draw(self.screen)
+            back_hover = self.back_button.draw(self.screen)
+
+        # --- GESTION DES CLICS ---
+        mouse_pressed = pygame.mouse.get_pressed()[0]  # clic gauche
+
+        if self.menu_state == "menu":
+            if resume_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                self.game_context.current_mini_game = "game"
+            elif options_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                self.menu_state = "options"
+            elif quit_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                pygame.event.post(pygame.event.Event(pygame.QUIT))
+                return
+            elif not mouse_pressed:
+                self.pressed = False  # relachement
+
+        elif self.menu_state == "options":
+            if video_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                self.game_context.screen = pygame.display.set_mode(
+                    (0, 0),
+                    pygame.NOFRAME
+                )
+                pygame.display.toggle_fullscreen()
+                print("Video Settings")
+            elif audio_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                print("Audio Settings")
+            elif keys_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                print("Change Key Bindings")
+            elif back_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
+                self.menu_state = "menu"
+            elif not mouse_pressed:
+                self.pressed = False  # relachement
+
         self.handle_events()
+
         # pygame.display.update()
 

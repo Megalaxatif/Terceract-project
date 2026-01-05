@@ -1,7 +1,58 @@
 {
-	"player1_posX": 550,
-	"player1_posY": 200,
-	"player2_posX": 249,
-	"player2_posY": 257,
-	"inventory": [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
+    "room_1/front_wall/images/table_test.png": [
+        1055,
+        559,
+        640,
+        464,
+        1055,
+        559
+    ],
+    "room_1/front_wall/images/ui_test.png": [
+        113,
+        171,
+        593,
+        492,
+        113,
+        171
+    ],
+    "room_2/front_wall/images/table_test.png": [
+        1055,
+        559,
+        640,
+        464,
+        1055,
+        559
+    ],
+    "room_3/front_wall/images/table_test.png": [
+        1055,
+        559,
+        640,
+        464,
+        1055,
+        559
+    ],
+    "room_4/back_wall/images/table_test.png": [
+        1055,
+        559,
+        640,
+        464,
+        1055,
+        559
+    ],
+    "room_4/front_wall/images/table_test.png": [
+        1055,
+        559,
+        640,
+        464,
+        1055,
+        559
+    ],
+    "room_5/front_wall/images/table_test.png": [
+        1055,
+        559,
+        640,
+        464,
+        1055,
+        559
+    ]
 }
