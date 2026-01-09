@@ -41,7 +41,6 @@ class Game:
         self.mini_game_menu = Menu(self)
         self.mini_game_inventory = Inventory(self, 600, 100, 5, 3, 100)
 
-        # new things ------------
         self.back_wall_R1  = Back_wall_R1(self)
         self.left_wall_R1  = Left_wall_R1(self)
         self.front_wall_R1 = Front_wall_R1(self)
@@ -90,11 +89,11 @@ class Game:
         self.current_wall_id = 0 # back wall
         self.current_wall = None
         self.update_current_wall() # reference to the current wall to render
-        self.network = Network_manager(self)
+        self.network_manager = Network_manager(self)
 
     def save_data(self):
         # save the data in the game_data file
-        if self.network.is_host:
+        if self.network_manager.is_host:
             data = {
                 "player1_posX": self.player1.get_posX(),
                 "player1_posY": self.player1.get_posY(),
@@ -106,7 +105,7 @@ class Game:
                 json.dump(data, file, indent=4)
 
     def load_data_from_file(self):
-        if self.network.is_host:
+        if self.network_manager.is_host:
             try:
                 with open(self.game_data_path, "r") as data:
                     self.game_data = json.load(data)
@@ -162,23 +161,23 @@ class Game:
         self.player1.is_displayed = True
 
         try:
-            self.network.client.connect((ip, port))
+            self.network_manager.client.connect((ip, port))
         except Exception as e:
             print("launch_duo: Error", e)
             sys.exit(1)
         else:
             try:
-                data = self.network.client.recv(4096).decode("utf-8")
+                data = self.network_manager.client.recv(4096).decode("utf-8")
             except Exception as e:
                 print("launch_duo: Error", e)
             else:
                 self.game_data = json.loads(data)
-                self.network.is_connected = True
-                self.network.is_host = False
+                self.network_manager.is_connected = True
+                self.network_manager.is_host = False
 
     def switch_back_to_solo_mode(self):
-        self.network.is_connected = False
-        self.network.reset_client()
+        self.network_manager.is_connected = False
+        self.network_manager.reset_client()
         self.player2.is_displayed = False
 
     def get_entities(self):
