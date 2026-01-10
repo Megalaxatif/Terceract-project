@@ -10,7 +10,7 @@ class Front_wall_R1(Wall):
     def __init__(self, game):
         super().__init__(game, f"{game.root_dir}/assets/images/next_door.png", [f"{root_dir}/images/table_test.png", f"{root_dir}/images/ui_test.png"], root_dir)
         
-        self.wall_parent = Wall
+        #self.wall_parent = Wall // what ??
         
         json_path = Path(f"{self.game_context.root_dir}/data/game_data.json")
 

@@ -20,16 +20,14 @@ class Wall:
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
-        self.displayed_obj = None #just to init
+        #self.displayed_obj = None #just to init # what ??
         
         self.dragging = False
-        self.drag_offset = pygame.Vector2(0, 0)
+        #self.drag_offset = pygame.Vector2(0, 0) # what ??
 
         # position de la table
-        self.table_pos = pygame.Vector2(100, 100)
+        self.table_pos = pygame.Vector2(100, 100) # what ??
 
-        #TODO: we need to find the coordinates and dimensions of each object on the images in interactable_layers (by using masks most likely)
-        # and put them in entities
         json_path = Path(f"{self.game_context.root_dir}/data/game_data.json")
 
         # Charger ou initialiser le JSON
@@ -122,25 +120,22 @@ class Wall:
     def create_sub_surface(self, x, y, w, h, surface):
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
-        # then create an object associated to the name of the image and give the bouding rect and the image as argument
         
     def handle_click(self, event, obj_list):
         if obj_list:
             l = len(obj_list)
             for i in range(l):
                 obj = obj_list[i]
-                self.object_pos = obj.x * self.delta, obj.y * self.delta
+                # self.object_pos = obj.x * self.delta, obj.y * self.delta # what ??
 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if obj.rect.collidepoint(event.pos):
                         print("clicked")
                         obj.dragging = not obj.dragging
-                        temp_obj = self.displayed_obj.pop(i)
-                        self.displayed_obj.append(temp_obj)
+                        # what ???
+                        #temp_obj = self.displayed_obj.pop(i)
+                        #self.displayed_obj.append(temp_obj)
 
-
-    #TODO: reuse the code of cyberfrog to make a function that moves an object centered on 
-    #the mouse position and that check collisions with the screen border and the other objects in entities
 
     def resize_images(self, objects_list):
 
@@ -164,18 +159,18 @@ class Wall:
     def update(self):
         self.resize_images(None)
         self.game_context.screen.blit(self.background, (0, 0))
-        mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
-        if self.dragging:
-            obj.x, obj.y = (mx - obj.w/2), (my - obj.h/2)
+        # mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
+        # if self.dragging:
+        #     obj.x, obj.y = (mx - obj.w/2), (my - obj.h/2)
         
-        if 1 == 0: #TODO erase (not now)
-            x, y, w, h = self.get_bounding_box(self.table_test)
-            new_table = self.create_sub_surface(x, y, w, h, self.table_test)
+        # if 1 == 0: #TODO erase (not now)
+        #     x, y, w, h = self.get_bounding_box(self.table_test)
+        #     new_table = self.create_sub_surface(x, y, w, h, self.table_test)
 
-            table_rect = new_table.get_rect(topleft=self.table_pos)
+        #     table_rect = new_table.get_rect(topleft=self.table_pos)
             
-            self.handle_event(table_rect)
+        #     self.handle_event(table_rect)
 
-            self.game_context.screen.blit(new_table, self.table_pos)
+        #     self.game_context.screen.blit(new_table, self.table_pos)
 
 

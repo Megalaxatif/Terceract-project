@@ -287,6 +287,31 @@ class Game:
     def update_current_wall(self):
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
 
+    def handle_input(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game_running = False
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.current_mini_game = "menu"
+                elif event.key == pygame.K_LEFT:
+                    self.change_wall("left")
+                elif event.key == pygame.K_RIGHT:
+                    self.change_wall("right")
+                elif event.key == pygame.K_UP:
+                    self.change_room()
+                if event.key == pygame.K_i and self.current_mini_game == "game":
+                    self.mini_game_inventory.display = not self.mini_game_inventory.display
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if self.mini_game_inventory.display:
+                    self.mini_game_inventory.handle_click(event.pos)
+                if self.current_mini_game == "game":
+                    if self.current_wall.interactable_obj:
+                        self.current_wall.handle_click(event, self.current_wall.interactable_obj)
 
     def update(self):
         self.screen.fill((0, 0, 0))
@@ -299,28 +324,7 @@ class Game:
         self.current_wall.delta_h = self.delta_h * (720/1080)
         self.current_wall.delta = min(self.delta_w * (1080/1920), self.delta_h * (720/1080))
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.game_running = False
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.current_mini_game = "menu"
-                elif event.key == pygame.K_LEFT:
-                    self.change_wall("left")
-                elif event.key == pygame.K_RIGHT:
-                    self.change_wall("right")
-                elif event.key == pygame.K_UP:
-                    self.change_room()
-                if event.key == pygame.K_i and self.current_mini_game == "game":
-                    self.mini_game_inventory.display = not self.mini_game_inventory.display
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if self.mini_game_inventory.display:
-                    self.mini_game_inventory.handle_click(event.pos)
-                if self.current_mini_game == "game":
-                    if self.current_wall.interactable_obj:
-                        self.current_wall.handle_click(event, self.current_wall.interactable_obj)
+        self.handle_input()
 
         if self.current_mini_game == "game":
             #player = self.player1 if self.network.is_host else self.player2
