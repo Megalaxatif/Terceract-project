@@ -2,20 +2,19 @@ import pygame
 import os
 import json
 from pathlib import Path
-
-pygame.init()
+from room.objects.vase import Vase
 
 class Wall:
-    def __init__(self, game_context, background_layer_path : str | None, interactable_layers_path : list[str] | None, root_dir_child):
+    def __init__(self, game_context, root_dir):
         #explanation:
         #background_layer_path is a path to a static image that cannot move
-        #interactable_layers is a list of the path to the entities to be displayed on the wall
+        #interactable_layers is a list of the path to the objects to be displayed on the wall
+        self.root_dir = root_dir
         self.game_context = game_context
-        self.interactable_layers_path = interactable_layers_path
-        self.background = pygame.image.load(background_layer_path) if background_layer_path is not None else pygame.Surface(self.game_context.screen.get_size())
-        self.raw_background = self.background
-        if background_layer_path is None: self.background.fill((255, 0, 0))
+        self.background = self.create_background()
+        self.original_background = self.background
         self.entities = pygame.sprite.Group
+        self.create_entities()
         self.current_item = None
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
@@ -26,65 +25,120 @@ class Wall:
         #self.drag_offset = pygame.Vector2(0, 0) # what ??
 
         # position de la table
-        self.table_pos = pygame.Vector2(100, 100) # what ??
+        #self.table_pos = pygame.Vector2(100, 100) # what ??
 
-        json_path = Path(f"{self.game_context.root_dir}/data/game_data.json")
+        # json_path = Path(f"{self.game_context.root_dir}/data/game_data.json")
 
+        # # Charger ou initialiser le JSON
+        # if json_path.exists():
+        #     with open(json_path, "r", encoding="utf-8") as f:
+        #         try:
+        #             game_data = json.load(f)
+        #         except json.JSONDecodeError:
+        #             game_data = {}
+        # else:
+        #     game_data = {}
+        
+        # if self.interactable_layers_path:
+
+        #     for layer_path in self.interactable_layers_path:
+        #         original_layer_path = layer_path  # cle du JSON
+
+        #         full_path = Path(layer_path)
+        #         if not full_path.exists():
+        #             print(f"Image not found: {full_path}")
+        #             continue
+
+        #         original_name = os.path.basename(layer_path)
+        #         cropped_name = f"cropped_{original_name}"
+        #         save_path = Path(f"{root_dir_child}") / "images" / cropped_name
+
+        #         # Si la cle not in JSON, on init
+        #         json_key = full_path.relative_to(full_path.parents[3]).as_posix()
+        #         if json_key not in game_data:
+        #             game_data[json_key] = [None, None, None, None, None, None]
+
+        #         if save_path.exists() and game_data[json_key][0] != None:
+        #             print(f"Cropped file already exists: {save_path}, skipping...")
+        #             continue
+
+        #         image = pygame.image.load(full_path).convert_alpha()
+
+        #         bbox = self.get_bounding_box(image)
+        #         if bbox is None:
+        #             print(f"No visible pixels in {original_layer_path}")
+        #             continue
+
+        #         x, y, w, h = bbox
+        #         cropped_image = self.create_sub_surface(x, y, w, h, image)
+
+        #         # Enregistrer bbox dans le JSON
+        #         game_data[json_key] = [x, y, w, h, x, y]
+
+        #         pygame.image.save(cropped_image, save_path)
+        #         print(f"Cropped image saved to {save_path}")
+                
+        # #json_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # with open(json_path, "w", encoding="utf-8") as f:
+        #     json.dump(game_data, f, indent=4, ensure_ascii=False)
+
+    def create_background(self):
+        background_layer_dir = Path(self.root_dir + "/images/background")
+        background_exist = list(background_layer_dir.iterdir()) is not None # NOTE: iterdir lists the content of the folder
+        background = pygame.image.load(background_layer_dir/"background.png") if background_exist else pygame.Surface(self.game_context.screen.get_size())
+        if background_layer_dir is None: 
+            background.fill((255, 0, 0))
+        return background
+    
+    def create_entities(self):
+        # 1: for each object in object_layers directory check if there exist a croped object associated in the croped_objects directory and it's data in objects_info.json
+        # 2: if not we create the object and we write it's property in objects_info.json
+        # 3: when all the cropped object are here we create a sprite for each of them and we put them in entities
+        object_layers_dir = Path(self.root_dir + "/images/object_layers")
+        cropped_object_dir = Path(self.root_dir + "/images/cropped_objects")
+        object_layers_path = list(object_layers_dir.iterdir())
         # Charger ou initialiser le JSON
+        json_path = Path(self.root_dir + "/images/objects_info.json")
         if json_path.exists():
             with open(json_path, "r", encoding="utf-8") as f:
-                try:
-                    game_data = json.load(f)
-                except json.JSONDecodeError:
-                    game_data = {}
+                    try:
+                        objects_data = json.load(f)
+                    except json.JSONDecodeError:
+                        objects_data = {}
         else:
-            game_data = {}
-        
-        # first we load the raw images with their path in interactable_layers_path
-        if self.interactable_layers_path:
+            raise Exception("file not found error")
 
-            for layer_path in self.interactable_layers_path:
-                original_layer_path = layer_path  # cle du JSON
+        for object_path in object_layers_path:
+            cropped_name = f"cropped_{object_path.name}"
+            save_path = Path(cropped_object_dir / cropped_name)
+            if not save_path.exists() or cropped_name not in objects_data:
 
-                full_path = Path(layer_path)
-                if not full_path.exists():
-                    print(f"Image not found: {full_path}")
-                    continue
-
-                original_name = os.path.basename(layer_path)
-                cropped_name = f"cropped_{original_name}"
-                save_path = Path(f"{root_dir_child}") / "images" / cropped_name
-
-                # Si la cle not in JSON, on init
-                json_key = full_path.relative_to(full_path.parents[3]).as_posix()
-                if json_key not in game_data:
-                    game_data[json_key] = [None, None, None, None, None, None]
-
-                if save_path.exists() and game_data[json_key][0] != None:
-                    print(f"Cropped file already exists: {save_path}, skipping...")
-                    continue
-
-                image = pygame.image.load(full_path).convert_alpha()
-
+                image = pygame.image.load(object_path).convert_alpha()
                 bbox = self.get_bounding_box(image)
                 if bbox is None:
-                    print(f"No visible pixels in {original_layer_path}")
+                    print(f"No visible pixels in {object_path}")
                     continue
 
                 x, y, w, h = bbox
                 cropped_image = self.create_sub_surface(x, y, w, h, image)
 
-                # Enregistrer bbox dans le JSON
-                game_data[json_key] = [x, y, w, h, x, y]
-
                 pygame.image.save(cropped_image, save_path)
                 print(f"Cropped image saved to {save_path}")
+
+                # put w, y, w, h in objects_data
+                objects_data[cropped_name] = bbox
+            
+            #create the sprite
+            sprite_rect = objects_data[cropped_name]
+            if cropped_name == "cropped_table_test.png":
+                self.entities.add(Vase(self.game_context, save_path, sprite_rect))
                 
-        #json_path.parent.mkdir(parents=True, exist_ok=True)
 
+        #save the data in the json file
         with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(game_data, f, indent=4, ensure_ascii=False)
-
+            json.dump(objects_data, f, indent=4, ensure_ascii=False)
+                
 
 
     def get_bounding_box(self, surface):
@@ -142,8 +196,8 @@ class Wall:
         self.background = pygame.transform.scale(
             self.background,
             (
-                int(self.raw_background.get_width() * self.delta),
-                int(self.raw_background.get_height() * self.delta)
+                int(self.original_background.get_width() * self.delta),
+                int(self.original_background.get_height() * self.delta)
             )
         )
         

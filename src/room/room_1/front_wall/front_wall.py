@@ -23,7 +23,8 @@ class Front_wall_R1(Wall):
                     game_data = {}
         else:
             game_data = {}
-        
+            
+
         # Init les objets displayed sur le mur
         self.vase = Vase(f"{root_dir}/images/table_test.png", game_data[f"{root_dir.relative_to(root_dir.parents[1]).as_posix()}/images/table_test.png"])
         self.ui_test = Vase(f"{root_dir}/images/ui_test.png", game_data[f"{root_dir.relative_to(root_dir.parents[1]).as_posix()}/images/ui_test.png"])
