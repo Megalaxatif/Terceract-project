@@ -310,8 +310,8 @@ class Game:
                 if self.mini_game_inventory.display:
                     self.mini_game_inventory.handle_click(event.pos)
                 if self.current_mini_game == "game":
-                    if self.current_wall.interactable_obj:
-                        self.current_wall.handle_click(event, self.current_wall.interactable_obj)
+                    self.current_wall.handle_click(event)
+
 
     def update(self):
         self.screen.fill((0, 0, 0))

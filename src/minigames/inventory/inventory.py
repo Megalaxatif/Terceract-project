@@ -36,11 +36,6 @@ class Inventory:
         self.draw_grid()
         self.draw_items()
 
-        # for event in pygame.event.get():
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-                # self.handle_click(event.pos)
-                # print("click")
-
         # Display current item
         if self.current_item: # if not None
             mx, my = pygame.mouse.get_pos()

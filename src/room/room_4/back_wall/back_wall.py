@@ -6,5 +6,5 @@ root_dir = Path(__file__).resolve().parent
 
 class Back_wall_R4(Wall):
     def __init__(self, game):
-        super().__init__(game, f"{game.root_dir}/assets/images/door.png", [f"{root_dir}/images/table_test.png"], root_dir)
+        super().__init__(game, root_dir)
         #self.background.fill((0,0,255))

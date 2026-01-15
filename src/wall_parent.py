@@ -13,81 +13,19 @@ class Wall:
         self.game_context = game_context
         self.background = self.create_background()
         self.original_background = self.background
-        self.entities = pygame.sprite.Group
+        self.entities = pygame.sprite.Group()
         self.create_entities()
         self.current_item = None
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
-        #self.displayed_obj = None #just to init # what ??
-        
-        self.dragging = False
-        #self.drag_offset = pygame.Vector2(0, 0) # what ??
 
-        # position de la table
-        #self.table_pos = pygame.Vector2(100, 100) # what ??
-
-        # json_path = Path(f"{self.game_context.root_dir}/data/game_data.json")
-
-        # # Charger ou initialiser le JSON
-        # if json_path.exists():
-        #     with open(json_path, "r", encoding="utf-8") as f:
-        #         try:
-        #             game_data = json.load(f)
-        #         except json.JSONDecodeError:
-        #             game_data = {}
-        # else:
-        #     game_data = {}
-        
-        # if self.interactable_layers_path:
-
-        #     for layer_path in self.interactable_layers_path:
-        #         original_layer_path = layer_path  # cle du JSON
-
-        #         full_path = Path(layer_path)
-        #         if not full_path.exists():
-        #             print(f"Image not found: {full_path}")
-        #             continue
-
-        #         original_name = os.path.basename(layer_path)
-        #         cropped_name = f"cropped_{original_name}"
-        #         save_path = Path(f"{root_dir_child}") / "images" / cropped_name
-
-        #         # Si la cle not in JSON, on init
-        #         json_key = full_path.relative_to(full_path.parents[3]).as_posix()
-        #         if json_key not in game_data:
-        #             game_data[json_key] = [None, None, None, None, None, None]
-
-        #         if save_path.exists() and game_data[json_key][0] != None:
-        #             print(f"Cropped file already exists: {save_path}, skipping...")
-        #             continue
-
-        #         image = pygame.image.load(full_path).convert_alpha()
-
-        #         bbox = self.get_bounding_box(image)
-        #         if bbox is None:
-        #             print(f"No visible pixels in {original_layer_path}")
-        #             continue
-
-        #         x, y, w, h = bbox
-        #         cropped_image = self.create_sub_surface(x, y, w, h, image)
-
-        #         # Enregistrer bbox dans le JSON
-        #         game_data[json_key] = [x, y, w, h, x, y]
-
-        #         pygame.image.save(cropped_image, save_path)
-        #         print(f"Cropped image saved to {save_path}")
-                
-        # #json_path.parent.mkdir(parents=True, exist_ok=True)
-
-        # with open(json_path, "w", encoding="utf-8") as f:
-        #     json.dump(game_data, f, indent=4, ensure_ascii=False)
-
-    def create_background(self):
-        background_layer_dir = Path(self.root_dir + "/images/background")
-        background_exist = list(background_layer_dir.iterdir()) is not None # NOTE: iterdir lists the content of the folder
-        background = pygame.image.load(background_layer_dir/"background.png") if background_exist else pygame.Surface(self.game_context.screen.get_size())
-        if background_layer_dir is None: 
+    def create_background(self) -> pygame.Surface:
+        background_dir = Path(self.root_dir / "images/background")
+        background_path = list(background_dir.iterdir()) # NOTE: we should only have one png file for the background
+        background_exist =  background_path is not None # NOTE: iterdir lists the content of the folder
+        background = pygame.image.load(background_path[0]) if background_exist else pygame.Surface(self.game_context.screen.get_size())
+        if not background_exist: 
             background.fill((255, 0, 0))
         return background
     
@@ -95,11 +33,12 @@ class Wall:
         # 1: for each object in object_layers directory check if there exist a croped object associated in the croped_objects directory and it's data in objects_info.json
         # 2: if not we create the object and we write it's property in objects_info.json
         # 3: when all the cropped object are here we create a sprite for each of them and we put them in entities
-        object_layers_dir = Path(self.root_dir + "/images/object_layers")
-        cropped_object_dir = Path(self.root_dir + "/images/cropped_objects")
+        object_layers_dir = Path(self.root_dir / "images/object_layers")
+        cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
         object_layers_path = list(object_layers_dir.iterdir())
         # Charger ou initialiser le JSON
-        json_path = Path(self.root_dir + "/images/objects_info.json")
+        objects_data = {}
+        json_path = Path(self.root_dir / "images/objects_info.json")
         if json_path.exists():
             with open(json_path, "r", encoding="utf-8") as f:
                     try:
@@ -107,7 +46,7 @@ class Wall:
                     except json.JSONDecodeError:
                         objects_data = {}
         else:
-            raise Exception("file not found error")
+            raise Exception("create entities error : invalid path")
 
         for object_path in object_layers_path:
             cropped_name = f"cropped_{object_path.name}"
@@ -130,15 +69,14 @@ class Wall:
                 objects_data[cropped_name] = bbox
             
             #create the sprite
-            sprite_rect = objects_data[cropped_name]
-            if cropped_name == "cropped_table_test.png":
-                self.entities.add(Vase(self.game_context, save_path, sprite_rect))
-                
+            sprite_rect_tupple = objects_data[cropped_name]
+            if cropped_name == "cropped_table_test.png" or "cropped_ui_test.png": #TODO: don't use those name in the future
+                self.entities.add(Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple)))
+            # TODO: list all the other entities possible
 
         #save the data in the json file
         with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(objects_data, f, indent=4, ensure_ascii=False)
-                
+            json.dump(objects_data, f, indent=4, ensure_ascii=False) 
 
 
     def get_bounding_box(self, surface):
@@ -171,28 +109,20 @@ class Wall:
         print(f"x={x}, y={y}, w={w}, h={h}")
         return (x, y, w, h)
         
+        
     def create_sub_surface(self, x, y, w, h, surface):
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
         
-    def handle_click(self, event, obj_list):
-        if obj_list:
-            l = len(obj_list)
-            for i in range(l):
-                obj = obj_list[i]
-                # self.object_pos = obj.x * self.delta, obj.y * self.delta # what ??
-
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if obj.rect.collidepoint(event.pos):
-                        print("clicked")
-                        obj.dragging = not obj.dragging
-                        # what ???
-                        #temp_obj = self.displayed_obj.pop(i)
-                        #self.displayed_obj.append(temp_obj)
+    def handle_click(self, event):
+        for obj in self.entities:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos):
+                print("clicked")
+                obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
 
 
     def resize_images(self, objects_list):
-
+        print(f"delta: {self.delta}")
         self.background = pygame.transform.scale(
             self.background,
             (
@@ -204,15 +134,28 @@ class Wall:
         # changer tailles de chaque objets
         if objects_list:
             for obj in objects_list:
-                obj.cropped_image = pygame.transform.scale(obj.raw_cropped_image,
-                    (self.delta * obj.w, self.delta * obj.h)
+                obj.image = pygame.transform.scale(obj.raw_image,
+                    (self.delta * obj.rect.w, self.delta * obj.rect.h)
                 )
-                obj.rect = pygame.Rect(self.delta * obj.x, self.delta * obj.y, self.delta * obj.w, self.delta * obj.h)
-                #pygame.draw.rect(self.game_context.screen, (0,0,0), obj.rect, 1)
-    
-    def update(self):
-        self.resize_images(None)
+                obj.rect = pygame.Rect(self.delta * obj.rect.x, self.delta * obj.rect.y, self.delta * obj.rect.w, self.delta * obj.rect.h)
+                #pygame.draw.rect(self.game_context.screen, (0,0,0), obj.rect, 1) 
+
+    def draw_entities(self):
+        self.entities.draw(self.game_context.screen)
+
+    def draw_background(self):
         self.game_context.screen.blit(self.background, (0, 0))
+
+    def update(self):
+        self.resize_images(self.entities) # TODO: can we find a way to remove self.entities ?
+        self.draw_background()
+        self.draw_entities()
+        mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
+        for obj in self.entities:
+            if obj.dragging:
+                obj.rect.x, obj.rect.y = (mx - obj.rect.w/2), (my - obj.rect.h/2)
+        #self.resize_images(None)
+        #self.draw_background()
         # mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
         # if self.dragging:
         #     obj.x, obj.y = (mx - obj.w/2), (my - obj.h/2)
