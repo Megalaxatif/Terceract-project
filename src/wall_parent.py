@@ -117,7 +117,6 @@ class Wall:
     def handle_click(self, event):
         for obj in self.entities:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos):
-                print("clicked")
                 obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
 
 
@@ -152,7 +151,6 @@ class Wall:
         mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
         for obj in self.entities:
             if obj.dragging:
-                print(obj.dragging)
                 obj.raw_rect.x, obj.raw_rect.y = (mx - obj.raw_rect.w/2), (my - obj.raw_rect.h/2)
         #self.resize_images(None)
         #self.draw_background()
