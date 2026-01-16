@@ -6,7 +6,10 @@ class Vase(pygame.sprite.Sprite):
         super().__init__()
         self.game_context = game_context
         self.image = pygame.image.load(image_path)
+
         self.raw_image = self.image
+        self.raw_rect = rect
+
         self.rect = rect
         self.x_valid = self.rect.x
         self.y_valid = self.rect.y

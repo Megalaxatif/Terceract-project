@@ -122,7 +122,6 @@ class Wall:
 
 
     def resize_images(self, objects_list):
-        print(f"delta: {self.delta}")
         self.background = pygame.transform.scale(
             self.background,
             (
@@ -135,9 +134,9 @@ class Wall:
         if objects_list:
             for obj in objects_list:
                 obj.image = pygame.transform.scale(obj.raw_image,
-                    (self.delta * obj.rect.w, self.delta * obj.rect.h)
+                    (int(self.delta * obj.raw_rect.w), int(self.delta * obj.raw_rect.h))
                 )
-                obj.rect = pygame.Rect(self.delta * obj.rect.x, self.delta * obj.rect.y, self.delta * obj.rect.w, self.delta * obj.rect.h)
+                obj.rect = pygame.Rect(self.delta * obj.raw_rect.x, self.delta * obj.raw_rect.y, self.delta * obj.raw_rect.w, self.delta * obj.raw_rect.h)
                 #pygame.draw.rect(self.game_context.screen, (0,0,0), obj.rect, 1) 
 
     def draw_entities(self):
@@ -153,7 +152,8 @@ class Wall:
         mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
         for obj in self.entities:
             if obj.dragging:
-                obj.rect.x, obj.rect.y = (mx - obj.rect.w/2), (my - obj.rect.h/2)
+                print(obj.dragging)
+                obj.raw_rect.x, obj.raw_rect.y = (mx - obj.raw_rect.w/2), (my - obj.raw_rect.h/2)
         #self.resize_images(None)
         #self.draw_background()
         # mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
