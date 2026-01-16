@@ -16,6 +16,7 @@ class Wall:
         self.entities = pygame.sprite.Group()
         self.create_entities()
         self.current_item = None
+        self.dragging = False
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
@@ -70,7 +71,8 @@ class Wall:
             
             #create the sprite
             sprite_rect_tupple = objects_data[cropped_name]
-            if cropped_name == "cropped_table_test.png" or "cropped_ui_test.png": #TODO: don't use those name in the future
+            cropped_name = cropped_name[2:]
+            if cropped_name == "table.png" or "cropped_ui_test.png" or "cropped_vase.png": #TODO: ALWAYS TRUE
                 self.entities.add(Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple)))
             # TODO: list all the other entities possible
 
@@ -115,9 +117,14 @@ class Wall:
 
         
     def handle_click(self, event):
-        for obj in self.entities:
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos):
-                obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
+        clicked = False
+        for obj in reversed(self.entities.sprites()):
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos) and not clicked:
+                clicked = True
+                if not self.dragging or obj.dragging:
+                    print("ivi")
+                    self.dragging = not self.dragging
+                    obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
 
 
     def resize_images(self, objects_list):
