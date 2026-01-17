@@ -27,6 +27,7 @@ class Game:
         self.screen = screen
         self.delta_h = 1
         self.delta_w = 1
+        self.delta = 1
         self.fullscreen = True
         self.FPS = 60
         self.clock = pygame.time.Clock()
@@ -39,7 +40,7 @@ class Game:
         self.current_mini_game = "menu"
         
         self.mini_game_menu = Menu(self)
-        self.mini_game_inventory = Inventory(self, 600, 100, 5, 3, 100)
+        self.mini_game_inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
         self.back_wall_R1  = Back_wall_R1(self)
         self.left_wall_R1  = Left_wall_R1(self)
@@ -269,6 +270,11 @@ class Game:
         else:
             print("change_room : Error, impossible to go in that direction")
             return 1
+        
+        self.current_wall.dragging = False
+        if self.current_wall.current_item:
+            self.current_wall.current_item.dragging = False
+            self.current_wall.current_item = None
         self.update_current_wall()
 
 
@@ -280,7 +286,11 @@ class Game:
             self.current_wall_id = (self.current_wall_id - 1) % ROOM_5 # python is magic
         elif direction == "left":
             self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
-
+            
+        self.current_wall.dragging = False
+        if self.current_wall.current_item:
+            self.current_wall.current_item.dragging = False
+            self.current_wall.current_item = None
         self.update_current_wall()
 
 
@@ -319,12 +329,11 @@ class Game:
         
         self.delta_h = self.screen.get_height() / 720
         self.delta_w = self.screen.get_width() / 1080
+        self.delta = min(self.delta_h, self.delta_w)
         
         self.current_wall.delta_w = self.delta_w * (1080/1920)
         self.current_wall.delta_h = self.delta_h * (720/1080)
         self.current_wall.delta = min(self.delta_w * (1080/1920), self.delta_h * (720/1080))
-
-        self.handle_input()
 
         if self.current_mini_game == "game":
             #player = self.player1 if self.network.is_host else self.player2
@@ -338,15 +347,16 @@ class Game:
                 (0,0,0)
             )
             self.screen.blit(text_surface, (100, 50))
-
-        elif self.current_mini_game == "menu":
+            
+            if self.mini_game_inventory.display:
+                self.mini_game_inventory.update()
+        
+        if self.current_mini_game == "menu":
             self.mini_game_menu.update()
 
-        else:
-            self.mini_game_test.update()
-        
-        if self.mini_game_inventory.display:
-            self.mini_game_inventory.update()
+        self.handle_input()
+        #else:
+            #self.mini_game_test.update()
 
         pygame.display.flip()
 
