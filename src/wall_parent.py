@@ -37,7 +37,8 @@ class Wall:
         object_layers_dir = Path(self.root_dir / "images/object_layers")
         cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
         object_layers_path = list(object_layers_dir.iterdir())
-        # Charger ou initialiser le JSON
+
+        # load or init the JSON file
         objects_data = {}
         json_path = Path(self.root_dir / "images/objects_info.json")
         if json_path.exists():
@@ -52,6 +53,7 @@ class Wall:
         for object_path in object_layers_path:
             cropped_name = f"cropped_{object_path.name}"
             save_path = Path(cropped_object_dir / cropped_name)
+            # create the cropped image if it doesn't exist
             if not save_path.exists() or cropped_name not in objects_data:
 
                 image = pygame.image.load(object_path).convert_alpha()
@@ -66,19 +68,68 @@ class Wall:
                 pygame.image.save(cropped_image, save_path)
                 print(f"Cropped image saved to {save_path}")
 
-                # put w, y, w, h in objects_data
+                # put w, y, w, h in objects_data        
                 objects_data[cropped_name] = bbox
-            
+    
+            #TODO: optimize so we don't have to to this every time we launch the game
+            # extract the collision rectangles of the object if they exist
+            #print(object_path.name)
+            collision_layers_path = self.load_collision_layers_path(object_path.stem)
+            collision_rects = []
+            for path in collision_layers_path:
+                #print(path) #debug
+                collision_layer = pygame.image.load(path).convert_alpha()
+                rect = pygame.Rect(self.get_bounding_box(collision_layer))
+                #print("collision rect found : ", rect) #  debug
+                collision_rects.append(rect)
+
+
             #create the sprite
             sprite_rect_tupple = objects_data[cropped_name]
             cropped_name = cropped_name[2:]
             if cropped_name == "table.png" or "cropped_ui_test.png" or "cropped_vase.png": #TODO: ALWAYS TRUE
-                self.entities.add(Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple)))
+                self.entities.add(Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects))
             # TODO: list all the other entities possible
 
         #save the data in the json file
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(objects_data, f, indent=4, ensure_ascii=False) 
+
+
+    def display_collision_rects(self):
+        for entity in self.entities:
+            for rect in entity.collision_rects:
+                temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+                pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
+                self.game_context.screen.blit(temp_surface, rect)
+            
+
+    def load_collision_layers_path(self, obj_name): #function that returns the list of the paths of all the collision layers of an object
+        collision_layers_dir = Path(self.root_dir / "images/collision_layers")
+        collision_layers_path = list(collision_layers_dir.iterdir())
+
+        valid_collision_layers_path = []
+        all_found = False
+        layer_count = 0
+        while not all_found:
+            layer_name = f"{obj_name}_pos{layer_count}.png"
+            layer_path = Path(collision_layers_dir / layer_name)
+            if layer_path in collision_layers_path:
+                valid_collision_layers_path.append(layer_path)
+                layer_count +=1
+            else:
+                all_found = True
+        return valid_collision_layers_path
+
+
+    # def get_collision_rects(self, layer_path):
+    #     surface = pygame.image.load(layer_path).convert_alpha()
+    #     mask = pygame.mask.from_surface(surface)
+    #     collision_rects = mask.get_bounding_rects()
+
+    #     for rect in collision_rects:
+    #         print(f"Rectangle: x={rect.x}, y={rect.y}, w={rect.width}, h={rect.height}")
+    #     return collision_rects
 
 
     def get_bounding_box(self, surface):
@@ -108,7 +159,7 @@ class Wall:
             return None
         
         x, y, w, h = min_x, min_y, max_x - min_x + 1, max_y - min_y + 1
-        print(f"x={x}, y={y}, w={w}, h={h}")
+        #print(f"x={x}, y={y}, w={w}, h={h}") #debug
         return (x, y, w, h)
         
         
@@ -117,14 +168,22 @@ class Wall:
 
         
     def handle_click(self, event):
-        clicked = False
-        for obj in reversed(self.entities.sprites()):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos) and not clicked:
-                clicked = True
-                if not self.dragging or obj.dragging:
-                    print("ivi")
-                    self.dragging = not self.dragging
-                    obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.current_item is not None:
+                collision_index = self.current_item.rect.collidelist(self.current_item.collision_rects)
+                if collision_index != -1:
+                    self.current_item.raw_rect.center = self.current_item.collision_rects[collision_index].center
+                    self.current_item.valid_rect = self.current_item.collision_rects[collision_index]
+                else:
+                    self.current_item.raw_rect.center = self.current_item.valid_rect.center
+                self.current_item.dragging = False # NOTE: dangerous because dragging is only defined in Vase
+                self.current_item = None
+            else:
+                for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
+                    if obj.rect.collidepoint(event.pos):
+                        self.current_item = obj
+                        obj.dragging = True # NOTE: dangerous because dragging is only defined in Vase
+                        break
 
 
     def resize_images(self, objects_list):
@@ -134,8 +193,7 @@ class Wall:
                 int(self.original_background.get_width() * self.delta),
                 int(self.original_background.get_height() * self.delta)
             )
-        )
-        
+        )  
         # changer tailles de chaque objets
         if objects_list:
             for obj in objects_list:
@@ -145,6 +203,11 @@ class Wall:
                 obj.rect = pygame.Rect(self.delta * obj.raw_rect.x, self.delta * obj.raw_rect.y, self.delta * obj.raw_rect.w, self.delta * obj.raw_rect.h)
                 #pygame.draw.rect(self.game_context.screen, (0,0,0), obj.rect, 1) 
 
+                for i in range(len(obj.collision_rects)):
+                    raw_collision_rect = obj.raw_collision_rects[i]
+                    obj.collision_rects[i] = pygame.Rect(self.delta * raw_collision_rect.x, self.delta * raw_collision_rect.y, self.delta * raw_collision_rect.w, self.delta * raw_collision_rect.h)
+
+        
     def draw_entities(self):
         self.entities.draw(self.game_context.screen)
 
@@ -155,6 +218,7 @@ class Wall:
         self.resize_images(self.entities) # TODO: can we find a way to remove self.entities ?
         self.draw_background()
         self.draw_entities()
+        self.display_collision_rects()
         mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
         for obj in self.entities:
             if obj.dragging:
