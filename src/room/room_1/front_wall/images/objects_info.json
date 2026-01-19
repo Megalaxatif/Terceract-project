@@ -1,32 +1,26 @@
 {
-    "cropped_table_test.png": [
-        1055,
-        559,
-        640,
-        464
-    ],
-    "cropped_ui_test.png": [
-        113,
-        171,
-        593,
-        492
-    ],
-    "cropped_vase.png": [
+    "D:\\Ethan\\Projets\\Terceract-project\\src\\room\\room_1\\front_wall\\images\\cropped_objects\\0_cropped_vase.png": [
         1659,
         497,
         171,
         300
     ],
-    "cropped_frame1.png": [
+    "D:\\Ethan\\Projets\\Terceract-project\\src\\room\\room_1\\front_wall\\images\\cropped_objects\\1_cropped_frame.png": [
         278,
         118,
         377,
         473
     ],
-    "cropped_table.png": [
+    "D:\\Ethan\\Projets\\Terceract-project\\src\\room\\room_1\\front_wall\\images\\cropped_objects\\2_cropped_table.png": [
         1211,
         623,
         695,
         457
+    ],
+    "D:\\Ethan\\Projets\\Terceract-project\\src\\room\\room_1\\front_wall\\images\\cropped_objects\\3_cropped_frame.png": [
+        278,
+        118,
+        377,
+        473
     ]
 }

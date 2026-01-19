@@ -21,6 +21,23 @@ class Wall:
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
 
+    def clear_json(self):
+        json_path = Path(self.root_dir / "images/objects_info.json")
+        with open(json_path, "w", encoding="utf-8") as f:
+            f.write("{}")
+
+    def clear_cropped_objects(self):
+        cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
+        cropped_object_path = list(cropped_object_dir.iterdir())
+        for path in cropped_object_path:
+            os.remove(path)
+    
+    def clear_object_layers(self):
+        object_layers_dir = Path(self.root_dir / "images/object_layers")
+        object_layers_path = list(object_layers_dir.iterdir())
+        for path in object_layers_path:
+            os.remove(path)
+
     def create_background(self) -> pygame.Surface:
         background_dir = Path(self.root_dir / "images/background")
         background_path = list(background_dir.iterdir()) # NOTE: we should only have one png file for the background
@@ -31,9 +48,13 @@ class Wall:
         return background
     
     def create_entities(self):
-        # 1: for each object in object_layers directory check if there exist a croped object associated in the croped_objects directory and it's data in objects_info.json
-        # 2: if not we create the object and we write it's property in objects_info.json
-        # 3: when all the cropped object are here we create a sprite for each of them and we put them in entities
+        #self.clear_object_layers()
+        #self.clear_cropped_objects()
+        #self.clear_json()
+        # 1: check if there exist a cropped object associated to the object in the cropped_objects folder and if its data is in objects_info.json
+        # 2: if not we create the cropped object and save its data
+        # 3: we try to find potential collision layers stored in collision_layers folder
+        # 4: we create a sprite for the object and add it to the entities group
         object_layers_dir = Path(self.root_dir / "images/object_layers")
         cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
         object_layers_path = list(object_layers_dir.iterdir())
@@ -50,44 +71,27 @@ class Wall:
         else:
             raise Exception("create entities error : invalid path")
 
-        for object_path in object_layers_path:
-            cropped_name = f"cropped_{object_path.name}"
+        for object_path in reversed(object_layers_path): # reversed so we draw the object with the lowest layer id first
+            layer_id = object_path.name[0]
+            cropped_name = f"{layer_id}_cropped_{object_path.name[2:]}"
             save_path = Path(cropped_object_dir / cropped_name)
-            # create the cropped image if it doesn't exist
-            if not save_path.exists() or cropped_name not in objects_data:
 
-                image = pygame.image.load(object_path).convert_alpha()
-                bbox = self.get_bounding_box(image)
-                if bbox is None:
-                    print(f"No visible pixels in {object_path}")
-                    continue
-
-                x, y, w, h = bbox
-                cropped_image = self.create_sub_surface(x, y, w, h, image)
-
-                pygame.image.save(cropped_image, save_path)
-                print(f"Cropped image saved to {save_path}")
-
-                # put w, y, w, h in objects_data        
-                objects_data[cropped_name] = bbox
+            if not save_path.exists() or str(save_path) not in objects_data:
+                self.create_cropped_object(object_path, save_path, objects_data)
     
-            #TODO: optimize so we don't have to to this every time we launch the game
             # extract the collision rectangles of the object if they exist
-            #print(object_path.name)
-            collision_layers_path = self.load_collision_layers_path(object_path.stem)
+            #TODO: optimize so we don't have to to this every time we launch the game
+            collision_layers_path = self.load_collision_layers_path(object_path.stem[2:]) # remove the id and the underscore
             collision_rects = []
             for path in collision_layers_path:
-                #print(path) #debug
                 collision_layer = pygame.image.load(path).convert_alpha()
                 rect = pygame.Rect(self.get_bounding_box(collision_layer))
-                #print("collision rect found : ", rect) #  debug
                 collision_rects.append(rect)
 
 
             #create the sprite
-            sprite_rect_tupple = objects_data[cropped_name]
-            cropped_name = cropped_name[2:]
-            if cropped_name == "table.png" or "cropped_ui_test.png" or "cropped_vase.png": #TODO: ALWAYS TRUE
+            sprite_rect_tupple = objects_data[str(save_path)]
+            if object_path.stem[2:] == "table" or "cropped_ui_test" or "cropped_vase": #TODO: ALWAYS TRUE
                 self.entities.add(Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects))
             # TODO: list all the other entities possible
 
@@ -96,7 +100,7 @@ class Wall:
             json.dump(objects_data, f, indent=4, ensure_ascii=False) 
 
 
-    def display_collision_rects(self):
+    def display_collision_rects(self): # debug function
         for entity in self.entities:
             for rect in entity.collision_rects:
                 temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
@@ -104,7 +108,7 @@ class Wall:
                 self.game_context.screen.blit(temp_surface, rect)
             
 
-    def load_collision_layers_path(self, obj_name): #function that returns the list of the paths of all the collision layers of an object
+    def load_collision_layers_path(self, obj_name): #returns the list of the paths of all the collision layers of an object
         collision_layers_dir = Path(self.root_dir / "images/collision_layers")
         collision_layers_path = list(collision_layers_dir.iterdir())
 
@@ -122,14 +126,21 @@ class Wall:
         return valid_collision_layers_path
 
 
-    # def get_collision_rects(self, layer_path):
-    #     surface = pygame.image.load(layer_path).convert_alpha()
-    #     mask = pygame.mask.from_surface(surface)
-    #     collision_rects = mask.get_bounding_rects()
+    def create_cropped_object(self, raw_image_path, save_path, data_dict): # creates a cropped version of an image and saves its dimensions in a dictionary
+        image = pygame.image.load(raw_image_path).convert_alpha()
+        bbox = self.get_bounding_box(image)
+        if bbox is None:
+            print(f"No visible pixels in {raw_image_path}")
+            return
 
-    #     for rect in collision_rects:
-    #         print(f"Rectangle: x={rect.x}, y={rect.y}, w={rect.width}, h={rect.height}")
-    #     return collision_rects
+        x, y, w, h = bbox
+        cropped_image = self.create_sub_surface(x, y, w, h, image)
+
+        pygame.image.save(cropped_image, save_path)
+        print(f"Cropped image saved to {save_path}")
+
+        # put w, y, w, h in objects_data        
+        data_dict[str(save_path)] = bbox
 
 
     def get_bounding_box(self, surface):
@@ -223,20 +234,3 @@ class Wall:
         for obj in self.entities:
             if obj.dragging:
                 obj.raw_rect.x, obj.raw_rect.y = (mx - obj.raw_rect.w/2), (my - obj.raw_rect.h/2)
-        #self.resize_images(None)
-        #self.draw_background()
-        # mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
-        # if self.dragging:
-        #     obj.x, obj.y = (mx - obj.w/2), (my - obj.h/2)
-        
-        # if 1 == 0: #TODO erase (not now)
-        #     x, y, w, h = self.get_bounding_box(self.table_test)
-        #     new_table = self.create_sub_surface(x, y, w, h, self.table_test)
-
-        #     table_rect = new_table.get_rect(topleft=self.table_pos)
-            
-        #     self.handle_event(table_rect)
-
-        #     self.game_context.screen.blit(new_table, self.table_pos)
-
-
