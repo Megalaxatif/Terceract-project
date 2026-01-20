@@ -78,9 +78,6 @@ class Inventory:
 
     def init_images(self):
         json_path = Path(self.root_dir / "objects_info.json")
-        object_dir = Path(self.root_dir / "images")
-        object_layers_path = list(object_dir.iterdir())
-
         objects_data = self.open_json(json_path)
 
         # delete extra keys
@@ -98,17 +95,11 @@ class Inventory:
             if key not in objects_data:
                 image = pygame.image.load(save_path).convert_alpha()
                 bbox = 0, 0, image.get_width(), image.get_height()
+                pygame.image.save(image, save_path)
+                print(f"Cropped image saved to {save_path}")
 
-                if bbox is None:
-                    print(f"No visible pixels in {object_path}")
-
-                else:
-                    x, y, w, h = bbox
-                    pygame.image.save(image, save_path)
-                    print(f"Cropped image saved to {save_path}")
-
-                    # put x, y, w, h in objects_data
-                    objects_data[key] = bbox
+                # put x, y, w, h in objects_data
+                objects_data[key] = bbox
 
         # delete extra images
         self.delete_extra_images(objects_data)
