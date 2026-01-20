@@ -25,12 +25,11 @@ class Object(pygame.sprite.Sprite):
         self.image_name = str(self.image_path.name)
 
         self.rect = rect
-        self.raw_rect = rect.copy()
-        self.valid_rect = rect
-
+        self.raw_rect = self.rect
+        self.valid_rect = self.rect.copy()
 
         self.collision_rects = collisions
-        self.raw_collision_rects = collisions
+        self.raw_collision_rects = self.collision_rects.copy()
         self.current_collision_rect_index = 0 # which collision rect the object is in
 
         self.displayed = True
