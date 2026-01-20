@@ -1,14 +1,20 @@
 {
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_table_test.png": [
-        1055,
-        559,
-        640,
-        464
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_3_frame.png": [
+        278,
+        118,
+        377,
+        473
     ],
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_ui_test.png": [
-        283,
-        340,
-        593,
-        492
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_2_table.png": [
+        1211,
+        623,
+        695,
+        457
+    ],
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_0_vase.png": [
+        1659,
+        497,
+        171,
+        300
     ]
 }

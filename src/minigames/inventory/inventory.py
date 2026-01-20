@@ -311,7 +311,7 @@ class Inventory:
         
         if name_without_layer == "table.png" or "cropped_ui_test.png" or "cropped_vase.png":  # TODO: ALWAYS TRUE
             self.game_context.current_wall.entities.add(
-                Vase(self.game_context, save_path, pygame.Rect(dim))
+                Vase(self.game_context, save_path, pygame.Rect(dim), [])
             )
 
         del objects_data[self.current_item]
