@@ -1,20 +1,14 @@
 {
-    "cropped_table_test.png": [
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_table_test.png": [
         1055,
         559,
         640,
         464
     ],
-    "cropped_ui_test.png": [
-        113,
-        171,
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_ui_test.png": [
+        283,
+        340,
         593,
         492
-    ],
-    "temp2.png": [
-        0,
-        0,
-        261,
-        231
     ]
 }

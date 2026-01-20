@@ -3,6 +3,7 @@ import os
 import json
 from pathlib import Path
 from room.objects.vase import Vase
+from room.objects.digicode import Digicode
 
 class Wall:
     def __init__(self, game_context, root_dir):
@@ -52,21 +53,39 @@ class Wall:
                     objects_data = {}
         else:
             raise Exception("create entities error : invalid path")
-
+        
+        parts = cropped_object_dir.parts
+        new_path = Path(*parts[-6:])
+        
         # delete extra keys
         expected_keys = {
-            f"cropped_{p.name}" for p in object_layers_path
+            (new_path / f"cropped_{p.name}").as_posix() for p in object_layers_path
         }
 
         for key in list(objects_data.keys()):
             if key not in expected_keys:
                 del objects_data[key]
+        
+        # delete extra cropped images
+        expected_cropped_filenames = {
+            f"cropped_{p.name}" for p in object_layers_path
+        }
+
+        for cropped_file in cropped_object_dir.iterdir():
+            if not cropped_file.is_file():
+                continue
+
+            if cropped_file.name not in expected_cropped_filenames or not cropped_file.name.startswith("cropped_"):
+                print(f"Removing extra cropped image: {cropped_file}")
+                cropped_file.unlink()
 
         for object_path in object_layers_path:
             cropped_name = f"cropped_{object_path.name}"
+            new_cropped_path = (new_path / cropped_name).as_posix()
             save_path = Path(cropped_object_dir / cropped_name)
 
-            if not save_path.exists() or cropped_name not in objects_data:
+            if not save_path.exists() or new_cropped_path not in objects_data:
+                print(new_cropped_path not in objects_data)
                 image = pygame.image.load(object_path).convert_alpha()
                 bbox = self.get_bounding_box(image)
 
@@ -81,13 +100,17 @@ class Wall:
                 print(f"Cropped image saved to {save_path}")
 
                 # put x, y, w, h in objects_data
-                objects_data[cropped_name] = bbox
+                objects_data[new_cropped_path] = bbox
 
             # create the sprite
-            sprite_rect_tupple = objects_data[cropped_name]
-            cropped_name = cropped_name[2:]
+            sprite_rect_tupple = objects_data[new_cropped_path]
+            name = object_path.name[2:]
 
-            if cropped_name == "table.png" or "cropped_ui_test.png" or "cropped_vase.png": #TODO: change
+            if name == "calculator.png": #TODO: change
+                self.entities.add(
+                    Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", (pygame.Rect(sprite_rect_tupple)[0], pygame.Rect(sprite_rect_tupple)[1]), "1234")
+                )
+            else:
                 self.entities.add(
                     Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple))
                 )
@@ -95,7 +118,6 @@ class Wall:
         # save JSON
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(objects_data, f, indent=4, ensure_ascii=False)
-
 
 
     def get_bounding_box(self, surface):
@@ -133,19 +155,22 @@ class Wall:
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
         
-    def handle_click(self, event):
+    def handle_click(self):
         clicked = False
-        for obj in reversed(self.entities.sprites()):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos) and not clicked:
-                clicked = True
-                if not self.dragging or obj.dragging:
-                    print("object clicked")
-                    self.dragging = not self.dragging
-                    obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
-                    if obj.dragging:
-                        self.current_item = obj
-                    else:
-                        self.current_item = None
+        event = self.game_context.event
+        if self.game_context.mouse_enabled:
+            for obj in reversed(self.entities.sprites()):
+                if event and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and obj.rect.collidepoint(event.pos) and not clicked:
+                    clicked = True
+                    if obj.name == "vase":
+                        if not self.dragging or obj.dragging:
+                            print("object clicked")
+                            self.dragging = not self.dragging
+                            obj.dragging = not obj.dragging # NOTE: dangerous because dragging is only defined in Vase
+                            if obj.dragging:
+                                self.current_item = obj
+                            else:
+                                self.current_item = None
 
     def resize_images(self, objects_list):
         self.background = pygame.transform.scale(
@@ -166,10 +191,21 @@ class Wall:
                 #pygame.draw.rect(self.game_context.screen, (0,0,0), obj.rect, 1) 
 
     def draw_entities(self):
-        self.entities.draw(self.game_context.screen)
+        for entity in self.entities:
+            if entity.displayed:
+                self.game_context.screen.blit(entity.image, entity.rect)
+                
 
     def draw_background(self):
         self.game_context.screen.blit(self.background, (0, 0))
+
+    def sort_entities_by_image_name(self):
+        sprites_list = self.entities.sprites()
+        sprites_list = [s for s in sprites_list if hasattr(s, "image_name")]
+        sprites_list.sort(key=lambda s: s.image_name.lower())
+
+        self.entities.empty()
+        self.entities.add(*sprites_list)
 
     def update(self):
         self.resize_images(self.entities) # TODO: can we find a way to remove self.entities ?
@@ -177,8 +213,9 @@ class Wall:
         self.draw_entities()
         mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
         for obj in self.entities:
-            if obj.dragging:
+            if obj.name in ["vase"] and obj.dragging:
                 obj.raw_rect.x, obj.raw_rect.y = (mx - obj.raw_rect.w/2), (my - obj.raw_rect.h/2)
+        self.update_current_wall()
         #self.resize_images(None)
         #self.draw_background()
         # mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
@@ -194,12 +231,6 @@ class Wall:
         #     self.handle_event(table_rect)
 
         #     self.game_context.screen.blit(new_table, self.table_pos)
-
-    def sort_entities_by_image_name(self):
-        sprites_list = self.entities.sprites()
-        sprites_list = [s for s in sprites_list if hasattr(s, "image_name")]
-        sprites_list.sort(key=lambda s: s.image_name.lower())
-
-        self.entities.empty()
-        self.entities.add(*sprites_list)
-
+        
+    def update_current_wall(self):
+        pass

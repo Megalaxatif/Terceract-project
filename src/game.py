@@ -32,17 +32,22 @@ class Game:
         self.FPS = 60
         self.clock = pygame.time.Clock()
         self.game_running = True
-        self.root_dir = Path(__file__).resolve().parent.parent
+        self.root_dir = (Path(__file__).resolve().parent.parent).as_posix()
         self.game_data = {}  # json file
         self.game_data_path = f"{self.root_dir}/data/game_data.json"
+        self.event = None
+        self.current_wall = None
 
         self.name = "game"
         self.current_mini_game = "menu"
         
         self.mini_game_menu = Menu(self)
         self.mini_game_inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
+        self.mouse_enabled = True
 
         self.back_wall_R1  = Back_wall_R1(self)
+        #self.digicode = Digicode(self, f"{self.root_dir}/src/room/room_1/back_wall/images/cropped_objects/cropped_5_calculator.png", (400, 300), "1234")
+        
         self.left_wall_R1  = Left_wall_R1(self)
         self.front_wall_R1 = Front_wall_R1(self)
         self.right_wall_R1 = Right_wall_R1(self)
@@ -88,7 +93,6 @@ class Game:
 
         self.current_room_id = 0
         self.current_wall_id = 0 # back wall
-        self.current_wall = None
         self.update_current_wall() # reference to the current wall to render
         self.network_manager = Network_manager(self)
 
@@ -299,6 +303,7 @@ class Game:
 
     def handle_input(self):
         for event in pygame.event.get():
+            self.event = event
             if event.type == pygame.QUIT:
                 self.game_running = False
                 pygame.quit()
@@ -316,11 +321,11 @@ class Game:
                 if event.key == pygame.K_i and self.current_mini_game == "game":
                     self.mini_game_inventory.display = not self.mini_game_inventory.display
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN and self.mouse_enabled:
                 if self.mini_game_inventory.display:
-                    self.mini_game_inventory.handle_click(event.pos)
+                    self.mini_game_inventory.handle_click()
                 if self.current_mini_game == "game":
-                    self.current_wall.handle_click(event)
+                    self.current_wall.handle_click()
 
 
     def update(self):
@@ -353,10 +358,13 @@ class Game:
         
         if self.current_mini_game == "menu":
             self.mini_game_menu.update()
-
+        
+        self.mouse_enabled = True
+        self.event = None
+        
         self.handle_input()
+        
         #else:
             #self.mini_game_test.update()
 
         pygame.display.flip()
-

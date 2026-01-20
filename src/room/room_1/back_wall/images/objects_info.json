@@ -1,20 +1,26 @@
 {
-    "cropped_4_frame1.png": [
-        278,
-        118,
-        377,
-        473
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_calculator.png": [
+        173,
+        539,
+        260,
+        346
     ],
-    "cropped_6_table.png": [
-        1211,
-        623,
-        695,
-        457
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_6_table.png": [
+        648,
+        476,
+        688,
+        448
     ],
-    "cropped_7_vase.png": [
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_7_vase.png": [
         1659,
         497,
         171,
         300
+    ],
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_4_frame1.png": [
+        184,
+        107,
+        371,
+        467
     ]
 }
