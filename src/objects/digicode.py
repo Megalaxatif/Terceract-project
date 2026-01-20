@@ -1,23 +1,12 @@
 import pygame
-from pathlib import Path
+from object import Object
 
-class Digicode(pygame.sprite.Sprite):
-    def __init__(self, game_context, image_path, pos, secret_code="1234", rect=None):
-        super().__init__()
-        self.name = "digicode"
-        self.game_context = game_context
-        self.screen = self.game_context.screen
-        self.pos = pos
+class Digicode(Object):
+    def __init__(self, game_context, image_path, rect, secret_code="1234"):
+        super().__init__(game_context, "digicode", image_path, rect, [])
+        self.pos = rect[0], rect[1]
         self.x, self.y = self.pos
         self.delta = 1
-        self.image_path = image_path
-
-        # Image fermée
-        self.raw_image = pygame.image.load(image_path).convert_alpha()
-        self.image = self.raw_image.copy()
-        self.raw_rect = self.image.get_rect(topleft=self.pos)
-        self.rect = self.raw_rect.copy()
-        self.image_name = str(Path(self.image_path).name)
 
         # Digicode
         self.secret_code = secret_code
@@ -39,9 +28,6 @@ class Digicode(pygame.sprite.Sprite):
         self.button_rects = []
         
         self.close_rect = pygame.Rect(self.x + 220*self.delta, self.y + 10*self.delta, 40*self.delta, 40*self.delta)
-
-        if rect:
-            self.rect = rect
 
     def create_buttons(self, pos):
         x0, y0 = pos[0] + 30, pos[1] + 120

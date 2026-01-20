@@ -1,4 +1,3 @@
-import pygame
 from wall_parent import Wall
 from pathlib import Path
 

@@ -2,8 +2,8 @@ import pygame
 import sys
 from pathlib import Path
 import json
-from room.objects.vase import Vase
-from room.objects.digicode import Digicode
+from objects.vase import Vase
+from objects.digicode import Digicode
 
 
 BLACK = (0, 0, 0)

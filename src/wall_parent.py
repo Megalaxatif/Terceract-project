@@ -2,8 +2,8 @@ import pygame
 import os
 import json
 from pathlib import Path
-from room.objects.vase import Vase
-from room.objects.digicode import Digicode
+from objects.vase import Vase
+from objects.digicode import Digicode
 
 class Wall:
     def __init__(self, game_context, root_dir):
@@ -128,7 +128,7 @@ class Wall:
 
             if name == "calculator.png": #TODO: change
                 self.entities.add(
-                    Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", (pygame.Rect(sprite_rect_tupple)[0], pygame.Rect(sprite_rect_tupple)[1]), "1234")
+                    Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", pygame.Rect(sprite_rect_tupple), "1234")
                 )
             else:
                 self.entities.add(
