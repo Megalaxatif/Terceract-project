@@ -151,6 +151,8 @@ class Wall:
 
     def load_collision_layers_path(self, obj_name): #returns the list of the paths of all the collision layers of an object
         collision_layers_dir = Path(self.root_dir / "images/collision_layers")
+        if not collision_layers_dir.exists():
+            collision_layers_dir.mkdir(parents=True, exist_ok=True)
         collision_layers_path = list(collision_layers_dir.iterdir())
 
         valid_collision_layers_path = []
