@@ -34,3 +34,15 @@ class Object(pygame.sprite.Sprite):
 
         self.displayed = True
         self.dragging = False
+
+    def handle_click(self, event):
+        collision_index = self.rect.collidelist(self.collision_rects)
+        if collision_index != -1:
+            self.raw_rect.center = self.collision_rects[collision_index].center
+            self.valid_rect = self.collision_rects[collision_index]
+        else:
+            self.raw_rect.center = self.valid_rect.center
+        
+        #TODO: maybe add a functionality to place the item anywhere in  the box
+        self.dragging = False # NOTE: dangerous because dragging is only defined in Vase
+        self.game_context.current_item = None

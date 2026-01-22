@@ -37,7 +37,7 @@ class Game:
         self.game_data_path = f"{self.root_dir}/data/game_data.json"
         self.event = None
         self.current_wall = None
-
+        self.current_item = None
         self.name = "game"
         self.current_mini_game = "menu"
         
@@ -325,7 +325,7 @@ class Game:
                 if self.mini_game_inventory.display:
                     self.mini_game_inventory.handle_click()
                 if self.current_mini_game == "game":
-                    self.current_wall.handle_click()
+                    self.current_wall.handle_click(event)
 
 
     def update(self):

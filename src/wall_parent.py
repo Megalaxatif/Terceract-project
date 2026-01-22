@@ -219,26 +219,15 @@ class Wall:
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
         
-    def handle_click(self):
-        event = self.game_context.event
-        if self.current_item is not None:
-            collision_index = self.current_item.rect.collidelist(self.current_item.collision_rects)
-            if collision_index != -1:
-                self.current_item.raw_rect.center = self.current_item.collision_rects[collision_index].center
-                self.current_item.valid_rect = self.current_item.collision_rects[collision_index]
-            else:
-                self.current_item.raw_rect.center = self.current_item.valid_rect.center
-            
-            #TODO: maybe add a functionality to place the item anywhere in  the box
-
-            self.current_item.dragging = False # NOTE: dangerous because dragging is only defined in Vase
-            self.current_item = None
+    def handle_click(self, event):
+        if self.game_context.current_item is not None:
+            self.game_context.current_item.handle_click(event)
         else:
             for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
                 if obj.name in ["vase"]:
                     if obj.rect.collidepoint(event.pos):
-                        self.current_item = obj
-                        obj.dragging = True # NOTE: dangerous because dragging is only defined in Vase
+                        self.game_context.current_item = obj
+                        obj.dragging = True
                         break
 
 
