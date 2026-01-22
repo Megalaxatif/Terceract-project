@@ -146,7 +146,7 @@ class Inventory:
         )
 
 
-    def handle_click(self):
+    def handle_event(self):
         pos = self.game_context.event.pos
         self.mouse_x, self.mouse_y = pos
 

@@ -46,8 +46,6 @@ class Game:
         self.mouse_enabled = True
 
         self.back_wall_R1  = Back_wall_R1(self)
-        #self.digicode = Digicode(self, f"{self.root_dir}/src/room/room_1/back_wall/images/cropped_objects/cropped_5_calculator.png", (400, 300), "1234")
-        
         self.left_wall_R1  = Left_wall_R1(self)
         self.front_wall_R1 = Front_wall_R1(self)
         self.right_wall_R1 = Right_wall_R1(self)
@@ -323,9 +321,9 @@ class Game:
 
             elif event.type == pygame.MOUSEBUTTONDOWN and self.mouse_enabled:
                 if self.mini_game_inventory.display:
-                    self.mini_game_inventory.handle_click()
+                    self.mini_game_inventory.handle_event()#TODO: pass event as argument
                 if self.current_mini_game == "game":
-                    self.current_wall.handle_click(event)
+                    self.current_wall.handle_event(event)
 
 
     def update(self):

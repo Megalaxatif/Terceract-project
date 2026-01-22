@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from objects.vase import Vase
 from objects.digicode import Digicode
-
+from utils import *
 class Wall:
     def __init__(self, game_context, root_dir):
         #explanation:
@@ -30,8 +30,8 @@ class Wall:
 
     def clear_cropped_objects(self):
         cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
-        cropped_object_path = list(cropped_object_dir.iterdir())
-        for path in cropped_object_path:
+        cropped_object_paths = list(cropped_object_dir.iterdir())
+        for path in cropped_object_paths:
             os.remove(path)
     
     def clear_object_layers(self):
@@ -57,6 +57,8 @@ class Wall:
         # 2: if not we create the cropped object and save its data
         # 3: we try to find potential collision layers stored in collision_layers folder
         # 4: we create a sprite for the object and add it to the entities group
+        json_path = Path(self.root_dir / "images/objects_info.json")
+
         object_layers_dir = Path(self.root_dir / "images/object_layers")
         if not object_layers_dir.exists():
             object_layers_dir.mkdir(parents=True, exist_ok=True)
@@ -66,19 +68,10 @@ class Wall:
             cropped_object_dir.mkdir(parents=True, exist_ok=True)
 
         object_layers_path = list(object_layers_dir.iterdir())
+        cropped_object_paths = list(cropped_object_dir.iterdir())
 
         # load or init the JSON file
-        objects_data = {}
-        json_path = Path(self.root_dir / "images/objects_info.json")
-
-        if json_path.exists():
-            with open(json_path, "r", encoding="utf-8") as f:
-                try:
-                    objects_data = json.load(f)
-                except json.JSONDecodeError:
-                    objects_data = {}
-        else:
-            raise Exception("create entities error : invalid path")
+        objects_data = load_json_file(json_path)
         
         parts = cropped_object_dir.parts
         new_path = Path(*parts[-6:])
@@ -91,19 +84,16 @@ class Wall:
         for key in list(objects_data.keys()):
             if key not in expected_keys:
                 del objects_data[key]
-        
+            
         # delete extra cropped images
-        expected_cropped_filenames = {
+        expected_cropped_paths = {
             f"cropped_{p.name}" for p in object_layers_path
         }
 
-        for cropped_file in cropped_object_dir.iterdir():
-            if not cropped_file.is_file():
-                continue
-
-            if cropped_file.name not in expected_cropped_filenames or not cropped_file.name.startswith("cropped_"):
-                print(f"Removing extra cropped image: {cropped_file}")
-                cropped_file.unlink()
+        for cropped_path in cropped_object_paths:
+            if cropped_path.name not in expected_cropped_paths or not cropped_path.name.startswith("cropped_"):
+                print(f"Removing extra cropped image:  {cropped_path}")
+                cropped_path.unlink()
 
         for object_path in reversed(object_layers_path): # reversed so we draw the object with the lowest layer id first
             cropped_name = f"cropped_{object_path.name}"
@@ -134,10 +124,7 @@ class Wall:
                 self.entities.add(
                     Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
                 )
-
-        # save JSON
-        with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(objects_data, f, indent=4, ensure_ascii=False)
+        save_data_in_json(objects_data, json_path)
 
 
     def display_collision_rects(self): # debug function
@@ -221,12 +208,12 @@ class Wall:
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
         
-    def handle_click(self, event):
+    def handle_event(self, event):
         if self.game_context.current_item is not None:
-            self.game_context.current_item.handle_click(event)
+            self.game_context.current_item.handle_event(event)
         else:
             for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
-                if obj.name in ["vase"]:
+                if obj.name in ["vase"]: # TODO: change that
                     if obj.rect.collidepoint(event.pos):
                         self.game_context.current_item = obj
                         obj.dragging = True

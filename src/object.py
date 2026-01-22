@@ -35,7 +35,7 @@ class Object(pygame.sprite.Sprite):
         self.displayed = True
         self.dragging = False
 
-    def handle_click(self, event):
+    def handle_event(self, event):
         collision_index = self.rect.collidelist(self.collision_rects)
         if collision_index != -1:
             self.raw_rect.center = self.collision_rects[collision_index].center
