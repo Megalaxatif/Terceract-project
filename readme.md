@@ -4,5 +4,5 @@ made by:
 -Ethan
 -Noah
 -Amélie
--Sarah Jane
--Nicola
+-Sarah-Jane
+-Nicolas
