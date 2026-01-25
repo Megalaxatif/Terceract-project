@@ -164,7 +164,7 @@ class Inventory:
                 if slot:
                     self.current_item = slot
 
-                external_obj = self.game_context.current_wall.current_item
+                external_obj = self.game_context.current_item
 
                 # Put object in inventory
                 if external_obj:
@@ -246,9 +246,9 @@ class Inventory:
             if isinstance(sprite, Vase) and sprite.image_path == external_obj.image_path:
                 self.game_context.current_wall.entities.remove(sprite)
 
-        self.game_context.current_wall.current_item.dragging = False
-        self.game_context.current_wall.current_item = None
-        self.game_context.current_wall.dragging = False
+        self.game_context.dragging = False
+        self.game_context.current_item = None
+        self.game_context.dragging = False
 
 
     def inventory_drop(self):

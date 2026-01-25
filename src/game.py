@@ -324,7 +324,6 @@ class Game:
 
     def update(self):
         self.screen.fill((0, 0, 0))
-        coeff = self.clock.tick(self.FPS) / 40
         
         self.delta_h = self.screen.get_height() / 720
         self.delta_w = self.screen.get_width() / 1080
@@ -335,7 +334,6 @@ class Game:
         self.current_wall.delta = min(self.delta_w * (1080/1920), self.delta_h * (720/1080))
 
         if self.current_mini_game == "game":
-            #player = self.player1 if self.network.is_host else self.player2
             self.current_wall.update()
 
             #debug
@@ -357,8 +355,5 @@ class Game:
         self.event = None
         
         self.handle_input()
-        
-        #else:
-            #self.mini_game_test.update()
 
         pygame.display.flip()
