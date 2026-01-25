@@ -272,11 +272,9 @@ class Game:
         else:
             print("change_room : Error, impossible to go in that direction")
             return 1
-        
-        self.current_wall.dragging = False
-        if self.current_wall.current_item:
-            self.current_wall.current_item.dragging = False
-            self.current_wall.current_item = None
+    
+        self.dragging = False
+        self.current_item = None
         self.update_current_wall()
 
 
@@ -289,10 +287,8 @@ class Game:
         elif direction == "left":
             self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
             
-        self.current_wall.dragging = False
-        if self.current_wall.current_item:
-            self.current_wall.current_item.dragging = False
-            self.current_wall.current_item = None
+        self.dragging = False
+        self.current_item = None
         self.update_current_wall()
 
 

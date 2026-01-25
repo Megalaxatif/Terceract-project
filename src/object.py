@@ -38,8 +38,8 @@ class Object(pygame.sprite.Sprite):
     def handle_event(self, event):
         collision_index = self.rect.collidelist(self.collision_rects)
         if collision_index != -1:
-            self.raw_rect.center = self.collision_rects[collision_index].center
-            self.valid_rect = self.collision_rects[collision_index]
+            self.raw_rect.center = self.raw_collision_rects[collision_index].center
+            self.valid_rect = self.raw_collision_rects[collision_index]
         else:
             self.raw_rect.center = self.valid_rect.center
         

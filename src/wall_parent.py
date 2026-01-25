@@ -16,8 +16,6 @@ class Wall:
         self.original_background = self.background
         self.entities = pygame.sprite.Group()
         self.create_entities()
-        self.current_item = None
-        self.dragging = False
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
