@@ -4,7 +4,7 @@ from pathlib import Path
 import json
 from objects.vase import Vase
 from objects.digicode import Digicode
-
+from utils import *
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
@@ -78,7 +78,7 @@ class Inventory:
 
     def init_images(self):
         json_path = Path(self.root_dir / "objects_info.json")
-        objects_data = self.open_json(json_path)
+        objects_data = load_json_file(json_path)
 
         # delete extra keys
         expected_keys = {
@@ -204,8 +204,8 @@ class Inventory:
         json_path = Path(self.root_dir / "objects_info.json")
         json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
 
-        objects_data = self.open_json(json_path)
-        objects_data_wall = self.open_json(json_path_wall)
+        objects_data = load_json_file(json_path)
+        objects_data_wall = load_json_file(json_path_wall)
 
         cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
         object_path = Path(Path(self.game_context.root_dir) / external_obj.image_id)
@@ -232,8 +232,8 @@ class Inventory:
 
         print(self.images)
 
-        self.save_json(json_path, objects_data)
-        self.save_json(json_path_wall, objects_data_wall)
+        save_data_in_json(objects_data, json_path)
+        save_data_in_json(objects_data_wall, json_path_wall)
 
         for sprite in self.game_context.current_wall.entities.sprites():
             if isinstance(sprite, Vase) and sprite.image_path == external_obj.image_path:
@@ -251,8 +251,8 @@ class Inventory:
         json_path = Path(self.root_dir / "objects_info.json")
         json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
 
-        objects_data = self.open_json(json_path)
-        objects_data_wall = self.open_json(json_path_wall)
+        objects_data = load_json_file(json_path)
+        objects_data_wall = load_json_file(json_path_wall)
 
         parts = cropped_object_dir.parts
         new_path_cropped = (Path(*parts[-6:]) / object_path.name).as_posix()
@@ -297,8 +297,8 @@ class Inventory:
         del objects_data[self.current_item]
 
         # save the data in the json file
-        self.save_json(json_path, objects_data)
-        self.save_json(json_path_wall, objects_data_wall)
+        save_data_in_json(objects_data, json_path)
+        save_data_in_json(objects_data_wall, json_path_wall)
 
         del self.images[self.current_item]
 
@@ -350,24 +350,3 @@ class Inventory:
                             self.y + row * self.block_size + 0.05 * self.block_size
                         )
                     )
-
-
-    def create_sub_surface(self, x, y, w, h, surface):
-        return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
-
-
-    def save_json(self, path, data):
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
-
-
-    def open_json(self, path):
-        if path.exists():
-            with open(path, "r", encoding="utf-8") as f:
-                try:
-                    data = json.load(f)
-                except json.JSONDecodeError:
-                    data = {}
-                return data
-        else:
-            raise Exception("open_json error : invalid path")
