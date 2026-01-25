@@ -128,8 +128,6 @@ class Inventory:
         self.draw_grid()
         self.draw_items()
 
-        json_path = Path(self.root_dir / "objects_info.json")
-
         # Display current item
         if self.current_item:  # if not None
             mx, my = pygame.mouse.get_pos()
@@ -183,8 +181,6 @@ class Inventory:
                     self.slots[row][col]
                 )
 
-            print("click inventory")
-
         # Drop object out of inventory
         elif self.current_item != None:
             self.inventory_drop()
@@ -224,14 +220,11 @@ class Inventory:
             image.get_height()
         )
 
-        x, y, w, h = bbox
-
         if save_path.exists():
             save_path.unlink()
 
         del objects_data_wall[external_obj.image_id]
 
-        # put x, y, w, h in objects_data
         objects_data[inventory_save_path] = bbox
 
         if inventory_save_path not in objects_data:
@@ -248,13 +241,11 @@ class Inventory:
 
         self.game_context.dragging = False
         self.game_context.current_item = None
-        self.game_context.dragging = False
 
 
     def inventory_drop(self):
         object_path = Path(Path(self.game_context.root_dir) / self.current_item)
         cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
-        object_layers_path = list((object_path.parent).iterdir())
 
         # load le JSON
         json_path = Path(self.root_dir / "objects_info.json")
@@ -281,8 +272,6 @@ class Inventory:
             int(image.get_width() / delta),
             int(image.get_height() / delta)
         )
-
-        x, y, w, h = bbox
 
         pygame.image.save(image, save_path)
         print(f"Image saved to {save_path}")
@@ -320,7 +309,6 @@ class Inventory:
 
 
     def delete_extra_images(self, objects_data):
-        json_image_keys = set(objects_data.keys())
         object_dir = Path(self.root_dir / "images")
 
         for image_file in object_dir.iterdir():
@@ -351,7 +339,6 @@ class Inventory:
 
 
     def draw_items(self):
-        # print(self.images)
         for row in range(self.rows):
             for col in range(self.cols):
                 item = self.slots[row][col]
