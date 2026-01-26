@@ -5,11 +5,9 @@ from pathlib import Path
 from objects.vase import Vase
 from objects.digicode import Digicode
 from utils import *
+
 class Wall:
     def __init__(self, game_context, root_dir):
-        #explanation:
-        #background_layer_path is a path to a static image that cannot move
-        #interactable_layers is a list of the path to the objects to be displayed on the wall
         self.root_dir = root_dir
         self.game_context = game_context
         self.background = self.create_background()
@@ -194,18 +192,6 @@ class Wall:
     def create_sub_surface(self, x, y, w, h, surface):
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
-        
-    def handle_event(self, event):
-        if self.game_context.current_item is not None:
-            self.game_context.current_item.handle_event(event)
-        else:
-            for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
-                if obj.name in ["vase"]: # TODO: change that
-                    if obj.rect.collidepoint(event.pos):
-                        self.game_context.current_item = obj
-                        obj.dragging = True
-                        break
-
 
     def resize_images(self, objects_list):
         self.background = pygame.transform.scale(
@@ -271,7 +257,20 @@ class Wall:
         self.entities.empty()
         self.entities.add(*sprites_list)
 
+    # NOTE: can be redefined in child classes
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.game_context.current_item is not None:
+                self.game_context.current_item.handle_event(event)
+            else:
+                for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
+                    if obj.name in ["vase"]: # TODO: change that
+                        if obj.rect.collidepoint(event.pos):
+                            self.game_context.current_item = obj
+                            obj.dragging = True
+                            break
 
+    # NOTE: can be redefined in child classes
     def update(self):
         self.resize_images(self.entities) # TODO: can we find a way to remove self.entities ?
         self.draw_background()

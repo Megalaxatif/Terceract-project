@@ -42,7 +42,7 @@ class Game:
         self.current_mini_game = "menu"
         
         self.mini_game_menu = Menu(self)
-        self.mini_game_inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
+        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
         self.mouse_enabled = True
 
         self.back_wall_R1  = Back_wall_R1(self)
@@ -312,14 +312,13 @@ class Game:
                     self.change_wall("right")
                 elif event.key == pygame.K_UP:
                     self.change_room()
-                if event.key == pygame.K_i and self.current_mini_game == "game":
-                    self.mini_game_inventory.display = not self.mini_game_inventory.display
+                # if event.key == pygame.K_i and self.current_mini_game == "game":
+                #     self.inventory.display = not self.inventory.display
 
-            elif event.type == pygame.MOUSEBUTTONDOWN and self.mouse_enabled:
-                if self.mini_game_inventory.display:
-                    self.mini_game_inventory.handle_event()#TODO: pass event as argument
-                if self.current_mini_game == "game":
-                    self.current_wall.handle_event(event)
+            # if self.inventory.display:
+            if self.current_mini_game == "game":
+                self.inventory.handle_event(event)
+                self.current_wall.handle_event(event)
 
 
     def update(self):
@@ -345,8 +344,8 @@ class Game:
             )
             self.screen.blit(text_surface, (100, 50))
             
-            if self.mini_game_inventory.display:
-                self.mini_game_inventory.update()
+            #if self.inventory.display:
+            self.inventory.update()
         
         if self.current_mini_game == "menu":
             self.mini_game_menu.update()

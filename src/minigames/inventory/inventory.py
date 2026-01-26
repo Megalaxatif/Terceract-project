@@ -29,7 +29,7 @@ class Inventory:
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
         self.slots = [[None for _ in range(cols)] for _ in range(rows)]
-        self.display = False
+        # self.display = False
         self.center = center
 
         self.last_row, self.last_col = 0, 0
@@ -55,7 +55,7 @@ class Inventory:
         self.slots[0][0] = "src/minigames/inventory/images/temp1.png"
         self.slots[0][1] = "src/minigames/inventory/images/temp2.png"
 
-        self.current_item = None
+        self.selected_item = None
 
         self.init_images()
 
@@ -129,10 +129,10 @@ class Inventory:
         self.draw_items()
 
         # Display current item
-        if self.current_item:  # if not None
+        if self.selected_item:  # if not None
             mx, my = pygame.mouse.get_pos()
             self.game_context.screen.blit(
-                self.images[self.current_item][0],
+                self.images[self.selected_item][0],
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
 
@@ -144,47 +144,47 @@ class Inventory:
         )
 
 
-    def handle_event(self):
-        pos = self.game_context.event.pos
-        self.mouse_x, self.mouse_y = pos
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and self.game_context.mouse_enabled:
+            self.mouse_x, self.mouse_y = event.pos
 
-        # Area in inventory
-        if (
-            self.x <= self.mouse_x < self.x + self.cols * self.block_size and
-            self.y <= self.mouse_y < self.y + self.rows * self.block_size
-        ):
-            col = (self.mouse_x - self.x) // self.block_size
-            row = (self.mouse_y - self.y) // self.block_size
+            # Area in inventory
+            if (
+                self.x <= self.mouse_x < self.x + self.cols * self.block_size and
+                self.y <= self.mouse_y < self.y + self.rows * self.block_size
+            ):
+                col = (self.mouse_x - self.x) // self.block_size
+                row = (self.mouse_y - self.y) // self.block_size
 
-            slot = self.slots[row][col]
+                slot = self.slots[row][col]
 
-            if not self.current_item:
-                if slot:
-                    self.current_item = slot
+                if not self.selected_item:
+                    if slot:
+                        self.selected_item = slot
 
-                external_obj = self.game_context.current_item
+                    external_obj = self.game_context.current_item
 
-                # Put object in inventory
-                if external_obj:
-                    self.put_object_in_inventory(external_obj, row, col)
+                    # Put object in inventory
+                    if external_obj:
+                        self.put_object_in_inventory(external_obj, row, col)
 
-                # Take object from inventory
-                else:
-                    self.slots[row][col] = None
+                    # Take object from inventory
+                    else:
+                        self.slots[row][col] = None
 
-                self.last_row, self.last_col = row, col
+                    self.last_row, self.last_col = row, col
 
-            # Swap object in inventory
-            elif self.current_item:
-                self.slots[row][col], self.current_item = (
-                    self.current_item,
-                    self.slots[row][col]
-                )
+                # Swap object in inventory
+                elif self.selected_item:
+                    self.slots[row][col], self.selected_item = (
+                        self.selected_item,
+                        self.slots[row][col]
+                    )
 
-        # Drop object out of inventory
-        elif self.current_item != None:
-            self.inventory_drop()
-            self.game_context.current_wall.sort_entities_by_image_name()
+            # Drop object out of inventory
+            elif self.selected_item != None:
+                self.inventory_drop() # TODO: control if the object is dropped in a collision rect
+                self.game_context.current_wall.sort_entities_by_image_name()
 
 
     def put_object_in_inventory(self, external_obj, row, col):
@@ -244,7 +244,7 @@ class Inventory:
 
 
     def inventory_drop(self):
-        object_path = Path(Path(self.game_context.root_dir) / self.current_item)
+        object_path = Path(Path(self.game_context.root_dir) / self.selected_item)
         cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
 
         # load le JSON
@@ -257,8 +257,8 @@ class Inventory:
         parts = cropped_object_dir.parts
         new_path_cropped = (Path(*parts[-6:]) / object_path.name).as_posix()
 
-        if self.current_item != str(self.current_item):
-            self.current_item = (self.current_item).as_posix()
+        if self.selected_item != str(self.selected_item):
+            self.selected_item = (self.selected_item).as_posix()
 
         save_path = Path(cropped_object_dir / object_path.name)
         origin_path = Path(self.images[f"src/minigames/inventory/images/{object_path.name}"][1])
@@ -294,17 +294,17 @@ class Inventory:
                 Vase(self.game_context, save_path, pygame.Rect(dim), [])
             )
 
-        del objects_data[self.current_item]
+        del objects_data[self.selected_item]
 
         # save the data in the json file
         save_data_in_json(objects_data, json_path)
         save_data_in_json(objects_data_wall, json_path_wall)
 
-        del self.images[self.current_item]
+        del self.images[self.selected_item]
 
         self.delete_extra_images(objects_data)
 
-        self.current_item = None
+        self.selected_item = None
         self.game_context.mouse_enabled = False
 
 
