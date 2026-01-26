@@ -39,7 +39,7 @@ class Inventory:
         self.images = {}
 
         for name in ["temp1.png", "temp2.png"]:
-            final_path = self.ensure_inventory_image(name)
+            final_path = self.init_inventory(name)
 
             inventory_key = f"src/minigames/inventory/images/{name}"
 
@@ -60,7 +60,7 @@ class Inventory:
         self.init_images()
 
 
-    def ensure_inventory_image(self, filename):
+    def init_inventory(self, filename):
         origin_path = self.root_dir / "images" / "origin" / filename
         target_path = self.root_dir / "images" / filename
 
@@ -129,7 +129,7 @@ class Inventory:
         self.draw_items()
 
         # Display current item
-        if self.selected_item:  # if not None
+        if self.selected_item:
             mx, my = pygame.mouse.get_pos()
             self.game_context.screen.blit(
                 self.images[self.selected_item][0],
@@ -144,8 +144,8 @@ class Inventory:
         )
 
 
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and self.game_context.mouse_enabled:
+    def handle_click(self, event):
+        if self.game_context.mouse_enabled:
             self.mouse_x, self.mouse_y = event.pos
 
             # Area in inventory
@@ -239,7 +239,6 @@ class Inventory:
             if isinstance(sprite, Vase) and sprite.image_path == external_obj.image_path:
                 self.game_context.current_wall.entities.remove(sprite)
 
-        self.game_context.dragging = False
         self.game_context.current_item = None
 
 

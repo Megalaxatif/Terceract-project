@@ -272,33 +272,15 @@ class Wall:
         self.entities.empty()
         self.entities.add(*sprites_list)
 
-    # NOTE: can be redefined in child classes
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.game_context.current_item is not None:
-                self.game_context.current_item.handle_event(event)
-            else:
-                for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
-                    if obj.movable:
-                        if obj.rect.collidepoint(event.pos):
-                            print("collision")
-                            self.game_context.current_item = obj
-                            print(self.game_context.current_item.name)
-                            obj.dragging = True
-                            break
 
-    # NOTE: can be redefined in child classes
-    def update(self):
-        self.resize_images(self.entities) # TODO: can we find a way to remove self.entities ?
+    def display(self):
+        self.resize_images(self.entities)
         self.draw_background()
         self.draw_entities()
         self.display_collision_rects()
-        mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
-        for obj in self.entities:
-            if obj.dragging:
-                obj.raw_rect.x, obj.raw_rect.y = (mx - obj.raw_rect.w/2), (my - obj.raw_rect.h/2)
-        self.update_current_wall()
 
+    # NOTE: can be redefined in child classes
+    def update(self, event):
+        for entity in self.entities:
+            entity.update(event) # interactions relative to each object
 
-    def update_current_wall(self):
-        pass

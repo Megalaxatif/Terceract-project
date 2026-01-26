@@ -91,7 +91,7 @@ class Game:
 
         self.current_room_id = 0
         self.current_wall_id = 0 # back wall
-        self.update_current_wall() # reference to the current wall to render
+        self.change_current_wall() # reference to the current wall to render
         self.network_manager = Network_manager(self)
 
     def save_data(self):
@@ -264,7 +264,7 @@ class Game:
     #                         player.precise_x = player.old_x
     #                         player.precise_y = player.old_y
 
-    def change_room(self):
+    def change_room(self): # change the room we are in
         if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5:
             self.current_room_id += 1
         elif self.current_wall_id == BACK_WALL and self.current_room_id > 0:
@@ -272,13 +272,12 @@ class Game:
         else:
             print("change_room : Error, impossible to go in that direction")
             return 1
-    
-        self.dragging = False
+
         self.current_item = None
-        self.update_current_wall()
+        self.change_current_wall()
 
 
-    def change_wall(self, direction : str):
+    def change_wall(self, direction : str):  # change the wall we are facing
         if direction != "right" and direction != "left": 
             print("change_wall : Error, invalid direction")
             return 1
@@ -287,43 +286,38 @@ class Game:
         elif direction == "left":
             self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
             
-        self.dragging = False
         self.current_item = None
-        self.update_current_wall()
+        self.change_current_wall()
 
 
-    def update_current_wall(self):
+    def change_current_wall(self): # update the reference to the current wall
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
-
-    def handle_input(self):
-        for event in pygame.event.get():
-            self.event = event
-            if event.type == pygame.QUIT:
-                self.game_running = False
-                pygame.quit()
-                sys.exit()
-
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.current_mini_game = "menu"
-                elif event.key == pygame.K_LEFT:
-                    self.change_wall("left")
-                elif event.key == pygame.K_RIGHT:
-                    self.change_wall("right")
-                elif event.key == pygame.K_UP:
-                    self.change_room()
-                # if event.key == pygame.K_i and self.current_mini_game == "game":
-                #     self.inventory.display = not self.inventory.display
-
-            # if self.inventory.display:
-            if self.current_mini_game == "game":
-                self.inventory.handle_event(event)
-                self.current_wall.handle_event(event)
+        self.recalculate_deltas()
 
 
-    def update(self):
-        self.screen.fill((0, 0, 0))
-        
+    def update_walls(self, event): # update all walls
+        for room in self.room_list:
+            for wall in room:
+                wall.update(event)
+
+    def center_current_item(self): # put the center of the current item at the mouse position
+        if self.current_item is not None and self.current_item.movable:
+            mx, my = pygame.mouse.get_pos()[0] / self.current_wall.delta, pygame.mouse.get_pos()[1] / self.current_wall.delta
+            self.current_item.raw_rect.x = mx - self.current_item.raw_rect.w/2
+            self.current_item.raw_rect.y = my - self.current_item.raw_rect.h/2
+
+
+    def display_room_counter(self): # for debug purposes
+        font = pygame.font.Font(None, 50)
+        text_surface = font.render(
+            f"room number {self.current_room_id+1}",
+            True,           # anti-aliasing
+            (0,0,0)
+        )
+        self.screen.blit(text_surface, (100, 50))
+
+
+    def recalculate_deltas(self): # recalculate the delta values when the window is resized
         self.delta_h = self.screen.get_height() / 720
         self.delta_w = self.screen.get_width() / 1080
         self.delta = min(self.delta_h, self.delta_w)
@@ -331,28 +325,68 @@ class Game:
         self.current_wall.delta_w = self.delta_w * (1080/1920)
         self.current_wall.delta_h = self.delta_h * (720/1080)
         self.current_wall.delta = min(self.delta_w * (1080/1920), self.delta_h * (720/1080))
+    
 
-        if self.current_mini_game == "game":
-            self.current_wall.update()
-
-            #debug
-            font = pygame.font.Font(None, 50)
-            text_surface = font.render(
-                f"room number {self.current_room_id+1}",
-                True,           # anti-aliasing
-                (0,0,0)
-            )
-            self.screen.blit(text_surface, (100, 50))
-            
-            #if self.inventory.display:
-            self.inventory.update()
+    def handle_basic_game_events(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.current_mini_game = "menu"
+            elif event.key == pygame.K_LEFT:
+                self.change_wall("left")
+            elif event.key == pygame.K_RIGHT:
+                self.change_wall("right")
+            elif event.key == pygame.K_UP:
+                self.change_room()
         
-        if self.current_mini_game == "menu":
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            self.inventory.handle_click(event)
+
+            if self.mouse_enabled: #TODO: not clean
+                if self.current_item is not None and self.current_item.movable:
+                    self.current_item.try_to_drop()
+                    self.current_item = None
+
+                elif self.current_item is None:        
+                    for obj in reversed(self.current_wall.entities.sprites()): # reversed so we click the top object first
+                        if obj.rect.collidepoint(event.pos):
+                            self.current_item = obj
+                            break
+
+
+        elif event.type == pygame.MOUSEMOTION:
+            self.center_current_item()
+
+
+    def handle_all_events(self):
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                self.game_running = False
+                pygame.quit()
+                sys.exit()
+            
+            if event.type == pygame.VIDEORESIZE:
+                self.recalculate_deltas()
+            
+            if self.current_mini_game == "game":
+                self.handle_basic_game_events(event)
+                self.update_walls(event)
+
+
+    def update_all(self):
+        self.handle_all_events()
+
+        self.screen.fill((0, 0, 0)) # clear the screen
+
+        # render the current mini-game
+        if self.current_mini_game == "game":
+            self.current_wall.display()
+            self.inventory.update()
+            self.display_room_counter()
+
+        elif self.current_mini_game == "menu":
             self.mini_game_menu.update()
         
         self.mouse_enabled = True
-        self.event = None
-        
-        self.handle_input()
 
         pygame.display.flip()

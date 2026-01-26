@@ -34,17 +34,21 @@ class Object(pygame.sprite.Sprite):
         self.current_collision_rect_index = 0 # which collision rect the object is in
 
         self.displayed = True
-        self.dragging = False
         self.movable = movable
 
-    def handle_event(self, event):
-        collision_index = self.rect.collidelist(self.collision_rects)
-        if collision_index != -1:
-            self.raw_rect.center = self.raw_collision_rects[collision_index].center
-            self.valid_rect = self.raw_collision_rects[collision_index]
-        else:
-            self.raw_rect.center = self.valid_rect.center
-        
-        #TODO: maybe add a functionality to place the item anywhere in  the box
-        self.dragging = False # NOTE: dangerous because dragging is only defined in Vase
-        self.game_context.current_item = None
+    def try_to_drop(self) -> bool: # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
+            return_code = False
+            collision_index = self.rect.collidelist(self.collision_rects)
+            if collision_index != -1:
+                self.raw_rect.center = self.raw_collision_rects[collision_index].center
+                self.valid_rect = self.raw_collision_rects[collision_index]
+                return_code = True
+            else:
+                self.raw_rect.center = self.valid_rect.center
+                return_code = False
+            
+            #TODO: maybe add a functionality to place the item anywhere in  the box
+            return return_code
+
+    def update(self, event):
+        pass

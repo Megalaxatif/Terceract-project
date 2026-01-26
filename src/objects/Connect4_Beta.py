@@ -26,8 +26,8 @@ class Connect(Object):
 # /------------------------ FONCTIONS AUXILIAIRES ------------------------\
 
 
-    def handle_event(self, event):
-        pass
+    #def handle_event(self, event):
+     #   pass
 
     # Trouver l'index du fond
     def hit_bottom(self, col):

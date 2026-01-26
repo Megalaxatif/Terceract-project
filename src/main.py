@@ -13,4 +13,4 @@ game = Game(screen)
 game.start()
 
 while game.game_running:
-    game.update()
+    game.update_all()

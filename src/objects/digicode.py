@@ -3,7 +3,7 @@ from object import Object
 
 class Digicode(Object):
     def __init__(self, game_context, image_path, rect, secret_code="1234"):
-        super().__init__(game_context, "digicode", image_path, rect, [])
+        super().__init__(game_context, "digicode", image_path, rect, [], False)
         self.pos = rect[0], rect[1]
         self.x, self.y = self.pos
         self.delta = 1
@@ -13,7 +13,6 @@ class Digicode(Object):
         self.entered_code = ""
         self.message = ""
         self.displayed = True # True = image visible, False = digicode ouvert
-        self.dragging = False
 
         # Police et couleurs
         self.font = pygame.font.SysFont(None, 40)
@@ -71,7 +70,7 @@ class Digicode(Object):
             label = self.font.render(text, True, self.DARK)
             self.screen.blit(label, label.get_rect(center=rect.center))
 
-    def handle_event(self, event):
+    def update(self, event):
         if not event or event.type != pygame.MOUSEBUTTONDOWN:
             return
 
