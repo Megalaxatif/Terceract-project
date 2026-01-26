@@ -8,7 +8,8 @@ class Object(pygame.sprite.Sprite):
                  object_name : str,
                  image_path : str,
                  rect : pygame.Rect, 
-                 collisions : list[pygame.Rect]
+                 collisions : list[pygame.Rect],
+                 movable : bool = True
                  ):
         super().__init__()
 
@@ -34,6 +35,7 @@ class Object(pygame.sprite.Sprite):
 
         self.displayed = True
         self.dragging = False
+        self.movable = movable
 
     def handle_event(self, event):
         collision_index = self.rect.collidelist(self.collision_rects)

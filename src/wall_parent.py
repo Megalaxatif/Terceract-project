@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from objects.vase import Vase
 from objects.digicode import Digicode
+from objects.Connect4_Beta import Connect
 from utils import *
 
 class Wall:
@@ -95,9 +96,23 @@ class Wall:
                 self.entities.add(
                     Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", pygame.Rect(sprite_rect_tupple), "1234")
                 )
-            else:
+            elif object_name == "vase":
                 self.entities.add(
                     Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
+                )
+            elif object_name == "frame":
+                self.entities.add(
+                    Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
+                )
+
+            elif object_name == "table":
+                self.entities.add(
+                    Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
+                )
+
+            elif object_name == "connect4":
+                self.entities.add(
+                    Connect(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), 0)
                 )
 
         save_data_in_json(objects_data, json_path)
@@ -264,9 +279,11 @@ class Wall:
                 self.game_context.current_item.handle_event(event)
             else:
                 for obj in reversed(self.entities.sprites()): # reversed so we click the top object first
-                    if obj.name in ["vase"]: # TODO: change that
+                    if obj.movable:
                         if obj.rect.collidepoint(event.pos):
+                            print("collision")
                             self.game_context.current_item = obj
+                            print(self.game_context.current_item.name)
                             obj.dragging = True
                             break
 
@@ -278,7 +295,7 @@ class Wall:
         self.display_collision_rects()
         mx, my = pygame.mouse.get_pos()[0] / self.delta, pygame.mouse.get_pos()[1] / self.delta
         for obj in self.entities:
-            if obj.name in ["vase"] and obj.dragging:
+            if obj.dragging:
                 obj.raw_rect.x, obj.raw_rect.y = (mx - obj.raw_rect.w/2), (my - obj.raw_rect.h/2)
         self.update_current_wall()
 

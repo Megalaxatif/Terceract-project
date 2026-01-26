@@ -1,8 +1,13 @@
+from object import Object
 import random
 import time
+import pygame
+from pathlib import Path
 
-class Connect:
-    def __init__(self, nb_def):
+
+class Connect(Object):
+    def __init__(self, game_context, image_path: Path, rect: pygame.Rect, nb_def: int):
+        super().__init__(game_context, "connect4", image_path, rect, [])
         self.nb_def = nb_def
         self.coeff_lose = 1 * (3/4)**nb_def
         self.grid = [['_', '_', '_', '_', '_', '_', '_'],
@@ -19,6 +24,10 @@ class Connect:
         
         
 # /------------------------ FONCTIONS AUXILIAIRES ------------------------\
+
+
+    def handle_event(self, event):
+        pass
 
     # Trouver l'index du fond
     def hit_bottom(self, col):
@@ -219,9 +228,4 @@ class Connect:
     # Retourner la grille
     def ret_grid(self):
         return self.grid
-
-    
-Test = Connect(0)
-
-Test.show()
 
