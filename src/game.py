@@ -381,11 +381,11 @@ class Game:
         # render the current mini-game
         if self.current_mini_game == "game":
             self.current_wall.display()
-            self.inventory.update()
+            self.inventory.update()# TODO: separate update from display
             self.display_room_counter()
 
         elif self.current_mini_game == "menu":
-            self.mini_game_menu.update()
+            self.mini_game_menu.update() # TODO: separate update from display
         
         self.mouse_enabled = True
 

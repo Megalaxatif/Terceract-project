@@ -50,5 +50,9 @@ class Object(pygame.sprite.Sprite):
             #TODO: maybe add a functionality to place the item anywhere in  the box
             return return_code
 
+    def draw(self): # draw every entities and the non entities
+        if self.displayed:
+            self.game_context.screen.blit(self.image, self.rect)
+
     def update(self, event):
         pass

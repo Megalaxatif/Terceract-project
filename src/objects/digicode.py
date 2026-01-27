@@ -70,6 +70,7 @@ class Digicode(Object):
             label = self.font.render(text, True, self.DARK)
             self.screen.blit(label, label.get_rect(center=rect.center))
 
+
     def update(self, event):
         if not event or event.type != pygame.MOUSEBUTTONDOWN:
             return

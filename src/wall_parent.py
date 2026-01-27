@@ -92,7 +92,7 @@ class Wall:
             # create the sprite
             sprite_rect_tupple = objects_data[json_key]
 
-            if object_name == "calculator": #TODO: change
+            if object_name == "calculator":
                 self.entities.add(
                     Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", pygame.Rect(sprite_rect_tupple), "1234")
                 )
@@ -256,8 +256,7 @@ class Wall:
 
     def draw_entities(self):
         for entity in self.entities:
-            if entity.displayed:
-                self.game_context.screen.blit(entity.image, entity.rect)
+            entity.draw()
                 
 
     def draw_background(self):
@@ -283,4 +282,3 @@ class Wall:
     def update(self, event):
         for entity in self.entities:
             entity.update(event) # interactions relative to each object
-
