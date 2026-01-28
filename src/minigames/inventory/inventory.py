@@ -16,6 +16,8 @@ class Inventory:
     def __init__(self, game_context, x, y, rows, cols, block_size, center):
         self.game_context = game_context
         self.root_dir = Path(__file__).resolve().parent
+        self.entities = pygame.sprite.Group()
+        self.current_entity = None
 
         self.raw_x = x
         self.x = int(self.raw_x * self.game_context.delta)
@@ -29,7 +31,9 @@ class Inventory:
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
         self.slots = [[None for _ in range(cols)] for _ in range(rows)]
-        # self.display = False
+        self.slots_entities = [[None for _ in range(cols)] for _ in range(rows)]
+
+        self.display = False
         self.center = center
 
         self.last_row, self.last_col = 0, 0
@@ -38,42 +42,9 @@ class Inventory:
         # load images
         self.images = {}
 
-        for name in ["temp1.png", "temp2.png"]:
-            final_path = self.init_inventory(name)
-
-            inventory_key = f"src/minigames/inventory/images/{name}"
-
-            self.images[inventory_key] = [
-                pygame.transform.scale(
-                    pygame.image.load(final_path),
-                    (int(block_size * 0.9), int(block_size * 0.9))
-                ),
-                str(final_path)
-            ]
-
-        # Default pos
-        self.slots[0][0] = "src/minigames/inventory/images/temp1.png"
-        self.slots[0][1] = "src/minigames/inventory/images/temp2.png"
-
-        self.selected_item = None
+        self.current_item = None
 
         self.init_images()
-
-
-    def init_inventory(self, filename):
-        origin_path = self.root_dir / "images" / "origin" / filename
-        target_path = self.root_dir / "images" / filename
-
-        if not origin_path.exists():
-            raise FileNotFoundError(f"Image source manquante : {origin_path}")
-
-        if not target_path.exists():
-            target_path.parent.mkdir(parents=True, exist_ok=True)
-            image = pygame.image.load(origin_path).convert_alpha()
-            pygame.image.save(image, target_path)
-            print(f"Image inventaire created : {target_path}")
-
-        return target_path
 
 
     def init_images(self):
@@ -92,14 +63,17 @@ class Inventory:
         for key in list(self.images):
             save_path = Path(Path(self.game_context.root_dir) / key).as_posix()
 
-            if key not in objects_data:
-                image = pygame.image.load(save_path).convert_alpha()
-                bbox = 0, 0, image.get_width(), image.get_height()
-                pygame.image.save(image, save_path)
-                print(f"Cropped image saved to {save_path}")
+            image = pygame.image.load(save_path).convert_alpha()
+            bbox = 0, 0, image.get_width(), image.get_height()
+            pygame.image.save(image, save_path)
+            print(f"Cropped image saved to {save_path}")
+            
+            self.entities.add(
+                Vase(self.game_context, save_path, pygame.Rect(bbox), [])
+            )
 
-                # put x, y, w, h in objects_data
-                objects_data[key] = bbox
+            # put x, y, w, h in objects_data
+            objects_data[key] = bbox
 
         # delete extra images
         self.delete_extra_images(objects_data)
@@ -113,26 +87,22 @@ class Inventory:
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
         if self.center:
-            mid_block = len(self.slots[0]) // 2 + len(self.slots[0]) % 2
+            mid_block = len(self.slots_entities[0]) // 2 + len(self.slots_entities[0]) % 2
             self.x = self.game_context.screen.get_width() // 2 - mid_block * self.block_size
         else:
             self.x = int(self.raw_x * self.game_context.delta)
 
         self.y = int(self.raw_y * self.game_context.delta)
 
-        for key in self.images:
-            self.images[key][0] = self.resize_in_inventory(
-                (Path(self.game_context.root_dir) / key).as_posix()
-            )
-
         self.draw_grid()
         self.draw_items()
 
         # Display current item
-        if self.selected_item:
+        if self.current_item:  # if not None
+            self.game_context.dragging = True
             mx, my = pygame.mouse.get_pos()
             self.game_context.screen.blit(
-                self.images[self.selected_item][0],
+                self.images[f"{self.current_item}"][0],
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
 
@@ -145,46 +115,55 @@ class Inventory:
 
 
     def handle_click(self, event):
-        if self.game_context.mouse_enabled:
-            self.mouse_x, self.mouse_y = event.pos
+        pos = event.pos
+        self.mouse_x, self.mouse_y = pos
 
-            # Area in inventory
-            if (
-                self.x <= self.mouse_x < self.x + self.cols * self.block_size and
-                self.y <= self.mouse_y < self.y + self.rows * self.block_size
-            ):
-                col = (self.mouse_x - self.x) // self.block_size
-                row = (self.mouse_y - self.y) // self.block_size
+        # Area in inventory
+        if (
+            self.x <= self.mouse_x < self.x + self.cols * self.block_size and
+            self.y <= self.mouse_y < self.y + self.rows * self.block_size
+        ):
+            col = (self.mouse_x - self.x) // self.block_size
+            row = (self.mouse_y - self.y) // self.block_size
 
-                slot = self.slots[row][col]
+            slot = self.slots[row][col]
 
-                if not self.selected_item:
-                    if slot:
-                        self.selected_item = slot
+            if not self.current_item:
+                if slot:
+                    self.current_item = slot
+                    self.current_entity = self.slots_entities[row][col]
 
-                    external_obj = self.game_context.current_item
+                external_obj = self.game_context.current_item
 
-                    # Put object in inventory
-                    if external_obj:
-                        self.put_object_in_inventory(external_obj, row, col)
+                # Put object in inventory
+                if external_obj:
+                    self.put_object_in_inventory(external_obj, row, col)
 
-                    # Take object from inventory
-                    else:
-                        self.slots[row][col] = None
+                # Take object from inventory
+                else:
+                    self.slots[row][col] = None
+                    self.slots_entities[row][col] = None
 
-                    self.last_row, self.last_col = row, col
+                self.last_row, self.last_col = row, col
 
-                # Swap object in inventory
-                elif self.selected_item:
-                    self.slots[row][col], self.selected_item = (
-                        self.selected_item,
-                        self.slots[row][col]
-                    )
+            # Swap object in inventory
+            elif self.current_item:
+                self.game_context.dragging = False
+                self.slots[row][col], self.current_item = (
+                    self.current_item,
+                    self.slots[row][col]
+                )
 
-            # Drop object out of inventory
-            elif self.selected_item != None:
-                self.inventory_drop() # TODO: control if the object is dropped in a collision rect
-                self.game_context.current_wall.sort_entities_by_image_name()
+                self.slots_entities[row][col], self.current_entity = (
+                    self.current_entity,
+                    self.slots_entities[row][col]
+                )
+
+
+        # Drop object out of inventory
+        elif self.current_item != None:
+            self.inventory_drop()
+            self.game_context.current_wall.sort_entities_by_image_name()
 
 
     def put_object_in_inventory(self, external_obj, row, col):
@@ -196,10 +175,11 @@ class Inventory:
 
         self.images[inventory_save_path] = [
             self.resize_in_inventory(wall_save_path),
-            str(wall_save_path)
+            wall_save_path
         ]
 
         self.slots[row][col] = inventory_save_path
+        self.slots_entities[row][col] = external_obj
 
         json_path = Path(self.root_dir / "objects_info.json")
         json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
@@ -210,101 +190,110 @@ class Inventory:
         cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
         object_path = Path(Path(self.game_context.root_dir) / external_obj.image_id)
         save_path = Path(cropped_object_dir / object_path.name)
-        origin_path = Path(self.images[inventory_save_path][1])
+        origin_path = Path(wall_save_path)
 
         image = pygame.image.load(origin_path).convert_alpha()
-        bbox = (
+
+        if save_path.exists():
+            save_path.unlink()
+
+        objects_data[inventory_save_path] = (
             objects_data_wall[external_obj.image_id][0],
             objects_data_wall[external_obj.image_id][1],
             image.get_width(),
             image.get_height()
         )
-
-        if save_path.exists():
-            save_path.unlink()
-
+        
         del objects_data_wall[external_obj.image_id]
-
-        objects_data[inventory_save_path] = bbox
 
         if inventory_save_path not in objects_data:
             objects_data[inventory_save_path] = objects_data_wall[external_obj.image_id]
 
-        print(self.images)
-
         save_data_in_json(objects_data, json_path)
         save_data_in_json(objects_data_wall, json_path_wall)
+        
+        if self.game_context.current_item:
+            self.entities.add(self.game_context.current_item)
+            self.game_context.current_wall.entities.remove(self.game_context.current_item)
 
-        for sprite in self.game_context.current_wall.entities.sprites():
-            if isinstance(sprite, Vase) and sprite.image_path == external_obj.image_path:
-                self.game_context.current_wall.entities.remove(sprite)
-
+        self.game_context.dragging = False
         self.game_context.current_item = None
 
 
     def inventory_drop(self):
-        object_path = Path(Path(self.game_context.root_dir) / self.selected_item)
-        cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
+        # ensure self.current_entity has collision_layers
+        if self.current_entity and self.game_context.current_wall.load_collision_layers_path(Path(self.game_context.current_wall.root_dir / "images/collision_layers"), self.current_entity.name):
+            
+            mouse_rect = pygame.Rect(self.mouse_x, self.mouse_y, 1, 1)
+            collision_index = mouse_rect.collidelist(self.current_entity.collision_rects)
+            
+            if collision_index != -1:
+                
+                self.current_entity.raw_rect.center = self.current_entity.raw_collision_rects[collision_index].center
+                print(self.current_entity.raw_rect)
+                self.current_entity.valid_rect = self.current_entity.raw_collision_rects[collision_index]
+            
+                object_path = Path(Path(self.game_context.root_dir) / self.current_item)
+                cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
 
-        # load le JSON
-        json_path = Path(self.root_dir / "objects_info.json")
-        json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
+                # load le JSON
+                json_path = Path(self.root_dir / "objects_info.json")
+                json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
 
-        objects_data = load_json_file(json_path)
-        objects_data_wall = load_json_file(json_path_wall)
+                objects_data = load_json_file(json_path)
+                objects_data_wall = load_json_file(json_path_wall)
 
-        parts = cropped_object_dir.parts
-        new_path_cropped = (Path(*parts[-6:]) / object_path.name).as_posix()
+                parts = cropped_object_dir.parts
+                new_path_cropped = (Path(*parts[-6:]) / object_path.name).as_posix()
 
-        if self.selected_item != str(self.selected_item):
-            self.selected_item = (self.selected_item).as_posix()
+                if self.current_item != str(self.current_item):
+                    self.current_item = (self.current_item).as_posix()
 
-        save_path = Path(cropped_object_dir / object_path.name)
-        origin_path = Path(self.images[f"src/minigames/inventory/images/{object_path.name}"][1])
+                save_path = Path(cropped_object_dir / object_path.name)
+                origin_path = Path(self.images[f"src/minigames/inventory/images/{object_path.name}"][1])
 
-        image = pygame.image.load(origin_path).convert_alpha()
-        delta = self.game_context.current_wall.delta
+                image = pygame.image.load(origin_path).convert_alpha()
+                delta = self.game_context.current_wall.delta
 
-        bbox = (
-            int(self.mouse_x / self.game_context.current_wall.delta - (image.get_width() / delta) / 2),
-            int(self.mouse_y / delta - (image.get_height() / delta) / 2),
-            int(image.get_width() / delta),
-            int(image.get_height() / delta)
-        )
+                bbox = (
+                    int(self.current_entity.raw_rect[0]),
+                    int(self.current_entity.raw_rect[1]),
+                    int(image.get_width() / delta),
+                    int(image.get_height() / delta)
+                )
 
-        pygame.image.save(image, save_path)
-        print(f"Image saved to {save_path}")
+                pygame.image.save(image, save_path)
+                print(f"Image saved to {save_path}")
 
-        objects_data_wall[new_path_cropped] = bbox
+                objects_data_wall[new_path_cropped] = bbox
 
-        # create the sprite
-        sprite_rect_tupple = objects_data_wall[new_path_cropped]
-        dim = (
-            sprite_rect_tupple[0],
-            sprite_rect_tupple[1],
-            sprite_rect_tupple[2],
-            sprite_rect_tupple[3]
-        )
+                # create the sprite
+                sprite_rect_tupple = objects_data_wall[new_path_cropped]
 
-        name_without_layer = object_path.name
-        
-        if name_without_layer == "table.png" or "cropped_ui_test.png" or "cropped_vase.png":  # TODO: ALWAYS TRUE
-            self.game_context.current_wall.entities.add(
-                Vase(self.game_context, save_path, pygame.Rect(dim), [])
-            )
+                name_without_layer = object_path.name
+                
+                self.game_context.current_wall.entities.add(self.current_entity)
+                self.current_entity.dragging = False
+                self.entities.remove(self.current_entity)
 
-        del objects_data[self.selected_item]
+                del objects_data[self.current_item]
 
-        # save the data in the json file
-        save_data_in_json(objects_data, json_path)
-        save_data_in_json(objects_data_wall, json_path_wall)
+                # save the data in the json file
+                save_data_in_json(objects_data, json_path)
+                save_data_in_json(objects_data_wall, json_path_wall)
 
-        del self.images[self.selected_item]
+                del self.images[self.current_item]
 
-        self.delete_extra_images(objects_data)
+                self.delete_extra_images(objects_data)
 
-        self.selected_item = None
-        self.game_context.mouse_enabled = False
+                self.current_item = None
+                self.current_entity = None
+
+                self.game_context.mouse_enabled = False
+                self.game_context.dragging = False
+                
+            else:
+                print("no collision here")
 
 
     def delete_extra_images(self, objects_data):
@@ -349,3 +338,4 @@ class Inventory:
                             self.y + row * self.block_size + 0.05 * self.block_size
                         )
                     )
+
