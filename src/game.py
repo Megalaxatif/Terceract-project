@@ -32,7 +32,7 @@ class Game:
         self.FPS = 60
         self.clock = pygame.time.Clock()
         self.game_running = True
-        self.root_dir = (Path(__file__).resolve().parent.parent).as_posix()
+        self.root_dir = (Path(__file__).resolve().parent.parent)
         self.game_data = {}  # json file
         self.game_data_path = f"{self.root_dir}/data/game_data.json"
         self.event = None

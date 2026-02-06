@@ -1,8 +1,13 @@
 {
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_calculator.png": [
-        1144,
-        660,
-        257,
-        343
-    ]
+    "calculator": {
+        "image": "/home/megalaxe/Documents/code/Terceract-project/assets/cropped_images/cropped_calculator.png",
+        "rect": [
+            173,
+            539,
+            260,
+            346
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
 }

@@ -1,8 +1,13 @@
 {
-    "src/room/room_3/left_wall/images/cropped_objects/cropped_0_connect4.png": [
-        16,
-        16,
-        268,
-        268
-    ]
+    "connect4": {
+        "image": "/home/megalaxe/Documents/code/Terceract-project/assets/cropped_images/cropped_connect4.png",
+        "rect": [
+            16,
+            16,
+            268,
+            268
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
 }

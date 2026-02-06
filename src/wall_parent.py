@@ -9,8 +9,28 @@ from utils import *
 
 class Wall:
     def __init__(self, game_context, root_dir):
-        self.root_dir = root_dir
         self.game_context = game_context
+        self.root_dir = root_dir
+
+        self.object_layers_dir = Path(self.root_dir / "images/object_layers")
+        if not self.object_layers_dir.exists():
+            self.object_layers_dir.mkdir(parents=True, exist_ok=True)
+
+        self.cropped_object_dir = Path(self.game_context.root_dir / "assets/cropped_images")
+        if not self.cropped_object_dir.exists():
+            self.cropped_object_dir.mkdir(parents=True, exist_ok=True)
+
+        self.collision_layers_dir = Path(self.root_dir / "images/collision_layers")
+        if not self.collision_layers_dir.exists():
+            self.collision_layers_dir.mkdir(parents=True, exist_ok=True)
+
+        self.json_path = Path(self.root_dir / "images/objects_info.json")
+        #self.clear_object_layers()
+        self.clear_cropped_objects() # TODO: to remove
+        self.clear_json() # TODO: to remove also
+
+        self.objects_data = load_json_file(self.json_path) # load or init the JSON file
+
         self.background = self.create_background()
         self.original_background = self.background
         self.entities = pygame.sprite.Group()
@@ -21,19 +41,16 @@ class Wall:
         
 
     def clear_json(self):
-        json_path = Path(self.root_dir / "images/objects_info.json")
-        with open(json_path, "w", encoding="utf-8") as f:
+        with open(self.json_path, "w", encoding="utf-8") as f:
             f.write("{}")
 
     def clear_cropped_objects(self):
-        cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
-        cropped_object_paths = list(cropped_object_dir.iterdir())
+        cropped_object_paths = list(self.cropped_object_dir.iterdir())
         for path in cropped_object_paths:
             os.remove(path)
     
     def clear_object_layers(self):
-        object_layers_dir = Path(self.root_dir / "images/object_layers")
-        object_layers_path = list(object_layers_dir.iterdir())
+        object_layers_path = list(self.object_layers_dir.iterdir())
         for path in object_layers_path:
             os.remove(path)
 
@@ -45,77 +62,66 @@ class Wall:
         if not background_exist: 
             background.fill((255, 0, 0))
         return background
-    
-    def create_entities(self):
-        #self.clear_object_layers()
-        #self.clear_cropped_objects()
-        #self.clear_json()
-        # 1: check if there exist a cropped object associated to the object in the cropped_objects folder and if its data is in objects_info.json
-        # 2: if not we create the cropped object and save its data
-        # 3: we try to find potential collision layers stored in collision_layers folder
-        # 4: we create a sprite for the object and add it to the entities group
-        json_path = Path(self.root_dir / "images/objects_info.json")
-        objects_data = load_json_file(json_path) # load or init the JSON file
 
-        object_layers_dir = Path(self.root_dir / "images/object_layers")
-        if not object_layers_dir.exists():
-            object_layers_dir.mkdir(parents=True, exist_ok=True)
 
-        cropped_object_dir = Path(self.root_dir / "images/cropped_objects")
-        if not cropped_object_dir.exists():
-            cropped_object_dir.mkdir(parents=True, exist_ok=True)
-
-        collision_layers_dir = Path(self.root_dir / "images/collision_layers")
-        if not collision_layers_dir.exists():
-            collision_layers_dir.mkdir(parents=True, exist_ok=True)
-        
-        # get all the paths in the directories
-        object_layers_path = list(object_layers_dir.iterdir())
-        cropped_object_paths = list(cropped_object_dir.iterdir())
-        
-        parts = cropped_object_dir.parts
-        new_path = Path(*parts[-6:]) # relative path from src
-        
-        self.cleanup_data(new_path, object_layers_path, cropped_object_paths, objects_data)
-
+    def init_objects_info(self):
+        object_layers_path = list(self.object_layers_dir.iterdir())
         for object_path in reversed(object_layers_path): # reversed so we draw the object with the lowest layer id first
             object_name = object_path.stem[2:] # example : "vase" instead of ".../.../.../1_vase.png"
-            cropped_name = f"cropped_{object_path.name}"
-            json_key = (new_path / cropped_name).as_posix()
-            save_path = Path(cropped_object_dir / cropped_name).as_posix() # place where we save the cropped image
+            cropped_name = f"cropped_{object_name}.png"
+            save_path = Path(self.cropped_object_dir / cropped_name) # place where we save the cropped image
 
-            if not Path(save_path).exists() or json_key not in objects_data:
-                self.create_cropped_object(object_path, save_path, json_key, objects_data)
+            #TODO: optimise this: the images are created everytime this function is called event if they already exist
+            bbox = self.create_cropped_object(object_path, save_path.as_posix())
 
-            #TODO: optimize so we don't have to to this every time we launch the game
-            collision_rects = self.get_collision_rects(collision_layers_dir, object_name) # ignore the layer index and the dash
-            # create the sprite
-            sprite_rect_tupple = objects_data[json_key]
+            collision_rects = self.get_collision_rects(self.collision_layers_dir, object_name)
 
-            if object_name == "calculator":
+            self.objects_data[object_name] = {}
+            self.objects_data[object_name]["image"] = save_path.as_posix()
+            self.objects_data[object_name]["rect"] = bbox
+            self.objects_data[object_name]["collisions"] = collision_rects
+            self.objects_data[object_name]["collision_id"] = -1
+            
+        save_data_in_json(self.objects_data, self.json_path)
+
+
+    def create_entities(self):
+        # case where we launched the game for the first time or we previously reset the progression
+        if not self.objects_data:
+            self.init_objects_info()
+
+        for obj in self.objects_data:
+            img_path = self.objects_data[obj].get("image")
+            rect = pygame.Rect(self.objects_data[obj].get("rect"))
+            collision_rects = self.objects_data[obj].get("collisions")
+            #convert in pygame Rect
+            for i in range(len(collision_rects)):
+                collision_rects[i] = pygame.Rect(collision_rects[i])
+
+            current_collision_id = self.objects_data[obj].get("collision_id")
+
+            if obj == "calculator":
                 self.entities.add(
-                    Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", pygame.Rect(sprite_rect_tupple), "1234")
+                    Digicode(self.game_context, img_path, rect, "1234")
                 )
-            elif object_name in ["vase", "vase2"]:
+            elif obj in ["vase", "vase2"]:
                 self.entities.add(
-                    Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
+                    Vase(self.game_context, img_path, rect, collision_rects)
                 )
-            elif object_name == "frame":
+            elif obj == "frame":
                 self.entities.add(
-                    Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
+                    Vase(self.game_context, img_path, rect, collision_rects)
                 )
 
-            elif object_name == "table":
+            elif obj == "table":
                 self.entities.add(
-                    Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
+                    Vase(self.game_context, img_path, rect, collision_rects)
                 )
 
-            elif object_name == "connect4":
+            elif obj == "connect4":
                 self.entities.add(
-                    Connect(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), 0)
+                    Connect(self.game_context, img_path, rect, 0)
                 )
-
-        save_data_in_json(objects_data, json_path)
 
 
     def display_collision_rects(self): # debug function
@@ -145,18 +151,18 @@ class Wall:
         return valid_collision_layers_path
 
 
-    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[pygame.Rect]:
+    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[(int, int, int, int)]:
         collision_rects = []
         collision_layers_path = self.load_collision_layers_path(collision_layers_dir, object_name)
         for path in collision_layers_path:
             collision_layer = pygame.image.load(path).convert_alpha()
-            rect = pygame.Rect(self.get_bounding_box(collision_layer))
+            rect = self.get_bounding_box(collision_layer)
             collision_rects.append(rect)
         return collision_rects
 
 
     # creates a cropped version of an image and saves its dimensions in a dictionary
-    def create_cropped_object(self, raw_image_path, save_path, json_key, data_dict):
+    def create_cropped_object(self, raw_image_path, save_path):
         image = pygame.image.load(raw_image_path).convert_alpha()
         bbox = self.get_bounding_box(image)
         if bbox is None:
@@ -169,11 +175,10 @@ class Wall:
         pygame.image.save(cropped_image, save_path)
         print(f"Cropped image saved to {save_path}")
 
-        # put w, y, w, h in objects_data        
-        data_dict[json_key] = bbox
+        return bbox
 
 
-    def get_bounding_box(self, surface):
+    def get_bounding_box(self, surface: pygame.Surface) -> (int, int, int, int):
         width, height = surface.get_size()
         pixel_array = pygame.PixelArray(surface)
 
