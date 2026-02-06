@@ -42,6 +42,8 @@ class Object(pygame.sprite.Sprite):
             if collision_index != -1:
                 self.raw_rect.center = self.raw_collision_rects[collision_index].center
                 self.valid_rect = self.raw_collision_rects[collision_index]
+                self.current_collision_rect_index = collision_index
+                print(f"Dropped {self.name} in collision rect {collision_index}")
                 return_code = True
             else:
                 self.raw_rect.center = self.valid_rect.center

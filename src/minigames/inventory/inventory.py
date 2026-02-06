@@ -230,9 +230,9 @@ class Inventory:
             if collision_index != -1:
                 
                 self.current_entity.raw_rect.center = self.current_entity.raw_collision_rects[collision_index].center
-                print(self.current_entity.raw_rect)
+                #print(self.current_entity.raw_rect)
                 self.current_entity.valid_rect = self.current_entity.raw_collision_rects[collision_index]
-            
+                self.current_entity.current_collision_rect_index = collision_index
                 object_path = Path(Path(self.game_context.root_dir) / self.current_item)
                 cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
 
@@ -263,14 +263,9 @@ class Inventory:
                 )
 
                 pygame.image.save(image, save_path)
-                print(f"Image saved to {save_path}")
+                #print(f"Image saved to {save_path}")
 
                 objects_data_wall[new_path_cropped] = bbox
-
-                # create the sprite
-                sprite_rect_tupple = objects_data_wall[new_path_cropped]
-
-                name_without_layer = object_path.name
                 
                 self.game_context.current_wall.entities.add(self.current_entity)
                 self.current_entity.dragging = False
@@ -292,8 +287,8 @@ class Inventory:
                 self.game_context.mouse_enabled = False
                 self.game_context.dragging = False
                 
-            else:
-                print("no collision here")
+            #else:
+                #print("no collision here")
 
 
     def delete_extra_images(self, objects_data):

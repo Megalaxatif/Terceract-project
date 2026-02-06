@@ -96,7 +96,7 @@ class Wall:
                 self.entities.add(
                     Digicode(self.game_context, f"{self.root_dir}/images/cropped_objects/cropped_5_calculator.png", pygame.Rect(sprite_rect_tupple), "1234")
                 )
-            elif object_name == "vase":
+            elif object_name in ["vase", "vase2"]:
                 self.entities.add(
                     Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
                 )
