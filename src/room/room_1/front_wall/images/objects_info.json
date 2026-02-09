@@ -1,28 +1,6 @@
 {
-    "vase2": {
-        "image": "/home/megalaxe/Documents/code/Terceract-project/assets/cropped_images/cropped_vase2.png",
-        "rect": [
-            296,
-            218,
-            171,
-            300
-        ],
-        "collisions": [],
-        "collision_id": -1
-    },
-    "frame": {
-        "image": "/home/megalaxe/Documents/code/Terceract-project/assets/cropped_images/cropped_frame.png",
-        "rect": [
-            278,
-            118,
-            377,
-            473
-        ],
-        "collisions": [],
-        "collision_id": -1
-    },
     "table": {
-        "image": "/home/megalaxe/Documents/code/Terceract-project/assets/cropped_images/cropped_table.png",
+        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_table.png",
         "rect": [
             1211,
             623,
@@ -32,8 +10,19 @@
         "collisions": [],
         "collision_id": -1
     },
+    "frame": {
+        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_frame.png",
+        "rect": [
+            278,
+            118,
+            377,
+            473
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
     "vase": {
-        "image": "/home/megalaxe/Documents/code/Terceract-project/assets/cropped_images/cropped_vase.png",
+        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_vase.png",
         "rect": [
             1659,
             497,
@@ -54,6 +43,17 @@
                 784
             ]
         ],
+        "collision_id": -1
+    },
+    "vase2": {
+        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_vase2.png",
+        "rect": [
+            296,
+            218,
+            171,
+            300
+        ],
+        "collisions": [],
         "collision_id": -1
     }
 }

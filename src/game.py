@@ -307,7 +307,7 @@ class Game:
         # render the current mini-game
         if self.current_mini_game == "game":
             self.current_wall.display()
-            self.inventory.update()# TODO: separate update from display
+            self.inventory.draw()# TODO: separate update from display
             self.display_room_counter()
 
         elif self.current_mini_game == "menu":

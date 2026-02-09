@@ -26,7 +26,7 @@ class Wall:
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
         #self.clear_object_layers()
-        self.clear_cropped_objects() # TODO: to remove
+        #self.clear_cropped_objects() # TODO: to remove
         self.clear_json() # TODO: to remove also
 
         self.objects_data = load_json_file(self.json_path) # load or init the JSON file
