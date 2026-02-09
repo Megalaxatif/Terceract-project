@@ -1,17 +1,6 @@
 {
-    "table": {
-        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_table.png",
-        "rect": [
-            1211,
-            623,
-            695,
-            457
-        ],
-        "collisions": [],
-        "collision_id": -1
-    },
     "frame": {
-        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_frame.png",
+        "image": "C:/Users/BonSaucisson/Projet-J3D/Terceract-project/assets/cropped_images/cropped_frame.png",
         "rect": [
             278,
             118,
@@ -21,8 +10,30 @@
         "collisions": [],
         "collision_id": -1
     },
+    "table": {
+        "image": "C:/Users/BonSaucisson/Projet-J3D/Terceract-project/assets/cropped_images/cropped_table.png",
+        "rect": [
+            1211,
+            623,
+            695,
+            457
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "vase2": {
+        "image": "C:/Users/BonSaucisson/Projet-J3D/Terceract-project/assets/cropped_images/cropped_vase2.png",
+        "rect": [
+            296,
+            218,
+            171,
+            300
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
     "vase": {
-        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_vase.png",
+        "image": "C:/Users/BonSaucisson/Projet-J3D/Terceract-project/assets/cropped_images/cropped_vase.png",
         "rect": [
             1659,
             497,
@@ -43,17 +54,6 @@
                 784
             ]
         ],
-        "collision_id": -1
-    },
-    "vase2": {
-        "image": "/home/nixos/Terceract-project/assets/cropped_images/cropped_vase2.png",
-        "rect": [
-            296,
-            218,
-            171,
-            300
-        ],
-        "collisions": [],
         "collision_id": -1
     }
 }

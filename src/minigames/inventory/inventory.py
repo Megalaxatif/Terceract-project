@@ -69,30 +69,63 @@ class Inventory:
         if self.current_item:  # if not None
             self.game_context.dragging = True
             mx, my = pygame.mouse.get_pos()
+            scaled_image = pygame.transform.scale(
+                self.current_item.image,
+                (int(self.block_size * 0.9), int(self.block_size * 0.9))
+            )
             self.game_context.screen.blit(
-                self.images[f"{self.current_item}"][0],
+                scaled_image,
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
 
     def handle_click(self, event):
+        self.mouse_x, self.mouse_y = event.pos
         
         if (
             self.x <= self.mouse_x < self.x + self.cols * self.block_size and
             self.y <= self.mouse_y < self.y + self.rows * self.block_size
         ):
-            col = (self.mouse_x - self.x) // self.block_size
-            row = (self.mouse_y - self.y) // self.block_size
+            print("Clicked on inventory")
+            self.col = (self.mouse_x - self.x) // self.block_size
+            self.row = (self.mouse_y - self.y) // self.block_size
 
-            slot = self.slots[row][col]
+            print(self.game_context.current_item)
+            if self.game_context.current_item:
+                self.put_in_inventory(self.row, self.col)
+            else:
+                self.current_item, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_item
+                print("Take from inventory")  
+        
+        elif self.current_item:
+            self.put_out_inventory(self.row, self.col) 
 
-            if self.current_item:
-                pass
 
-    def put_in_inventory(self, obj):
-        pass
+    def put_in_inventory(self, row, col):
+        # put objet from wall to inventory
+        obj = self.game_context.current_item
+        # if there is an object in the slot, it becomes the current item
+        self.current_item = self.slots[row][col] 
+        self.slots[row][col] = obj
+        if obj in self.game_context.current_wall.entities:
+            self.game_context.current_wall.entities.remove(obj)
+        self.entities.add(obj)
+        print("Put in inventory")
+        self.game_context.current_item = None
+        self.current_item = None
 
-    def put_out_inventory(self, obj):
-        pass
+    def put_out_inventory(self, row, col):
+        obj = self.current_item
+        # Mettre à jour la position de l'objet à la position actuelle de la souris
+        mx, my = pygame.mouse.get_pos()[0] / self.game_context.current_wall.delta, pygame.mouse.get_pos()[1] / self.game_context.current_wall.delta
+
+        if obj.try_to_drop((mx, my)):
+            self.slots[row][col] = None
+            if obj in self.entities:
+                self.entities.remove(obj)
+            self.game_context.current_wall.entities.add(obj)
+            self.game_context.current_item = None
+            self.current_item = None
+            print("Put out inventory") 
 
     def resize_in_inventory(self, path):
         return pygame.transform.scale(
@@ -116,9 +149,14 @@ class Inventory:
         for row in range(self.rows):
             for col in range(self.cols):
                 item = self.slots[row][col]
-                if item:  # Not None
+                if item and item != self.current_item:
+                    # Redimensionner le sprite du sprite
+                    scaled_image = pygame.transform.scale(
+                        item.image,
+                        (int(self.block_size * 0.9), int(self.block_size * 0.9))
+                    )
                     self.game_context.screen.blit(
-                        self.images[item][0],
+                        scaled_image,
                         (
                             self.x + col * self.block_size + 0.05 * self.block_size,
                             self.y + row * self.block_size + 0.05 * self.block_size
