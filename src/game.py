@@ -263,14 +263,20 @@ class Game:
                 self.change_wall("right")
             elif event.key == pygame.K_UP:
                 self.change_room()
-        
+
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if not (self.current_item or self.inventory.current_item):        
+
+            self.inventory.handle_click(event)
+            
+            if self.current_item is None and self.inventory.current_item is None:        
                 for obj in reversed(self.current_wall.entities.sprites()): # reversed so we click the top object first
                     if obj.rect.collidepoint(event.pos):
                         self.current_item = obj
                         break
-            self.inventory.handle_click(event)
+
+            elif self.current_item is not None and self.current_item.movable:
+                self.current_item.drop(event.pos[0], event.pos[1])
+                self.current_item = None
 
 
         elif event.type == pygame.MOUSEMOTION:

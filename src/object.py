@@ -36,32 +36,21 @@ class Object(pygame.sprite.Sprite):
         self.displayed = True
         self.movable = movable
 
-    def try_to_drop(self, mouse) -> bool: # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
-            # Put mouse at None if you don't want to use the mouse position
+    def drop(self, x, y) -> bool: # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
+            print(f"Trying to drop {self.name} at ({x}, {y})")
             return_code = False
-            if mouse:
-                collision_index = -1
-                for collision_rect in self.raw_collision_rects:
-                    collision_index += 1
-                    if collision_rect.collidepoint(mouse):
-                        self.raw_rect.center = collision_rect.center
-                        self.valid_rect = collision_rect
-                        self.current_collision_rect_index = collision_index
-                        print(f"Dropped {self.name} in collision rect {collision_index}")
-                        return_code = True
-                        break
+            point_rect = pygame.Rect(int(x), int(y), 1, 1)
+            collision_index = point_rect.collidelist(self.collision_rects)
+            if collision_index != -1:
+                self.raw_rect.center = self.raw_collision_rects[collision_index].center
+                self.valid_rect = self.raw_collision_rects[collision_index]
+                self.current_collision_rect_index = collision_index
+                print(f"Dropped {self.name} in collision rect {collision_index}")
+                return_code = True
+
             else:
-                collision_index = self.rect.collidelist(self.collision_rects)
-                if collision_index != -1:
-                    self.raw_rect.center = self.raw_collision_rects[collision_index].center
-                    self.valid_rect = self.raw_collision_rects[collision_index]
-                    self.current_collision_rect_index = collision_index
-                    print(f"Dropped {self.name} in collision rect {collision_index}")
-                    return_code = True
-                else:
-                    self.raw_rect.center = self.valid_rect.center
-                    return_code = False
-            #TODO: maybe add a functionality to place the item anywhere in  the box
+                self.raw_rect.center = self.valid_rect.center
+            
             return return_code
 
     def draw(self): # draw every entities and the non entities

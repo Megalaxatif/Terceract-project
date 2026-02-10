@@ -228,36 +228,12 @@ class Wall:
                     (int(self.delta * obj.raw_rect.w), int(self.delta * obj.raw_rect.h))
                 )
                 obj.rect = pygame.Rect(self.delta * obj.raw_rect.x, self.delta * obj.raw_rect.y, self.delta * obj.raw_rect.w, self.delta * obj.raw_rect.h)
-                #pygame.draw.rect(self.game_context.screen, (0,0,0), obj.rect, 1) 
-                if obj.name in ["vase"]:
-                    for i in range(len(obj.collision_rects)):
-                        raw_collision_rect = obj.raw_collision_rects[i]
-                        obj.collision_rects[i] = pygame.Rect(self.delta * raw_collision_rect.x, self.delta * raw_collision_rect.y, self.delta * raw_collision_rect.w, self.delta * raw_collision_rect.h)
 
+                # resize collision rects
+                for i in range(len(obj.collision_rects)):
+                    raw_collision_rect = obj.raw_collision_rects[i]
+                    obj.collision_rects[i] = pygame.Rect(self.delta * raw_collision_rect.x, self.delta * raw_collision_rect.y, self.delta * raw_collision_rect.w, self.delta * raw_collision_rect.h)
 
-    # remove unused images in a list of cropped_object_path and the unused keys in objects_data 
-    # by comparing them to the list of object_layers_path whose images are supposed to be used
-    def cleanup_data(self, root_dir: Path, object_layers_path: list[Path], cropped_object_paths: list[Path], objects_data: dict):
-        expected_keys = {
-            (root_dir / f"cropped_{p.name}").as_posix() for p in object_layers_path
-        }
-
-        expected_cropped_name = {
-            f"cropped_{p.name}" for p in object_layers_path
-        }
-
-        # delete extra keys
-        for key in list(objects_data.keys()):
-            if key not in expected_keys:
-                del objects_data[key]
-            
-
-        # delete extra cropped images
-        for cropped_path in cropped_object_paths:
-            if cropped_path.name not in expected_cropped_name:
-                print(f"Removing extra cropped image:  {cropped_path}")
-                cropped_path.unlink()
-        
 
     def draw_entities(self):
         for entity in self.entities:
