@@ -3,7 +3,7 @@ from object import Object
 
 class Digicode(Object):
     def __init__(self, game_context, image_path, rect, secret_code="1234"):
-        super().__init__(game_context, "digicode", image_path, rect, [], False)
+        super().__init__(game_context, "digicode", image_path, rect, [], -1, False)
         self.pos = rect[0], rect[1]
         self.x, self.y = self.pos
         self.delta = 1

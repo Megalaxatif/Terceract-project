@@ -27,7 +27,7 @@ class Wall:
         self.json_path = Path(self.root_dir / "images/objects_info.json")
         #self.clear_object_layers()
         #self.clear_cropped_objects() # TODO: to remove
-        self.clear_json() # TODO: to remove also
+        #self.clear_json() # TODO: to remove also
 
         self.objects_data = load_json_file(self.json_path) # load or init the JSON file
 
@@ -38,7 +38,7 @@ class Wall:
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
-        
+
 
     def clear_json(self):
         with open(self.json_path, "w", encoding="utf-8") as f:
@@ -48,7 +48,7 @@ class Wall:
         cropped_object_paths = list(self.cropped_object_dir.iterdir())
         for path in cropped_object_paths:
             os.remove(path)
-    
+
     def clear_object_layers(self):
         object_layers_path = list(self.object_layers_dir.iterdir())
         for path in object_layers_path:
@@ -59,7 +59,7 @@ class Wall:
         background_path = list(background_dir.iterdir()) # NOTE: we should only have one png file for the background
         background_exist =  background_path is not None # NOTE: iterdir lists the content of the folder
         background = pygame.image.load(background_path[0]) if background_exist else pygame.Surface(self.game_context.screen.get_size())
-        if not background_exist: 
+        if not background_exist:
             background.fill((255, 0, 0))
         return background
 
@@ -71,7 +71,6 @@ class Wall:
             cropped_name = f"cropped_{object_name}.png"
             save_path = Path(self.cropped_object_dir / cropped_name) # place where we save the cropped image
 
-            #TODO: optimise this: the images are created everytime this function is called event if they already exist
             bbox = self.create_cropped_object(object_path, save_path.as_posix())
 
             collision_rects = self.get_collision_rects(self.collision_layers_dir, object_name)
@@ -81,7 +80,7 @@ class Wall:
             self.objects_data[object_name]["rect"] = bbox
             self.objects_data[object_name]["collisions"] = collision_rects
             self.objects_data[object_name]["collision_id"] = -1
-            
+
         save_data_in_json(self.objects_data, self.json_path)
 
 
@@ -106,16 +105,16 @@ class Wall:
                 )
             elif obj in ["vase", "vase2"]:
                 self.entities.add(
-                    Vase(self.game_context, img_path, rect, collision_rects)
+                    Vase(self.game_context, img_path, rect, collision_rects, current_collision_id)
                 )
             elif obj == "frame":
                 self.entities.add(
-                    Vase(self.game_context, img_path, rect, collision_rects)
+                    Vase(self.game_context, img_path, rect, collision_rects, current_collision_id)
                 )
 
             elif obj == "table":
                 self.entities.add(
-                    Vase(self.game_context, img_path, rect, collision_rects)
+                    Vase(self.game_context, img_path, rect, collision_rects, current_collision_id)
                 )
 
             elif obj == "connect4":
@@ -131,7 +130,7 @@ class Wall:
                     temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
                     pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
                     self.game_context.screen.blit(temp_surface, rect)
-            
+
 
     #returns the list of the paths of all the collision layers of an object
     def load_collision_layers_path(self, collision_layers_dir: Path, obj_name: str) -> list[Path]:
@@ -203,12 +202,12 @@ class Wall:
 
         if not found:
             return None
-        
+
         x, y, w, h = min_x, min_y, max_x - min_x + 1, max_y - min_y + 1
         #print(f"x={x}, y={y}, w={w}, h={h}") #debug
         return (x, y, w, h)
-        
-        
+
+
     def create_sub_surface(self, x, y, w, h, surface):
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
@@ -220,7 +219,7 @@ class Wall:
                 int(self.original_background.get_width() * self.delta),
                 int(self.original_background.get_height() * self.delta)
             )
-        )  
+        )
         # changer tailles de chaque objets
         if objects_list:
             for obj in objects_list:
@@ -238,7 +237,7 @@ class Wall:
     def draw_entities(self):
         for entity in self.entities:
             entity.draw()
-                
+
 
     def draw_background(self):
         self.game_context.screen.blit(self.background, (0, 0))

@@ -9,6 +9,7 @@ class Object(pygame.sprite.Sprite):
                  image_path : str,
                  rect : pygame.Rect, 
                  collisions : list[pygame.Rect],
+                 collision_index : int = -1,
                  movable : bool = True
                  ):
         super().__init__()
@@ -31,7 +32,7 @@ class Object(pygame.sprite.Sprite):
 
         self.collision_rects = collisions
         self.raw_collision_rects = self.collision_rects.copy()
-        self.current_collision_rect_index = 0 # which collision rect the object is in
+        self.collision_rect_index = collision_index # which collision rect the object is in
 
         self.displayed = True
         self.movable = movable
@@ -44,7 +45,7 @@ class Object(pygame.sprite.Sprite):
             if collision_index != -1:
                 self.raw_rect.center = self.raw_collision_rects[collision_index].center
                 self.valid_rect = self.raw_collision_rects[collision_index]
-                self.current_collision_rect_index = collision_index
+                self.collision_rect_index = collision_index
                 print(f"Dropped {self.name} in collision rect {collision_index}")
                 return_code = True
 

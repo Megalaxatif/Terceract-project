@@ -11,13 +11,13 @@ from utils import *
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
 
-pygame.init()
-
 
 class Inventory:
     def __init__(self, game_context, x, y, rows, cols, block_size, center):
         self.game_context = game_context
         self.root_dir = Path(__file__).resolve().parent
+        self.json_path = Path(self.root_dir / "objects_info.json")
+
         self.entities = pygame.sprite.Group()
 
         self.raw_x = x
@@ -45,9 +45,24 @@ class Inventory:
         self.init_images()
 
 
+    def save_images(self):
+        objects_data = load_json_file(self.json_path)
+
+        objects_list = []
+        for i in range(len(self.slots)):
+            object = self.slots[i]
+            if object == None:
+                objects_list[i] = None
+            else:
+                objects_list[i] = {}
+                objects_list[i]["image"] = object.image_path.as_posix()
+                objects_list[i]["rect"] = bbox
+                objects_list[i]["collisions"] = collision_rects
+                objects_list[i]["collision_id"] = -1
+
+
     def init_images(self):
         pass
-
 
     def draw(self):
         self.block_size = int(self.raw_block_size * self.game_context.delta)
@@ -63,36 +78,32 @@ class Inventory:
         self.draw_grid()
         self.draw_items()
         self.draw_current_item()
-    
+
 
     def handle_click(self, event):
         self.mouse_x, self.mouse_y = event.pos
-        
+
         if (
             self.x <= self.mouse_x < self.x + self.cols * self.block_size and
             self.y <= self.mouse_y < self.y + self.rows * self.block_size
         ):
-            print("Clicked on inventory")
             self.col = (self.mouse_x - self.x) // self.block_size
             self.row = (self.mouse_y - self.y) // self.block_size
 
-            print("object : " + str(self.game_context.current_item))
             if self.game_context.current_item is not None:
-                print("test")
                 self.put_in_inventory(self.row, self.col)
             else:
                 self.current_item, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_item
-                print("Take from inventory")  
-        
+
         elif self.current_item is not None:
-            self.put_out_inventory(self.row, self.col) 
+            self.put_out_inventory(self.row, self.col)
 
 
     def put_in_inventory(self, row, col):
         # put objet from wall to inventory
         obj = self.game_context.current_item
         # if there is an object in the slot, it becomes the current item
-        self.current_item = self.slots[row][col] 
+        self.current_item = self.slots[row][col]
         self.slots[row][col] = obj
         if obj in self.game_context.current_wall.entities:
             self.game_context.current_wall.entities.remove(obj)
@@ -112,7 +123,7 @@ class Inventory:
             self.game_context.current_wall.entities.add(obj)
             self.game_context.current_item = None
             self.current_item = None
-            print("Put out inventory") 
+            print("Put out inventory")
 
     def resize_in_inventory(self, path):
         return pygame.transform.scale(
