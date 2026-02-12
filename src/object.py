@@ -26,13 +26,13 @@ class Object(pygame.sprite.Sprite):
         self.image_id = (Path(*parts[-7:])).as_posix()
         self.image_name = str(self.image_path.name)
 
-        self.rect = rect
-        self.raw_rect = self.rect
-        self.valid_rect = self.rect.copy()
-
         self.collision_rects = collisions
         self.raw_collision_rects = self.collision_rects.copy()
         self.collision_rect_index = collision_index # which collision rect the object is in
+
+        self.rect = rect
+        self.raw_rect = self.rect
+        self.valid_rect = self.collision_rects[self.collision_rect_index]
 
         self.displayed = True
         self.movable = movable

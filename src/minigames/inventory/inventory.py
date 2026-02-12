@@ -48,21 +48,25 @@ class Inventory:
     def save_images(self):
         objects_data = load_json_file(self.json_path)
 
-        objects_list = []
+        objects_list = {"data": []}
         for i in range(len(self.slots)):
-            object = self.slots[i]
-            if object == None:
-                objects_list[i] = None
+            obj = self.slots[i]
+            if obj == None:
+                objects_list["data"].append(None)
             else:
-                objects_list[i] = {}
-                objects_list[i]["image"] = object.image_path.as_posix()
-                objects_list[i]["rect"] = bbox
-                objects_list[i]["collisions"] = collision_rects
-                objects_list[i]["collision_id"] = -1
+                objects_list["data"].append({})
+                objects_list["data"][i]["image"] = obj.image_path.as_posix()
+                objects_list["data"][i]["rect"] = obj.rect
+                objects_list["data"][i]["collisions"] = obj.collision_rects
+                objects_list["data"][i]["collision_id"] = obj.current_collision_id
+        save_data_in_json(objects_list)
 
 
     def init_images(self):
-        pass
+        objects_data = load_json_file(self.json_path)
+        for obj in objects_data:
+            
+
 
     def draw(self):
         self.block_size = int(self.raw_block_size * self.game_context.delta)
