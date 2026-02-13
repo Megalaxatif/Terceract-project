@@ -28,6 +28,7 @@ class Menu:
         self.audio_img_raw = pygame.image.load(root_dir / "images/button_audio.png").convert_alpha()
         self.keys_img_raw  = pygame.image.load(root_dir / "images/button_keys.png").convert_alpha()
         self.back_img_raw  = pygame.image.load(root_dir / "images/button_back.png").convert_alpha()
+        self.save_img_raw  = pygame.image.load(root_dir / "images/button_save.png").convert_alpha()
 
 
         self.create_buttons()
@@ -35,6 +36,15 @@ class Menu:
     def create_buttons(self):
         center_x = self.SCREEN_WIDTH // 2
         delta = min(self.game_context.delta_w, self.game_context.delta_h)
+
+        self.save_img = pygame.transform.scale(
+            self.save_img_raw,
+            (
+                int(self.save_img_raw.get_width() * delta),
+                int(self.save_img_raw.get_height() * delta)
+            )
+        )
+
 
         self.resume_img = pygame.transform.scale(
             self.resume_img_raw,
@@ -93,13 +103,20 @@ class Menu:
         )
 
         # menu principal
+        self.save_button = menu_button.MenuButton(
+            center_x // 1.5 - self.save_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.1),
+            self.save_img,
+            1
+        )
+
         self.resume_button = menu_button.MenuButton(
             center_x // 1.5 - self.resume_img.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.25),
             self.resume_img,
             1
         )
-        
+
         self.options_button = menu_button.MenuButton(
             center_x // 1.5- self.options_img.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.4),
@@ -145,10 +162,7 @@ class Menu:
         self.screen.blit(img, rect)
 
     def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
+        for event in pygame.event.get(): # TODO: change this to respect the event queue
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.game_paused = not self.game_paused
@@ -166,6 +180,7 @@ class Menu:
 
         # --- AFFICHAGE DES BOUTONS ---
         if self.menu_state == "menu":
+            save_hover = self.save_button.draw(self.screen)
             resume_hover = self.resume_button.draw(self.screen)
             options_hover = self.options_button.draw(self.screen)
             quit_hover = self.quit_button.draw(self.screen)
@@ -182,6 +197,9 @@ class Menu:
             if resume_hover and mouse_pressed and not self.pressed:
                 self.pressed = True
                 self.game_context.current_mini_game = "game"
+            elif save_hover and mouse_pressed and not self.pressed:
+                self.game_context.save_game()
+
             elif options_hover and mouse_pressed and not self.pressed:
                 self.pressed = True
                 self.menu_state = "options"

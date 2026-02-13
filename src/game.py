@@ -40,7 +40,7 @@ class Game:
         self.current_item = None
         self.name = "game"
         self.current_mini_game = "menu"
-        
+
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
         self.mouse_enabled = True
@@ -94,39 +94,12 @@ class Game:
         self.change_current_wall() # reference to the current wall to render
         self.network_manager = Network_manager(self)
 
-    def save_data(self):
-        # save the data in the game_data file
-        if self.network_manager.is_host:
-            data = {
-                "player1_posX": self.player1.get_posX(),
-                "player1_posY": self.player1.get_posY(),
-                "player2_posX": self.player2.get_posX(),
-                "player2_posY": self.player2.get_posY()
-            }
+    def save_game(self): # save all the game data
+        print("save game")
+        for room in self.room_list:
+            for wall in room:
+                wall.save_objects_data()
 
-            with open(self.game_data_path, "w") as file:
-                json.dump(data, file, indent=4)
-
-    def load_data_from_file(self):
-        if self.network_manager.is_host:
-            try:
-                with open(self.game_data_path, "r") as data:
-                    self.game_data = json.load(data)
-            except FileNotFoundError as e:
-                print("load_data_file: Error", e)
-                sys.exit(1)
-
-    def load_data_in_memory(self, data: dict):
-        for key, value in data.items():
-            if key == "player1_posX":
-                self.player1.set_posX(value)
-
-            elif key == "player1_posY":
-                self.player1.set_posY(value)
-            elif key == "player2_posX":
-                self.player2.set_posX(value)
-            elif key == "player2_posY":
-                self.player2.set_posY(value)
 
     def start(self): # TODO: adapt this function to make it work again
         gamemode = "s" #input("wanna play solo (s) or duo (d) bitch ? ")
@@ -188,7 +161,7 @@ class Game:
 
     def is_collision(self, rect):
         return rect.collidelist(self.map.collision_rects) > -1
-    
+
 
     def change_room(self): # change the room we are in
         if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5:
@@ -204,14 +177,14 @@ class Game:
 
 
     def change_wall(self, direction : str):  # change the wall we are facing
-        if direction != "right" and direction != "left": 
+        if direction != "right" and direction != "left":
             print("change_wall : Error, invalid direction")
             return 1
         elif direction == "right":
             self.current_wall_id = (self.current_wall_id - 1) % ROOM_5 # python is magic
         elif direction == "left":
             self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
-            
+
         self.current_item = None
         self.change_current_wall()
 
@@ -247,11 +220,11 @@ class Game:
         self.delta_h = self.screen.get_height() / 720
         self.delta_w = self.screen.get_width() / 1080
         self.delta = min(self.delta_h, self.delta_w)
-        
+
         self.current_wall.delta_w = self.delta_w * (1080/1920)
         self.current_wall.delta_h = self.delta_h * (720/1080)
         self.current_wall.delta = min(self.delta_w * (1080/1920), self.delta_h * (720/1080))
-    
+
 
     def handle_basic_game_events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -267,8 +240,8 @@ class Game:
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
             self.inventory.handle_click(event)
-            
-            if self.current_item is None and self.inventory.current_item is None:        
+
+            if self.current_item is None and self.inventory.current_item is None:
                 for obj in reversed(self.current_wall.entities.sprites()): # reversed so we click the top object first
                     if obj.rect.collidepoint(event.pos):
                         self.current_item = obj
@@ -290,10 +263,10 @@ class Game:
                 self.game_running = False
                 pygame.quit()
                 sys.exit()
-            
+
             if event.type == pygame.VIDEORESIZE:
                 self.recalculate_deltas()
-            
+
             if self.current_mini_game == "game":
                 self.handle_basic_game_events(event)
                 self.update_walls(event)
@@ -312,7 +285,7 @@ class Game:
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update() # TODO: separate update from display
-        
+
         self.mouse_enabled = True
 
         pygame.display.flip()

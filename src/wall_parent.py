@@ -29,8 +29,6 @@ class Wall:
         #self.clear_cropped_objects() # TODO: to remove
         #self.clear_json() # TODO: to remove also
 
-        self.objects_data = load_json_file(self.json_path) # load or init the JSON file
-
         self.background = self.create_background()
         self.original_background = self.background
         self.entities = pygame.sprite.Group()
@@ -64,63 +62,53 @@ class Wall:
         return background
 
 
-    def init_objects_info(self):
+    def get_objects_data(self):
+        objects_data = {}
         object_layers_path = list(self.object_layers_dir.iterdir())
         for object_path in reversed(object_layers_path): # reversed so we draw the object with the lowest layer id first
             object_name = object_path.stem[2:] # example : "vase" instead of ".../.../.../1_vase.png"
             cropped_name = f"cropped_{object_name}.png"
             save_path = Path(self.cropped_object_dir / cropped_name) # place where we save the cropped image
-
+            relative_path = Path(f"assets/cropped_images/{cropped_name}")
             bbox = self.create_cropped_object(object_path, save_path.as_posix())
 
             collision_rects = self.get_collision_rects(self.collision_layers_dir, object_name)
 
-            self.objects_data[object_name] = {}
-            self.objects_data[object_name]["image"] = save_path.as_posix()
-            self.objects_data[object_name]["rect"] = bbox
-            self.objects_data[object_name]["collisions"] = collision_rects
-            self.objects_data[object_name]["collision_id"] = -1
+            objects_data[object_name] = {}
+            objects_data[object_name]["image"] = relative_path.as_posix()
+            objects_data[object_name]["rect"] = bbox
+            objects_data[object_name]["collisions"] = collision_rects
+            objects_data[object_name]["collision_id"] = -1
 
-        save_data_in_json(self.objects_data, self.json_path)
+        return objects_data
+
+    def save_objects_data(self):
+        new_obj_data = {}
+        for object in self.entities:
+            new_obj_data[object.name] = {}
+            new_obj_data[object.name]["image"] = object.image_path.as_posix()
+            new_obj_data[object.name]["rect"] = object.rect
+            new_obj_data[object.name]["collisions"] = object.collision_rects
+            new_obj_data[object.name]["collision_id"] = object.current_collision_id
+        save_data_in_json(new_obj_data, self.json_path)
 
 
     def create_entities(self):
+        objects_data = load_json_file(self.json_path) # load or init the JSON file
         # case where we launched the game for the first time or we previously reset the progression
-        if not self.objects_data:
-            self.init_objects_info()
+        if not objects_data:
+            objects_data = self.get_objects_data()
 
-        for obj in self.objects_data:
-            img_path = self.objects_data[obj].get("image")
-            rect = pygame.Rect(self.objects_data[obj].get("rect"))
-            collision_rects = self.objects_data[obj].get("collisions")
+        for obj in objects_data:
+            img_path = objects_data[obj]["image"] # load the relative path
+            rect = pygame.Rect(objects_data[obj]["rect"])
+            collision_rects = objects_data[obj]["collisions"]
+            current_collision_id = objects_data[obj]["collision_id"]
             #convert in pygame Rect
             for i in range(len(collision_rects)):
                 collision_rects[i] = pygame.Rect(collision_rects[i])
 
-            current_collision_id = self.objects_data[obj].get("collision_id")
-
-            if obj == "calculator":
-                self.entities.add(
-                    Digicode(self.game_context, img_path, rect, "1234")
-                )
-            elif obj in ["vase", "vase2"]:
-                self.entities.add(
-                    Vase(self.game_context, img_path, rect, collision_rects, current_collision_id)
-                )
-            elif obj == "frame":
-                self.entities.add(
-                    Vase(self.game_context, img_path, rect, collision_rects, current_collision_id)
-                )
-
-            elif obj == "table":
-                self.entities.add(
-                    Vase(self.game_context, img_path, rect, collision_rects, current_collision_id)
-                )
-
-            elif obj == "connect4":
-                self.entities.add(
-                    Connect(self.game_context, img_path, rect, 0)
-                )
+            add_obj_to_group(obj, self.entities, self.game_context, img_path, rect, collision_rects, current_collision_id)
 
 
     def display_collision_rects(self): # debug function

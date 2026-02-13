@@ -3,11 +3,11 @@ from pathlib import Path
 
 class Object(pygame.sprite.Sprite):
 
-    def __init__(self, 
+    def __init__(self,
                  game_context,
                  object_name : str,
                  image_path : str,
-                 rect : pygame.Rect, 
+                 rect : pygame.Rect,
                  collisions : list[pygame.Rect],
                  collision_index : int = -1,
                  movable : bool = True
@@ -19,7 +19,7 @@ class Object(pygame.sprite.Sprite):
         self.screen = self.game_context.screen
 
         self.image_path = Path(image_path)
-        self.image = pygame.image.load(self.image_path)
+        self.image = pygame.image.load(Path(self.game_context.root_dir / self.image_path))
         self.raw_image = self.image
 
         parts = self.image_path.parts
@@ -32,8 +32,10 @@ class Object(pygame.sprite.Sprite):
 
         self.rect = rect
         self.raw_rect = self.rect
-        self.valid_rect = self.collision_rects[self.collision_rect_index]
-
+        if self.collision_rect_index != -1 :
+            self.valid_rect = self.collision_rects[self.collision_rect_index]
+        else:
+            self.valid_rect = self.rect.copy()
         self.displayed = True
         self.movable = movable
 
@@ -51,7 +53,7 @@ class Object(pygame.sprite.Sprite):
 
             else:
                 self.raw_rect.center = self.valid_rect.center
-            
+
             return return_code
 
     def draw(self): # draw every entities and the non entities
