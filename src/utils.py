@@ -54,7 +54,7 @@ def load_json_file(json_path: Path) -> dict:
         return {}
 
 def save_data_in_json(data: dict, json_path: Path):
-    with open(json_path, "a", encoding="utf-8") as f:
+    with open(json_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 def create_sub_surface(

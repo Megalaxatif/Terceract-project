@@ -80,6 +80,7 @@ class Wall:
             objects_data[object_name]["collisions"] = collision_rects
             objects_data[object_name]["collision_id"] = -1
 
+        save_data_in_json(objects_data, self.json_path)
         return objects_data
 
     def save_objects_data(self):
@@ -89,7 +90,7 @@ class Wall:
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = object.rect
             new_obj_data[object.name]["collisions"] = object.collision_rects
-            new_obj_data[object.name]["collision_id"] = object.current_collision_id
+            new_obj_data[object.name]["collision_id"] = object.collision_rect_index
         save_data_in_json(new_obj_data, self.json_path)
 
 
