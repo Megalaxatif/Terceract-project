@@ -80,6 +80,7 @@ class Wall:
             objects_data[object_name]["collisions"] = collision_rects
             objects_data[object_name]["collision_id"] = -1
 
+        save_data_in_json(objects_data, self.json_path)
         return objects_data
 
     def save_objects_data(self):
