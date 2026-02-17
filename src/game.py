@@ -6,6 +6,8 @@ import json
 import sys
 import time
 
+#from wall_parent import Wall
+#from object import Game_object
 from room import *
 from network import Network_manager
 from minigames import *
@@ -135,9 +137,6 @@ class Game:
         pass
 
     def launch_duo(self, ip: str, port: int):
-        self.player2.is_displayed = True
-        self.player1.is_displayed = True
-
         try:
             self.network_manager.client.connect((ip, port))
         except Exception as e:
@@ -156,13 +155,6 @@ class Game:
     def switch_back_to_solo_mode(self):
         self.network_manager.is_connected = False
         self.network_manager.reset_client()
-        self.player2.is_displayed = False
-
-    def get_entities(self):
-        return list(self.entities)
-
-    def is_collision(self, rect):
-        return rect.collidelist(self.map.collision_rects) > -1
 
 
     def change_room(self): # change the room we are in
@@ -241,10 +233,10 @@ class Game:
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
-            self.inventory.handle_click(event)
+            self.inventory.handle_event(event)
 
             if self.current_item is None and self.inventory.current_item is None:
-                for obj in reversed(self.current_wall.entities.sprites()): # reversed so we click the top object first
+                for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
                     if obj.rect.collidepoint(event.pos):
                         self.current_item = obj
                         break
@@ -273,6 +265,9 @@ class Game:
                 self.handle_basic_game_events(event)
                 self.update_walls(event)
 
+            elif self.current_mini_game == "menu": # TODO
+                pass
+
 
     def update_all(self):
         self.handle_all_events()
@@ -282,7 +277,7 @@ class Game:
         # render the current mini-game
         if self.current_mini_game == "game":
             self.current_wall.display()
-            self.inventory.draw()# TODO: separate update from display
+            self.inventory.display()
             self.display_room_counter()
 
         elif self.current_mini_game == "menu":

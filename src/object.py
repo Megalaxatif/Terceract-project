@@ -1,7 +1,7 @@
 import pygame
 from pathlib import Path
 
-class Object(pygame.sprite.Sprite):
+class Game_object(pygame.sprite.Sprite):
 
     def __init__(self,
                  game_context,
@@ -55,6 +55,28 @@ class Object(pygame.sprite.Sprite):
                 self.raw_rect.center = self.valid_rect.center
 
             return return_code
+
+
+    def resize_image (self):
+        delta = self.game_context.current_wall.delta
+        self.image = pygame.transform.scale(self.raw_image,
+            (int(delta * self.raw_rect.w), int(delta * self.raw_rect.h))
+        )
+        self.rect = pygame.Rect(delta * self.raw_rect.x, delta * self.raw_rect.y, delta * self.raw_rect.w, delta * self.raw_rect.h)
+
+
+    def resize_collision_rects(self):
+        delta = self.game_context.current_wall.delta
+        for i in range(len(self.collision_rects)):
+            raw_collision_rect = self.raw_collision_rects[i]
+            self.collision_rects[i] = pygame.Rect(delta * raw_collision_rect.x, delta * raw_collision_rect.y, delta * raw_collision_rect.w, delta * raw_collision_rect.h)
+
+    def display_collision_rect(self):
+        for rect in self.collision_rects:
+            temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+            pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
+            self.game_context.screen.blit(temp_surface, rect)
+
 
     def draw(self): # draw every entities and the non entities
         if self.displayed:

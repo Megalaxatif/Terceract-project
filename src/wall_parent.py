@@ -31,7 +31,7 @@ class Wall:
 
         self.background = self.create_background()
         self.original_background = self.background
-        self.entities = pygame.sprite.Group()
+        self.objects = pygame.sprite.Group()
         self.create_entities()
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
@@ -85,7 +85,7 @@ class Wall:
 
     def save_objects_data(self):
         new_obj_data = {}
-        for object in self.entities:
+        for object in self.objects:
             print(f"saving {object.name} in json")
             # convert the rectangle from pygame.Rect to tuple to store them in the json
             formated_rect = tuple(object.raw_rect)
@@ -118,15 +118,11 @@ class Wall:
                 collision_rects[i] = pygame.Rect(collision_rects[i])
 
             object = create_object(key, self.game_context, img_path, rect, collision_rects, current_collision_id)
-            self.entities.add(object)
+            self.objects.add(object)
 
     def display_collision_rects(self): # debug function
-        for entity in self.entities:
-            if entity.name in ["vase"]:
-                for rect in entity.collision_rects:
-                    temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                    pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
-                    self.game_context.screen.blit(temp_surface, rect)
+        for entity in self.objects:
+           entity.display_collision_rect()
 
 
     #returns the list of the paths of all the collision layers of an object
@@ -209,7 +205,7 @@ class Wall:
         return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
 
-    def resize_images(self, objects_list):
+    def resize_background(self):
         self.background = pygame.transform.scale(
             self.background,
             (
@@ -217,45 +213,30 @@ class Wall:
                 int(self.original_background.get_height() * self.delta)
             )
         )
-        # changer tailles de chaque objets
-        if objects_list:
-            for obj in objects_list:
-                obj.image = pygame.transform.scale(obj.raw_image,
-                    (int(self.delta * obj.raw_rect.w), int(self.delta * obj.raw_rect.h))
-                )
-                obj.rect = pygame.Rect(self.delta * obj.raw_rect.x, self.delta * obj.raw_rect.y, self.delta * obj.raw_rect.w, self.delta * obj.raw_rect.h)
 
-                # resize collision rects
-                for i in range(len(obj.collision_rects)):
-                    raw_collision_rect = obj.raw_collision_rects[i]
-                    obj.collision_rects[i] = pygame.Rect(self.delta * raw_collision_rect.x, self.delta * raw_collision_rect.y, self.delta * raw_collision_rect.w, self.delta * raw_collision_rect.h)
+    def resize(self):
+        self.resize_background()
+        for obj in self.objects:
+            obj.resize_image()
+            obj.resize_collision_rects()
 
 
-    def draw_entities(self):
-        for entity in self.entities:
-            entity.draw()
+    def draw_objects(self):
+        for obj in self.objects:
+            obj.draw()
 
 
     def draw_background(self):
         self.game_context.screen.blit(self.background, (0, 0))
 
 
-    def sort_entities_by_image_name(self):
-        sprites_list = self.entities.sprites()
-        sprites_list = [s for s in sprites_list if hasattr(s, "image_name")]
-        sprites_list.sort(key=lambda s: s.image_name.lower())
-
-        self.entities.empty()
-        self.entities.add(*sprites_list)
-
-
     def display(self):
-        self.resize_images(self.entities)
+        self.resize()
         self.draw_background()
-        self.draw_entities()
+        self.draw_objects()
         self.display_collision_rects()
 
     # NOTE: can be redefined in child classes
     def update(self, event):
-        for entity in self.entities:
-            entity.update(event) # interactions relative to each object
+        for obj in self.objects:
+            obj.update(event) # interactions relative to each object

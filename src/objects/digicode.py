@@ -1,7 +1,7 @@
 import pygame
-from object import Object
+from object import Game_object
 
-class Digicode(Object):
+class Digicode(Game_object):
     def __init__(self, game_context, object_name, image_path, rect, secret_code="1234"):
         super().__init__(game_context, object_name, image_path, rect, [], -1, False)
         self.pos = rect[0], rect[1]

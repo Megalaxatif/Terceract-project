@@ -1,11 +1,11 @@
-from object import Object
+from object import Game_object
 import random
 import time
 import pygame
 from pathlib import Path
 
 
-class Connect(Object):
+class Connect(Game_object):
     def __init__(self, game_context, object_name, image_path: Path, rect: pygame.Rect, nb_def: int):
         super().__init__(game_context, object_name, image_path, rect, [])
         self.nb_def = nb_def

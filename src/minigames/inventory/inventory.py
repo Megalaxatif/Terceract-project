@@ -1,11 +1,6 @@
-# que handle click appele dans game, update = draw
-
 import pygame
-import sys
 from pathlib import Path
-import json
-from objects.vase import Vase
-from objects.digicode import Digicode
+from object import Game_object
 from utils import *
 
 BLACK = (0, 0, 0)
@@ -29,8 +24,8 @@ class Inventory:
         self.raw_block_size = block_size
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
-        self.slots = [[None for _ in range(cols)] for _ in range(rows)]
-        self.slots_entities = [[None for _ in range(cols)] for _ in range(rows)]
+        self.slots : list[list[Game_object]] | list = [[None for _ in range(cols)] for _ in range(rows)]
+        self.slots_entities = [[None for _ in range(cols)] for _ in range(rows)] # what ??
 
         self.center = center
 
@@ -95,7 +90,15 @@ class Inventory:
                             self.slots[i][j] = object
 
 
-    def draw(self):
+    def resize_objects(self):
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+                    obj.resize_image()
+                    obj.resize_collision_rects()
+
+
+    def display(self):
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
         if self.center:
@@ -106,12 +109,14 @@ class Inventory:
 
         self.y = int(self.raw_y * self.game_context.delta)
 
+        self.resize_objects()
+        self.display_collision_rects()
         self.draw_grid()
         self.draw_items()
         self.draw_current_item()
 
 
-    def handle_click(self, event):
+    def handle_event(self, event):
         self.mouse_x, self.mouse_y = event.pos
 
         if (
@@ -136,11 +141,12 @@ class Inventory:
         # if there is an object in the slot, it becomes the current item
         self.current_item = self.slots[row][col] #TODO: what ??
         self.slots[row][col] = obj
-        if obj in self.game_context.current_wall.entities:
-            self.game_context.current_wall.entities.remove(obj)
+        if obj in self.game_context.current_wall.objects:
+            self.game_context.current_wall.objects.remove(obj)
         print("Put in inventory")
         self.game_context.current_item = None
         self.current_item = None #TODO: what ??
+
 
     def put_out_inventory(self, row, col):
         obj = self.current_item
@@ -148,7 +154,7 @@ class Inventory:
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
         if obj.drop(mx, my):
             self.slots[row][col] = None
-            self.game_context.current_wall.entities.add(obj)
+            self.game_context.current_wall.objects.add(obj)
             self.game_context.current_item = None
             self.current_item = None
             print("Put out inventory")
@@ -200,4 +206,11 @@ class Inventory:
                 scaled_image,
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
+
+
+    def display_collision_rects(self):
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+                    obj.display_collision_rect()
 
