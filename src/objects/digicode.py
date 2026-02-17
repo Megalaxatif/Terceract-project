@@ -2,8 +2,8 @@ import pygame
 from object import Object
 
 class Digicode(Object):
-    def __init__(self, game_context, image_path, rect, secret_code="1234"):
-        super().__init__(game_context, "digicode", image_path, rect, [], -1, False)
+    def __init__(self, game_context, object_name, image_path, rect, secret_code="1234"):
+        super().__init__(game_context, object_name, image_path, rect, [], -1, False)
         self.pos = rect[0], rect[1]
         self.x, self.y = self.pos
         self.delta = 1
@@ -25,7 +25,7 @@ class Digicode(Object):
         # Boutons du digicode
         self.buttons = ["1","2","3","4","5","6","7","8","9","C","0","OK"]
         self.button_rects = []
-        
+
         self.close_rect = pygame.Rect(self.x + 220*self.delta, self.y + 10*self.delta, 40*self.delta, 40*self.delta)
 
     def create_buttons(self, pos):

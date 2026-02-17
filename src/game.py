@@ -99,6 +99,8 @@ class Game:
         for room in self.room_list:
             for wall in room:
                 wall.save_objects_data()
+        print("save inventory")
+        self.inventory.save_images()
 
 
     def start(self): # TODO: adapt this function to make it work again

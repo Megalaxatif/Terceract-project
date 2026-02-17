@@ -85,11 +85,19 @@ class Wall:
     def save_objects_data(self):
         new_obj_data = {}
         for object in self.entities:
+            print(f"saving {object.name} in json")
+            # convert the rectangle from pygame.Rect to tuple to store them in the json
+            formated_rect = tuple(object.raw_rect)
+
+            formated_collision_rects = []
+            for rect in object.raw_collision_rects:
+                formated_collision_rects.append(tuple(rect))
+
             new_obj_data[object.name] = {}
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
-            new_obj_data[object.name]["rect"] = object.rect
-            new_obj_data[object.name]["collisions"] = object.collision_rects
-            new_obj_data[object.name]["collision_id"] = object.current_collision_id
+            new_obj_data[object.name]["rect"] = formated_rect
+            new_obj_data[object.name]["collisions"] = formated_collision_rects
+            new_obj_data[object.name]["collision_id"] = object.collision_rect_index
         save_data_in_json(new_obj_data, self.json_path)
 
 
@@ -99,17 +107,17 @@ class Wall:
         if not objects_data:
             objects_data = self.get_objects_data()
 
-        for obj in objects_data:
-            img_path = objects_data[obj]["image"] # load the relative path
-            rect = pygame.Rect(objects_data[obj]["rect"])
-            collision_rects = objects_data[obj]["collisions"]
-            current_collision_id = objects_data[obj]["collision_id"]
+        for key in objects_data:
+            img_path = objects_data[key]["image"] # load the relative path
+            rect = pygame.Rect(objects_data[key]["rect"])
+            collision_rects = objects_data[key]["collisions"]
+            current_collision_id = objects_data[key]["collision_id"]
             #convert in pygame Rect
             for i in range(len(collision_rects)):
                 collision_rects[i] = pygame.Rect(collision_rects[i])
 
-            add_obj_to_group(obj, self.entities, self.game_context, img_path, rect, collision_rects, current_collision_id)
-
+            object = create_object(key, self.game_context, img_path, rect, collision_rects, current_collision_id)
+            self.entities.add(object)
 
     def display_collision_rects(self): # debug function
         for entity in self.entities:
@@ -138,7 +146,7 @@ class Wall:
         return valid_collision_layers_path
 
 
-    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[(int, int, int, int)]:
+    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[tuple[int, int, int, int]]:
         collision_rects = []
         collision_layers_path = self.load_collision_layers_path(collision_layers_dir, object_name)
         for path in collision_layers_path:

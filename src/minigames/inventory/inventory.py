@@ -18,8 +18,6 @@ class Inventory:
         self.root_dir = Path(__file__).resolve().parent
         self.json_path = Path(self.root_dir / "objects_info.json")
 
-        self.entities = pygame.sprite.Group()
-
         self.raw_x = x
         self.x = int(self.raw_x * self.game_context.delta)
         self.raw_y = y
@@ -46,35 +44,55 @@ class Inventory:
 
 
     def save_images(self):
+        objects_list = {"data": [[]]}
+        for i in range(len(self.slots)):
+            objects_list["data"].append([])
+            for obj in self.slots[i]:
+                if not obj:
+                    objects_list["data"][i].append(None)
+                else:
+                    # convert the rectangle from pygame.Rect to tuple to store them in the json
+                    formated_rect = tuple(obj.raw_rect)
 
-        objects_list = {"data": []}
-        for i in range(len(self.entities)):
-            obj = list(self.entities)[i]
-            if not obj:
-                objects_list["data"].append(None)
-            else:
-                objects_list["data"].append({})
-                objects_list["data"][i]["name"] = obj.name
-                objects_list["data"][i]["image"] = obj.image_path.as_posix()
-                objects_list["data"][i]["rect"] = obj.rect
-                objects_list["data"][i]["collisions"] = obj.collision_rects
-                objects_list["data"][i]["collision_id"] = obj.current_collision_id
+                    formated_collision_rects = []
+                    for rect in obj.raw_collision_rects:
+                        formated_collision_rects.append(tuple(rect))
+
+                    objects_list["data"][i].append(
+                        {
+                            "name" : obj.name,
+                            "image" : obj.image_path.as_posix(),
+                            "rect" : formated_rect,
+                            "collisions" : formated_collision_rects,
+                            "collision_id" : obj.collision_rect_index
+                        }
+                    )
+
         save_data_in_json(objects_list, self.json_path)
 
 
     def init_images(self):
         objects_data = load_json_file(self.json_path)
-        for i in range(len(objects_data)):
-            sprite = objects_data["data"][i]
+        for key in objects_data:
+            if key == "data":
+                for i in range(len(objects_data["data"])):
+                    for j in range(len(objects_data["data"][i])):
+                        sprite_dict = objects_data["data"][i][j]
+                        if sprite_dict:
+                            name = sprite_dict["name"]
+                            image = sprite_dict["image"]
+                            rect = sprite_dict["rect"]
+                            collisions = sprite_dict["collisions"]
+                            collision_id = sprite_dict["collision_id"]
 
-            if sprite:
-                name = sprite["name"]
-                image = sprite["image"]
-                rect = sprite["rect"]
-                collisions = sprite["collisions"]
-                collision_id = sprite["collision_id"]
-                add_obj_to_group(name, self.entities, self.game_context, image, rect, collisions, collision_id)
+                            #convert in pygame Rect
+                            rect = pygame.Rect(rect)
 
+                            for k in range(len(collisions)):
+                                collisions[k] = pygame.Rect(collisions[k])
+
+                            object = create_object(name, self.game_context, image, rect, collisions, collision_id)
+                            self.slots[i][j] = object
 
 
     def draw(self):
@@ -116,14 +134,13 @@ class Inventory:
         # put objet from wall to inventory
         obj = self.game_context.current_item
         # if there is an object in the slot, it becomes the current item
-        self.current_item = self.slots[row][col]
+        self.current_item = self.slots[row][col] #TODO: what ??
         self.slots[row][col] = obj
         if obj in self.game_context.current_wall.entities:
             self.game_context.current_wall.entities.remove(obj)
-        self.entities.add(obj)
         print("Put in inventory")
         self.game_context.current_item = None
-        self.current_item = None
+        self.current_item = None #TODO: what ??
 
     def put_out_inventory(self, row, col):
         obj = self.current_item
@@ -131,8 +148,6 @@ class Inventory:
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
         if obj.drop(mx, my):
             self.slots[row][col] = None
-            if obj in self.entities:
-                self.entities.remove(obj)
             self.game_context.current_wall.entities.add(obj)
             self.game_context.current_item = None
             self.current_item = None

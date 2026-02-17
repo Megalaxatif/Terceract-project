@@ -198,6 +198,7 @@ class Menu:
                 self.pressed = True
                 self.game_context.current_mini_game = "game"
             elif save_hover and mouse_pressed and not self.pressed:
+                self.pressed = True
                 self.game_context.save_game()
 
             elif options_hover and mouse_pressed and not self.pressed:
