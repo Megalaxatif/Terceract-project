@@ -1,6 +1,4 @@
 import pygame
-import os
-import json
 from pathlib import Path
 from objects.vase import Vase
 from objects.digicode import Digicode
@@ -25,8 +23,6 @@ class Wall:
             self.collision_layers_dir.mkdir(parents=True, exist_ok=True)
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
-        #self.clear_object_layers()
-        #self.clear_cropped_objects() # TODO: to remove
         #self.clear_json() # TODO: to remove also
 
         self.background = self.create_background()
@@ -42,15 +38,6 @@ class Wall:
         with open(self.json_path, "w", encoding="utf-8") as f:
             f.write("{}")
 
-    def clear_cropped_objects(self):
-        cropped_object_paths = list(self.cropped_object_dir.iterdir())
-        for path in cropped_object_paths:
-            os.remove(path)
-
-    def clear_object_layers(self):
-        object_layers_path = list(self.object_layers_dir.iterdir())
-        for path in object_layers_path:
-            os.remove(path)
 
     def create_background(self) -> pygame.Surface:
         background_dir = Path(self.root_dir / "images/background")
