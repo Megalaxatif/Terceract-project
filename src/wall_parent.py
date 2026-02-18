@@ -143,7 +143,7 @@ class Wall:
         return valid_collision_layers_path
 
 
-    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[tuple[int, int, int, int]]:
+    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[tuple[int, int, int, int]]: # TODO: can we move this to utils ?
         collision_rects = []
         collision_layers_path = self.load_collision_layers_path(collision_layers_dir, object_name)
         for path in collision_layers_path:

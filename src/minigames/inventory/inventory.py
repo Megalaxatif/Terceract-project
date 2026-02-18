@@ -207,6 +207,21 @@ class Inventory:
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
 
+    def update_object_collision_rects(self):
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+
+                    current_wall_collision_dir = self.game_context.current_wall.collision_layers_dir
+                    new_collision_rects = self.game_context.current_wall.get_collision_rects(current_wall_collision_dir, obj.name)
+
+                    # convert the tupple returned by get_collision_rects into pygame.Rect
+                    formated_collision_rects = []
+                    for rect in new_collision_rects:
+                        formated_collision_rects.append(pygame.Rect(rect))
+
+                    obj.collision_rects = formated_collision_rects
+
 
     def display_collision_rects(self):
         for i in range(len(self.slots)):

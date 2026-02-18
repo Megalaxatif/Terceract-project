@@ -187,6 +187,8 @@ class Game:
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.recalculate_deltas()
 
+        # change the collision rects of the objects in the inventory
+        self.inventory.update_object_collision_rects()
 
     def update_walls(self, event): # update all walls
         for room in self.room_list:
