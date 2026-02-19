@@ -47,27 +47,29 @@ class Inventory:
                     objects_list["data"][i].append(None)
                 else:
                     # convert the rectangle from pygame.Rect to tuple to store them in the json
-                    formated_rect = tuple(obj.raw_rect)
+                    converted_rect = convert_to_tuple_rect(obj.raw_rect)
 
-                    formated_collision_rects = []
-                    for rect in obj.raw_collision_rects:
-                        formated_collision_rects.append(tuple(rect))
+                    # formated_collision_rects = []
+                    # for rect in obj.raw_collision_rects:
+                    #     formated_collision_rects.append(tuple(rect))
 
                     objects_list["data"][i].append(
                         {
                             "name" : obj.name,
                             "image" : obj.image_path.as_posix(),
-                            "rect" : formated_rect,
-                            "collisions" : formated_collision_rects,
-                            "collision_id" : obj.collision_rect_index
+                            "rect" : converted_rect
+
                         }
                     )
+                        #"collisions" : converted_collision_rects,
+                            #"collision_id" : obj.collision_rect_index
 
         save_data_in_json(objects_list, self.json_path)
 
 
     def init_images(self):
         objects_data = load_json_file(self.json_path)
+        collision_layers_dir = self.game_context.current_wall.collision_layers_dir
         for key in objects_data:
             if key == "data":
                 for i in range(len(objects_data["data"])):
@@ -77,16 +79,17 @@ class Inventory:
                             name = sprite_dict["name"]
                             image = sprite_dict["image"]
                             rect = sprite_dict["rect"]
-                            collisions = sprite_dict["collisions"]
-                            collision_id = sprite_dict["collision_id"]
-
+                            #collisions = sprite_dict["collisions"]
+                            #collision_id = sprite_dict["collision_id"]
+                            collision_rects = get_collision_rects(collision_layers_dir, name)
+                            converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
                             #convert in pygame Rect
-                            rect = pygame.Rect(rect)
+                            # rect = pygame.Rect(rect)
 
-                            for k in range(len(collisions)):
-                                collisions[k] = pygame.Rect(collisions[k])
+                            # for k in range(len(collisions)):
+                            #     collisions[k] = pygame.Rect(collisions[k])
 
-                            object = create_object(name, self.game_context, image, rect, collisions, collision_id)
+                            object = create_object(name, self.game_context, image, rect, converted_collision_rects, -1)
                             self.slots[i][j] = object
 
 
@@ -159,11 +162,13 @@ class Inventory:
             self.current_item = None
             print("Put out inventory")
 
+
     def resize_in_inventory(self, path):
         return pygame.transform.scale(
             pygame.image.load(path),
             (int(self.block_size * 0.9), int(self.block_size * 0.9))
         )
+
 
     def draw_grid(self):
         for row in range(self.rows):
@@ -208,19 +213,15 @@ class Inventory:
             )
 
     def update_object_collision_rects(self):
+        collision_layers_dir = self.game_context.current_wall.collision_layers_dir
         for i in range(len(self.slots)):
             for obj in self.slots[i]:
                 if obj is not None:
 
-                    current_wall_collision_dir = self.game_context.current_wall.collision_layers_dir
-                    new_collision_rects = self.game_context.current_wall.get_collision_rects(current_wall_collision_dir, obj.name)
+                    new_collision_rects = get_collision_rects(collision_layers_dir, obj.name)
+                    converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
 
-                    # convert the tupple returned by get_collision_rects into pygame.Rect
-                    formated_collision_rects = []
-                    for rect in new_collision_rects:
-                        formated_collision_rects.append(pygame.Rect(rect))
-
-                    obj.collision_rects = formated_collision_rects
+                    obj.collision_rects = converted_collision_rects
 
 
     def display_collision_rects(self):

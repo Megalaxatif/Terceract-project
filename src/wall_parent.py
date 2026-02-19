@@ -23,22 +23,19 @@ class Wall:
             self.collision_layers_dir.mkdir(parents=True, exist_ok=True)
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
-        #self.clear_json() # TODO: to remove also
+
+        clear_json(self.json_path) # TODO: to remove also
 
         self.background = self.create_background()
         self.original_background = self.background
         self.objects = pygame.sprite.Group()
-        self.create_entities()
+        self.create_wall_objects()
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
 
 
-    def clear_json(self):
-        with open(self.json_path, "w", encoding="utf-8") as f:
-            f.write("{}")
-
-
+#---------------------------INIT---------------------------------------
     def create_background(self) -> pygame.Surface:
         background_dir = Path(self.root_dir / "images/background")
         background_path = list(background_dir.iterdir()) # NOTE: we should only have one png file for the background
@@ -57,39 +54,21 @@ class Wall:
             cropped_name = f"cropped_{object_name}.png"
             save_path = Path(self.cropped_object_dir / cropped_name) # place where we save the cropped image
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
-            bbox = self.create_cropped_object(object_path, save_path.as_posix())
+            bbox = create_cropped_object(object_path, save_path.as_posix())
 
-            collision_rects = self.get_collision_rects(self.collision_layers_dir, object_name)
+            #collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
             objects_data[object_name]["rect"] = bbox
-            objects_data[object_name]["collisions"] = collision_rects
+            #objects_data[object_name]["collisions"] = collision_rects
             objects_data[object_name]["collision_id"] = -1
 
         save_data_in_json(objects_data, self.json_path)
         return objects_data
 
-    def save_objects_data(self):
-        new_obj_data = {}
-        for object in self.objects:
-            print(f"saving {object.name} in json")
-            # convert the rectangle from pygame.Rect to tuple to store them in the json
-            formated_rect = tuple(object.raw_rect)
 
-            formated_collision_rects = []
-            for rect in object.raw_collision_rects:
-                formated_collision_rects.append(tuple(rect))
-
-            new_obj_data[object.name] = {}
-            new_obj_data[object.name]["image"] = object.image_path.as_posix()
-            new_obj_data[object.name]["rect"] = formated_rect
-            new_obj_data[object.name]["collisions"] = formated_collision_rects
-            new_obj_data[object.name]["collision_id"] = object.collision_rect_index
-        save_data_in_json(new_obj_data, self.json_path)
-
-
-    def create_entities(self):
+    def create_wall_objects(self):
         objects_data = load_json_file(self.json_path) # load or init the JSON file
         # case where we launched the game for the first time or we previously reset the progression
         if not objects_data:
@@ -97,99 +76,46 @@ class Wall:
 
         for key in objects_data:
             img_path = objects_data[key]["image"] # load the relative path
-            rect = pygame.Rect(objects_data[key]["rect"])
-            collision_rects = objects_data[key]["collisions"]
-            current_collision_id = objects_data[key]["collision_id"]
-            #convert in pygame Rect
-            for i in range(len(collision_rects)):
-                collision_rects[i] = pygame.Rect(collision_rects[i])
+            rect = objects_data[key]["rect"]
+            formated_rect = convert_to_pygame_rect(rect)
+            #collision_rects = objects_data[key]["collisions"]
 
-            object = create_object(key, self.game_context, img_path, rect, collision_rects, current_collision_id)
+            current_collision_id = objects_data[key]["collision_id"]
+            # #convert in pygame Rect
+            # for i in range(len(collision_rects)):
+            #     collision_rects[i] = pygame.Rect(collision_rects[i])
+            collision_rects = get_collision_rects(self.collision_layers_dir, key)
+
+            object = create_object(key, self.game_context, img_path, formated_rect, collision_rects, current_collision_id)
             self.objects.add(object)
 
-    def display_collision_rects(self): # debug function
-        for entity in self.objects:
-           entity.display_collision_rect()
+
+#-------------------------------SAVE---------------------------------
+    def save_objects_data(self):
+        new_obj_data = {}
+        for object in self.objects:
+            print(f"saving {object.name} in json")
+            # convert the rectangle from pygame.Rect to tuple to store them in the json
+            formated_rect = convert_to_tuple_rect(object.raw_rect)
+
+            # formated_collision_rects = []
+            # for rect in object.raw_collision_rects:
+            #     formated_collision_rects.append(tuple(rect))
+
+            new_obj_data[object.name] = {}
+            new_obj_data[object.name]["image"] = object.image_path.as_posix()
+            new_obj_data[object.name]["rect"] = formated_rect
+            #new_obj_data[object.name]["collisions"] = formated_collision_rects
+            new_obj_data[object.name]["collision_id"] = object.collision_rect_index
+        save_data_in_json(new_obj_data, self.json_path)
 
 
-    #returns the list of the paths of all the collision layers of an object
-    def load_collision_layers_path(self, collision_layers_dir: Path, obj_name: str) -> list[Path]:
-        collision_layers_path = list(collision_layers_dir.iterdir())
-
-        valid_collision_layers_path = []
-        all_found = False
-        layer_count = 0
-        while not all_found:
-            layer_name = f"{obj_name}_pos{layer_count}.png"
-            layer_path = Path(collision_layers_dir / layer_name)
-            if layer_path in collision_layers_path:
-                valid_collision_layers_path.append(layer_path)
-                layer_count +=1
-            else:
-                all_found = True
-        return valid_collision_layers_path
-
-
-    def get_collision_rects(self, collision_layers_dir: Path, object_name: str) -> list[tuple[int, int, int, int]]: # TODO: can we move this to utils ?
-        collision_rects = []
-        collision_layers_path = self.load_collision_layers_path(collision_layers_dir, object_name)
-        for path in collision_layers_path:
-            collision_layer = pygame.image.load(path).convert_alpha()
-            rect = self.get_bounding_box(collision_layer)
-            collision_rects.append(rect)
-        return collision_rects
-
-
-    # creates a cropped version of an image and saves its dimensions in a dictionary
-    def create_cropped_object(self, raw_image_path, save_path):
-        image = pygame.image.load(raw_image_path).convert_alpha()
-        bbox = self.get_bounding_box(image)
-        if bbox is None:
-            print(f"No visible pixels in {raw_image_path}")
-            return
-
-        x, y, w, h = bbox
-        cropped_image = self.create_sub_surface(x, y, w, h, image)
-
-        pygame.image.save(cropped_image, save_path)
-        print(f"Cropped image saved to {save_path}")
-
-        return bbox
-
-
-    def get_bounding_box(self, surface: pygame.Surface) -> (int, int, int, int):
-        width, height = surface.get_size()
-        pixel_array = pygame.PixelArray(surface)
-
-        min_x = width
-        min_y = height
-        max_x = 0
-        max_y = 0
-
-        found = False
-
-        for y in range(height):
-            for x in range(width):
-                color = surface.unmap_rgb(pixel_array[x, y])
-                if color.a > 0:  # if a pixel is visible
-                    found = True
-                    min_x = min(min_x, x)
-                    min_y = min(min_y, y)
-                    max_x = max(max_x, x)
-                    max_y = max(max_y, y)
-
-        del pixel_array  # if we don't do that, the surface is locked
-
-        if not found:
-            return None
-
-        x, y, w, h = min_x, min_y, max_x - min_x + 1, max_y - min_y + 1
-        #print(f"x={x}, y={y}, w={w}, h={h}") #debug
-        return (x, y, w, h)
-
-
-    def create_sub_surface(self, x, y, w, h, surface):
-        return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
+#-----------------------RESIZE---------------------------
+    def resize_all(self):
+        self.resize_background()
+        for obj in self.objects:
+            obj.resize_image()
+            obj.resize_collision_rects()
 
 
     def resize_background(self):
@@ -201,11 +127,10 @@ class Wall:
             )
         )
 
-    def resize(self):
-        self.resize_background()
-        for obj in self.objects:
-            obj.resize_image()
-            obj.resize_collision_rects()
+#--------------------DRAWING--------------------------------
+    def display_collision_rects(self):
+        for entity in self.objects:
+            entity.display_collision_rect()
 
 
     def draw_objects(self):
@@ -218,10 +143,11 @@ class Wall:
 
 
     def display(self):
-        self.resize()
+        self.resize_all()
         self.draw_background()
         self.draw_objects()
         self.display_collision_rects()
+#--------------------------------------------------------
 
     # NOTE: can be redefined in child classes
     def update(self, event):

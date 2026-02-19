@@ -43,8 +43,6 @@ class Game:
         self.name = "game"
         self.current_mini_game = "menu"
 
-        self.mini_game_menu = Menu(self)
-        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
         self.mouse_enabled = True
 
         self.back_wall_R1  = Back_wall_R1(self)
@@ -95,6 +93,9 @@ class Game:
         self.current_wall_id = 0 # back wall
         self.change_current_wall() # reference to the current wall to render
         self.network_manager = Network_manager(self)
+        self.mini_game_menu = Menu(self)
+        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
+
 
     def save_game(self): # save all the game data
         print("save game")
@@ -190,10 +191,12 @@ class Game:
         # change the collision rects of the objects in the inventory
         self.inventory.update_object_collision_rects()
 
+
     def update_walls(self, event): # update all walls
         for room in self.room_list:
             for wall in room:
                 wall.update(event)
+
 
     def center_current_item(self): # put the center of the current item at the mouse position
         if self.current_item is not None and self.current_item.movable:
