@@ -46,12 +46,7 @@ class Inventory:
                 if not obj:
                     objects_list["data"][i].append(None)
                 else:
-                    # convert the rectangle from pygame.Rect to tuple to store them in the json
                     converted_rect = convert_to_tuple_rect(obj.raw_rect)
-
-                    # formated_collision_rects = []
-                    # for rect in obj.raw_collision_rects:
-                    #     formated_collision_rects.append(tuple(rect))
 
                     objects_list["data"][i].append(
                         {
@@ -61,8 +56,6 @@ class Inventory:
 
                         }
                     )
-                        #"collisions" : converted_collision_rects,
-                            #"collision_id" : obj.collision_rect_index
 
         save_data_in_json(objects_list, self.json_path)
 
@@ -79,17 +72,11 @@ class Inventory:
                             name = sprite_dict["name"]
                             image = sprite_dict["image"]
                             rect = sprite_dict["rect"]
-                            #collisions = sprite_dict["collisions"]
-                            #collision_id = sprite_dict["collision_id"]
+                            converted_rect = convert_to_pygame_rect(rect)
+
                             collision_rects = get_collision_rects(collision_layers_dir, name)
                             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
-                            #convert in pygame Rect
-                            # rect = pygame.Rect(rect)
-
-                            # for k in range(len(collisions)):
-                            #     collisions[k] = pygame.Rect(collisions[k])
-
-                            object = create_object(name, self.game_context, image, rect, converted_collision_rects, -1)
+                            object = create_object(name, self.game_context, image, converted_rect, converted_collision_rects, -1)
                             self.slots[i][j] = object
 
 
@@ -163,11 +150,11 @@ class Inventory:
             print("Put out inventory")
 
 
-    def resize_in_inventory(self, path):
-        return pygame.transform.scale(
-            pygame.image.load(path),
-            (int(self.block_size * 0.9), int(self.block_size * 0.9))
-        )
+    # def resize_in_inventory(self, path):
+    #     return pygame.transform.scale(
+    #         pygame.image.load(path),
+    #         (int(self.block_size * 0.9), int(self.block_size * 0.9))
+    #     )
 
 
     def draw_grid(self):
@@ -221,7 +208,7 @@ class Inventory:
                     new_collision_rects = get_collision_rects(collision_layers_dir, obj.name)
                     converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
 
-                    obj.collision_rects = converted_collision_rects
+                    obj.set_collision_rects(converted_collision_rects)
 
 
     def display_collision_rects(self):

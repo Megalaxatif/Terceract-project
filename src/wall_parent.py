@@ -56,12 +56,12 @@ class Wall:
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
             bbox = create_cropped_object(object_path, save_path.as_posix())
 
-            #collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
+            collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
             objects_data[object_name]["rect"] = bbox
-            #objects_data[object_name]["collisions"] = collision_rects
+            objects_data[object_name]["collisions"] = collision_rects
             objects_data[object_name]["collision_id"] = -1
 
         save_data_in_json(objects_data, self.json_path)
@@ -77,16 +77,13 @@ class Wall:
         for key in objects_data:
             img_path = objects_data[key]["image"] # load the relative path
             rect = objects_data[key]["rect"]
-            formated_rect = convert_to_pygame_rect(rect)
-            #collision_rects = objects_data[key]["collisions"]
-
+            collision_rects = objects_data[key]["collisions"]
             current_collision_id = objects_data[key]["collision_id"]
-            # #convert in pygame Rect
-            # for i in range(len(collision_rects)):
-            #     collision_rects[i] = pygame.Rect(collision_rects[i])
-            collision_rects = get_collision_rects(self.collision_layers_dir, key)
 
-            object = create_object(key, self.game_context, img_path, formated_rect, collision_rects, current_collision_id)
+            converted_rect = convert_to_pygame_rect(rect)
+            converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
+
+            object = create_object(key, self.game_context, img_path, converted_rect, converted_collision_rects, current_collision_id)
             self.objects.add(object)
 
 
@@ -95,23 +92,18 @@ class Wall:
         new_obj_data = {}
         for object in self.objects:
             print(f"saving {object.name} in json")
-            # convert the rectangle from pygame.Rect to tuple to store them in the json
             formated_rect = convert_to_tuple_rect(object.raw_rect)
-
-            # formated_collision_rects = []
-            # for rect in object.raw_collision_rects:
-            #     formated_collision_rects.append(tuple(rect))
-
+            formated_collision_rects = convert_to_tuple_rect_list(object.raw_collision_rects)
             new_obj_data[object.name] = {}
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = formated_rect
-            #new_obj_data[object.name]["collisions"] = formated_collision_rects
+            new_obj_data[object.name]["collisions"] = formated_collision_rects
             new_obj_data[object.name]["collision_id"] = object.collision_rect_index
         save_data_in_json(new_obj_data, self.json_path)
 
 
 #-----------------------RESIZE---------------------------
-    def resize_all(self):
+    def resize_wall(self):
         self.resize_background()
         for obj in self.objects:
             obj.resize_image()
@@ -143,7 +135,7 @@ class Wall:
 
 
     def display(self):
-        self.resize_all()
+        self.resize_wall()
         self.draw_background()
         self.draw_objects()
         self.display_collision_rects()

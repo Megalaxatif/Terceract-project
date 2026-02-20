@@ -218,6 +218,7 @@ class Menu:
                     (0, 0),
                     pygame.NOFRAME
                 )
+                self.game_context.recalculate_deltas()
                 pygame.display.toggle_fullscreen()
                 print("Video Settings")
             elif audio_hover and mouse_pressed and not self.pressed:

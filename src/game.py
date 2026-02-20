@@ -38,8 +38,6 @@ class Game:
         self.game_data = {}  # json file
         self.game_data_path = f"{self.root_dir}/data/game_data.json"
         self.event = None
-        self.current_wall = None
-        self.current_item = None
         self.name = "game"
         self.current_mini_game = "menu"
 
@@ -89,9 +87,11 @@ class Game:
            self.R5
         ]
 
+        #self.change_current_wall() # reference to the current wall to render
         self.current_room_id = 0
         self.current_wall_id = 0 # back wall
-        self.change_current_wall() # reference to the current wall to render
+        self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
+        self.current_item = None
         self.network_manager = Network_manager(self)
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
@@ -263,10 +263,10 @@ class Game:
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.VIDEORESIZE:
+            if event.type == pygame.WINDOWSIZECHANGED:
                 self.recalculate_deltas()
 
-            if self.current_mini_game == "game":
+            elif self.current_mini_game == "game":
                 self.handle_basic_game_events(event)
                 self.update_walls(event)
 

@@ -71,6 +71,12 @@ class Game_object(pygame.sprite.Sprite):
             raw_collision_rect = self.raw_collision_rects[i]
             self.collision_rects[i] = pygame.Rect(delta * raw_collision_rect.x, delta * raw_collision_rect.y, delta * raw_collision_rect.w, delta * raw_collision_rect.h)
 
+
+    def set_collision_rects(self, new_collision_rects):
+        self.collision_rects = new_collision_rects
+        self.raw_collision_rects = new_collision_rects.copy()
+
+
     def display_collision_rect(self):
         for rect in self.collision_rects:
             temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
