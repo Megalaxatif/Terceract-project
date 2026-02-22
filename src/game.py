@@ -96,6 +96,7 @@ class Game:
 
 
     def save_game(self): # save all the game data
+        #if self.network_manager.is_host:
         print("save game")
         for room in self.room_list:
             for wall in room:
@@ -213,6 +214,14 @@ class Game:
     def drop_current_item(self, event):
         self.current_item.drop_at_pos(event.pos[0], event.pos[1])
         self.current_item = None
+        # TODO: send information to second player
+
+    # function useful for network
+    def drop_item(self, obj, room_id, wall_id, collision_rect_id):
+        dest_wall = self.room_list[room_id][wall_id]                 # on which wall do we want to put it
+        dest_wall.objects.add(obj)                                   # add the object on the wall
+        obj.change_collision_rects(dest_wall.collision_layers_dir)    # update its collision rects
+        obj.drop_in_collision_rect(collision_rect_id)           # set the new collision rect id of the object and put it inside
 
 
     def display_room_counter(self): # for debug purposes

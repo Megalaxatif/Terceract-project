@@ -88,6 +88,14 @@ class Inventory:
                     obj.resize_collision_rects()
 
 
+    def update_object_collision_rects(self):
+        collision_layers_dir = self.game_context.current_wall.collision_layers_dir
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+                    obj.change_collision_rects(collision_layers_dir)
+
+
     def display(self):
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
@@ -136,13 +144,7 @@ class Inventory:
         #print("Put in inventory")
         self.game_context.current_item = None
         self.current_item = None #TODO: what ??
-
-
-    def store_item(self, row, col, obj, room_id, wall_id):
-        src_wall = self.game_context.room_list[room_id][wall_id]
-        self.slots[row][col] = obj                                                      # put the object in inventory
-        obj.change_collision_rect(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
-        src_wall.objects.remove(obj)                                                        # remove the object from the wall
+        # TODO: send the information to the other player
 
 
     def drop_current_item(self, row, col):
@@ -155,17 +157,25 @@ class Inventory:
             self.game_context.current_item = None
             self.current_item = None
             #print("Put out inventory")
+        #TODO: send the informatoin to the other player
+
+#-------------------------NETWORK-------------------------------------
+
+    # function useful for network
+    def inventory_store_item(self, row, col, obj, room_id, wall_id):
+        src_wall = self.game_context.room_list[room_id][wall_id]
+        self.slots[row][col] = obj                                                      # put the object in inventory
+        obj.change_collision_rect(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
+        src_wall.objects.remove(obj)                                                    # remove the object from the wall
 
 
     # function useful for network
-    def drop_item(self, obj_row, obj_col, room_id, wall_id, collision_rect_id):
-        obj = self.slots[obj_row][obj_col]                      # which object are we talking about
-        wall = self.game_context.room_list[room_id][wall_id]    # on which wall do we want to put it
-        wall.objects.add(obj)                                   # add the object on the wall
-        obj.change_collision_rect(wall.collision_layers_dir)    # update its collision rects
-        obj.drop_in_collision_rect(collision_rect_id)           # set the new collision rect id of the object and put it inside
-        self.slots[obj_row][obj_col] = None                     # remove it from inventory
+    def inventory_drop_item(self, obj_row, obj_col, room_id, wall_id, collision_rect_id):
+        obj = self.slots[obj_row][obj_col]                                      # which object are we talking about
+        self.game_context.drop_item(obj, room_id, wall_id, collision_rect_id)   # do all the operations
+        self.slots[obj_row][obj_col] = None                                     # remove it from inventory
 
+#-------------------------------------------------------------------
 
     def draw_grid(self):
         for row in range(self.rows):
@@ -197,6 +207,7 @@ class Inventory:
                         )
                     )
 
+
     def draw_current_item(self):
         if self.current_item:  # if not None
             mx, my = pygame.mouse.get_pos()
@@ -208,13 +219,6 @@ class Inventory:
                 scaled_image,
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
-
-    def update_object_collision_rects(self):
-        collision_layers_dir = self.game_context.current_wall.collision_layers_dir
-        for i in range(len(self.slots)):
-            for obj in self.slots[i]:
-                if obj is not None:
-                    obj.change_collision_rects(collision_layers_dir)
 
 
     def display_collision_rects(self):
