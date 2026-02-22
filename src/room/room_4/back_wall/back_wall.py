@@ -5,6 +5,5 @@ from pathlib import Path
 root_dir = Path(__file__).resolve().parent
 
 class Back_wall_R4(Wall):
-    def __init__(self, game):
-        super().__init__(game, root_dir)
-        #self.background.fill((0,0,255))
+    def __init__(self, game, room_id, wall_id):
+        super().__init__(game, root_dir, room_id, wall_id)

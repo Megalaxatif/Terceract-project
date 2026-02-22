@@ -3,7 +3,7 @@ from pathlib import Path
 from utils import *
 
 class Wall:
-    def __init__(self, game_context, root_dir):
+    def __init__(self, game_context, root_dir, room_id, wall_id):
         self.game_context = game_context
         self.root_dir = root_dir
 
@@ -26,11 +26,12 @@ class Wall:
         self.background = self.create_background()
         self.original_background = self.background
         self.objects = pygame.sprite.Group()
-        self.create_wall_objects()
+        self.wall_id = wall_id # for network
+        self.room_id = room_id # for network
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
-
+        self.create_wall_objects()
 
 #---------------------------INIT---------------------------------------
     def create_background(self) -> pygame.Surface:
@@ -66,10 +67,15 @@ class Wall:
 
 
     def create_wall_objects(self):
-        objects_data = load_json_file(self.json_path) # load or init the JSON file
-        # case where we launched the game for the first time or we previously reset the progression
-        if not objects_data:
-            objects_data = self.get_objects_data()
+        objects_data = {}
+        if self.game_context.network_manager.is_host:
+            objects_data = load_json_file(self.json_path) # load or init the JSON file
+            # case where we launched the game for the first time or we previously reset the progression
+            if not objects_data:
+                objects_data = self.get_objects_data()
+
+        else:
+            objects_data = self.game_context.game_data["wall_data"][self.room_id][self.wall_id]
 
         for key in objects_data:
             img_path = objects_data[key]["image"] # load the relative path

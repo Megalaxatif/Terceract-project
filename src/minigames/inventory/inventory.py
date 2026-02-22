@@ -53,7 +53,6 @@ class Inventory:
                             "name" : obj.name,
                             "image" : obj.image_path.as_posix(),
                             "rect" : converted_rect
-
                         }
                     )
 

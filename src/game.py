@@ -1,3 +1,4 @@
+from json.decoder import JSONDecodeError
 import math
 import pygame
 import socket
@@ -33,46 +34,48 @@ class Game:
         self.clock = pygame.time.Clock()
         self.game_running = True
         self.root_dir = (Path(__file__).resolve().parent.parent)
-        self.game_data = {}  # json file
+        self.game_data = {} # for network
         self.game_data_path = f"{self.root_dir}/data/game_data.json"
         self.event = None
         self.name = "game"
         self.current_mini_game = "menu"
 
         self.mouse_enabled = True
+        self.network_manager = Network_manager(self)
+        self.start()
 
-        self.back_wall_R1  = Back_wall_R1(self)
-        self.left_wall_R1  = Left_wall_R1(self)
-        self.front_wall_R1 = Front_wall_R1(self)
-        self.right_wall_R1 = Right_wall_R1(self)
+        self.back_wall_R1  = Back_wall_R1(self, 0, 0)
+        self.left_wall_R1  = Left_wall_R1(self, 0, 1)
+        self.front_wall_R1 = Front_wall_R1(self, 0, 2)
+        self.right_wall_R1 = Right_wall_R1(self, 0, 3)
 
         self.R1 = [self.back_wall_R1, self.left_wall_R1, self.front_wall_R1, self.right_wall_R1]
 
-        self.back_wall_R2  = Back_wall_R2(self)
-        self.left_wall_R2  = Left_wall_R2(self)
-        self.front_wall_R2 = Front_wall_R2(self)
-        self.right_wall_R2 = Right_wall_R2(self)
+        self.back_wall_R2  = Back_wall_R2(self, 1, 0)
+        self.left_wall_R2  = Left_wall_R2(self, 1, 1)
+        self.front_wall_R2 = Front_wall_R2(self, 1, 2)
+        self.right_wall_R2 = Right_wall_R2(self, 1, 3)
 
         self.R2 = [self.back_wall_R2, self.left_wall_R2, self.front_wall_R2, self.right_wall_R2]
 
-        self.back_wall_R3  = Back_wall_R3(self)
-        self.left_wall_R3  = Left_wall_R3(self)
-        self.front_wall_R3 = Front_wall_R3(self)
-        self.right_wall_R3 = Right_wall_R3(self)
+        self.back_wall_R3  = Back_wall_R3(self, 2, 0)
+        self.left_wall_R3  = Left_wall_R3(self, 2, 1)
+        self.front_wall_R3 = Front_wall_R3(self, 2, 2)
+        self.right_wall_R3 = Right_wall_R3(self, 2, 3)
 
         self.R3 = [self.back_wall_R3, self.left_wall_R3, self.front_wall_R3, self.right_wall_R3]
 
-        self.back_wall_R4  = Back_wall_R4(self)
-        self.left_wall_R4  = Left_wall_R4(self)
-        self.front_wall_R4 = Front_wall_R4(self)
-        self.right_wall_R4 = Right_wall_R4(self)
+        self.back_wall_R4  = Back_wall_R4(self, 3, 0)
+        self.left_wall_R4  = Left_wall_R4(self, 3, 1)
+        self.front_wall_R4 = Front_wall_R4(self, 3, 2)
+        self.right_wall_R4 = Right_wall_R4(self, 3, 3)
 
         self.R4 = [self.back_wall_R4, self.left_wall_R4, self.front_wall_R4, self.right_wall_R4]
 
-        self.back_wall_R5  = Back_wall_R5(self)
-        self.left_wall_R5  = Left_wall_R5(self)
-        self.front_wall_R5 = Front_wall_R5(self)
-        self.right_wall_R5 = Right_wall_R5(self)
+        self.back_wall_R5  = Back_wall_R5(self, 4, 0)
+        self.left_wall_R5  = Left_wall_R5(self, 4, 1)
+        self.front_wall_R5 = Front_wall_R5(self, 4, 2)
+        self.right_wall_R5 = Right_wall_R5(self, 4, 3)
 
         self.R5 = [self.back_wall_R5, self.left_wall_R5, self.front_wall_R5, self.right_wall_R5]
 
@@ -85,28 +88,27 @@ class Game:
            self.R5
         ]
 
-        #self.change_current_wall() # reference to the current wall to render
         self.current_room_id = 0
         self.current_wall_id = 0 # back wall
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_item = None
-        self.network_manager = Network_manager(self)
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
 
     def save_game(self): # save all the game data
-        #if self.network_manager.is_host:
-        print("save game")
-        for room in self.room_list:
-            for wall in room:
-                wall.save_objects_data()
-        print("save inventory")
-        self.inventory.save_images()
+        if self.network_manager.is_host:
+            print("save game")
+            for room in self.room_list:
+                for wall in room:
+                    wall.save_objects_data()
+            print("save inventory")
+            self.inventory.save_images()
 
 
     def start(self): # TODO: adapt this function to make it work again
-        gamemode = "s" #input("wanna play solo (s) or duo (d) bitch ? ")
+        #gamemode = "s"
+        gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -124,17 +126,13 @@ class Game:
 
         #self.load_data_in_memory(self.game_data)
 
-        #incoming_data_thread = threading.Thread(
-         #   target=self.network.network_manager,
-          #  daemon=True
-        #)
-        #incoming_data_thread.start()
+        incoming_data_thread = threading.Thread(target=self.network_manager.network_manager, daemon=True)
+        incoming_data_thread.start()
 
     def launch_solo(self): # TODO adapt this function to make it work again
-        #self.load_data_from_file()
-        #self.player1.is_displayed = True
-        #self.network.setup_server()
-        pass
+        self.network_manager.is_host = True
+        self.network_manager.setup_server()
+
 
     def launch_duo(self, ip: str, port: int):
         try:
@@ -144,13 +142,23 @@ class Game:
             sys.exit(1)
         else:
             try:
-                data = self.network_manager.client.recv(4096).decode("utf-8")
+                #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
+                # it is undefined behavior we need to use a method that give us the length of the data
+                data = self.network_manager.client.recv(20480).decode("utf-8")
             except Exception as e:
                 print("launch_duo: Error", e)
+                sys.exit(1)
             else:
-                self.game_data = json.loads(data)
-                self.network_manager.is_connected = True
-                self.network_manager.is_host = False
+                try:
+                    self.game_data = json.loads(data)
+
+                except JSONDecodeError as e:
+                    print("launch_duo error: ", e)
+                    sys.exit(1)
+                else:
+                    self.network_manager.is_connected = True
+                    self.network_manager.is_host = False
+
 
     def switch_back_to_solo_mode(self):
         self.network_manager.is_connected = False

@@ -10,7 +10,7 @@ screen = pygame.display.set_mode((1080, 720), pygame.RESIZABLE)
 
 # game
 game = Game(screen)
-game.start()
+#game.start()
 
 while game.game_running:
     game.update_all()
