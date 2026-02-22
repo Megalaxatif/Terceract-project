@@ -1,8 +1,5 @@
 import pygame
 from pathlib import Path
-from objects.vase import Vase
-from objects.digicode import Digicode
-from objects.Connect4_Beta import Connect
 from utils import *
 
 class Wall:
@@ -24,7 +21,7 @@ class Wall:
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
 
-        clear_json(self.json_path) # TODO: to remove also
+        #clear_json(self.json_path) # TODO: to remove also
 
         self.background = self.create_background()
         self.original_background = self.background
@@ -98,7 +95,7 @@ class Wall:
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = formated_rect
             new_obj_data[object.name]["collisions"] = formated_collision_rects
-            new_obj_data[object.name]["collision_id"] = object.collision_rect_index
+            new_obj_data[object.name]["collision_id"] = object.collision_rect_id
         save_data_in_json(new_obj_data, self.json_path)
 
 

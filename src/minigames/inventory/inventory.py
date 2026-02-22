@@ -106,7 +106,7 @@ class Inventory:
         self.draw_current_item()
 
 
-    def handle_event(self, event):
+    def handle_left_click(self, event):
         self.mouse_x, self.mouse_y = event.pos
 
         if (
@@ -117,44 +117,54 @@ class Inventory:
             self.row = (self.mouse_y - self.y) // self.block_size
 
             if self.game_context.current_item is not None:
-                self.put_in_inventory(self.row, self.col)
+                self.store_current_item(self.row, self.col)
             else:
                 self.current_item, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_item
 
         elif self.current_item is not None:
-            self.put_out_inventory(self.row, self.col)
+            self.drop_current_item(self.row, self.col)
 
 
-    def put_in_inventory(self, row, col):
+    def store_current_item(self, row, col):
         # put objet from wall to inventory
         obj = self.game_context.current_item
         # if there is an object in the slot, it becomes the current item
-        self.current_item = self.slots[row][col] #TODO: what ??
+        #self.current_item = self.slots[row][col] #TODO: what ??
         self.slots[row][col] = obj
-        if obj in self.game_context.current_wall.objects:
-            self.game_context.current_wall.objects.remove(obj)
-        print("Put in inventory")
+        #if obj in self.game_context.current_wall.objects:
+        self.game_context.current_wall.objects.remove(obj)
+        #print("Put in inventory")
         self.game_context.current_item = None
         self.current_item = None #TODO: what ??
 
 
-    def put_out_inventory(self, row, col):
+    def store_item(self, row, col, obj, room_id, wall_id):
+        src_wall = self.game_context.room_list[room_id][wall_id]
+        self.slots[row][col] = obj                                                      # put the object in inventory
+        obj.change_collision_rect(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
+        src_wall.objects.remove(obj)                                                        # remove the object from the wall
+
+
+    def drop_current_item(self, row, col):
         obj = self.current_item
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
-        if obj.drop(mx, my):
+        if obj.drop_at_pos(mx, my):
             self.slots[row][col] = None
             self.game_context.current_wall.objects.add(obj)
             self.game_context.current_item = None
             self.current_item = None
-            print("Put out inventory")
+            #print("Put out inventory")
 
 
-    # def resize_in_inventory(self, path):
-    #     return pygame.transform.scale(
-    #         pygame.image.load(path),
-    #         (int(self.block_size * 0.9), int(self.block_size * 0.9))
-    #     )
+    # function useful for network
+    def drop_item(self, obj_row, obj_col, room_id, wall_id, collision_rect_id):
+        obj = self.slots[obj_row][obj_col]                      # which object are we talking about
+        wall = self.game_context.room_list[room_id][wall_id]    # on which wall do we want to put it
+        wall.objects.add(obj)                                   # add the object on the wall
+        obj.change_collision_rect(wall.collision_layers_dir)    # update its collision rects
+        obj.drop_in_collision_rect(collision_rect_id)           # set the new collision rect id of the object and put it inside
+        self.slots[obj_row][obj_col] = None                     # remove it from inventory
 
 
     def draw_grid(self):
@@ -204,11 +214,7 @@ class Inventory:
         for i in range(len(self.slots)):
             for obj in self.slots[i]:
                 if obj is not None:
-
-                    new_collision_rects = get_collision_rects(collision_layers_dir, obj.name)
-                    converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
-
-                    obj.set_collision_rects(converted_collision_rects)
+                    obj.change_collision_rects(collision_layers_dir)
 
 
     def display_collision_rects(self):

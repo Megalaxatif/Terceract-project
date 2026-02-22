@@ -6,8 +6,6 @@ import json
 import sys
 import time
 
-#from wall_parent import Wall
-#from object import Game_object
 from room import *
 from network import Network_manager
 from minigames import *
@@ -205,6 +203,18 @@ class Game:
             self.current_item.raw_rect.y = my - self.current_item.raw_rect.h/2
 
 
+    def select_current_item(self, event):
+        for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
+            if obj.rect.collidepoint(event.pos):
+                self.current_item = obj
+                break
+
+
+    def drop_current_item(self, event):
+        self.current_item.drop_at_pos(event.pos[0], event.pos[1])
+        self.current_item = None
+
+
     def display_room_counter(self): # for debug purposes
         font = pygame.font.Font(None, 50)
         text_surface = font.render(
@@ -238,17 +248,13 @@ class Game:
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
-            self.inventory.handle_event(event)
+            self.inventory.handle_left_click(event)
 
             if self.current_item is None and self.inventory.current_item is None:
-                for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
-                    if obj.rect.collidepoint(event.pos):
-                        self.current_item = obj
-                        break
+                self.select_current_item(event)
 
             elif self.current_item is not None and self.current_item.movable:
-                self.current_item.drop(event.pos[0], event.pos[1])
-                self.current_item = None
+                self.drop_current_item(event)
 
 
         elif event.type == pygame.MOUSEMOTION:
