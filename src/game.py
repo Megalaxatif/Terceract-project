@@ -314,3 +314,6 @@ class Game:
         self.mouse_enabled = True
 
         pygame.display.flip()
+
+        # limit framerate
+        self.clock.tick(self.FPS)

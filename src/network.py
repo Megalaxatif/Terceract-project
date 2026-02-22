@@ -14,15 +14,19 @@ class Network_manager:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receive_buffer = ""
+        self.FPS = 100
+        self.clock = pygame.time.Clock()
+
 
     def network_manager(self):
         while self.running:
             if self.is_host and not self.is_connected:
                 self.check_new_connection()
 
-            elif self.is_connected:
-                #self.check_incoming_client_data()
-                pass
+            # elif self.is_connected:
+            #     #self.check_incoming_client_data()
+            #     pass
+            self.clock.tick(self.FPS)
 
     def setup_server(self):
         self.server.setblocking(False) # TODO: I don't remember why I put this here, do we realy need the server socket to be non-blocking ?
@@ -40,7 +44,7 @@ class Network_manager:
         try:
             #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 10 KB
             # it is undefined behavior we need to use a method that give us the length of the data
-            raw_data = self.client.recv(10240).decode("utf-8")
+            raw_data = self.client.recv(4096).decode("utf-8")
 
             self.receive_buffer += raw_data
             #make sure that we process every line if there are multiple lines received at once
