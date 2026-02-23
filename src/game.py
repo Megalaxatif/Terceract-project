@@ -207,9 +207,27 @@ class Game:
 
     def center_current_item(self): # put the center of the current item at the mouse position
         if self.current_item is not None and self.current_item.movable:
-            mx, my = pygame.mouse.get_pos()[0] / self.current_wall.delta, pygame.mouse.get_pos()[1] / self.current_wall.delta
-            self.current_item.raw_rect.x = mx - self.current_item.raw_rect.w/2
-            self.current_item.raw_rect.y = my - self.current_item.raw_rect.h/2
+            mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+            x, y = mx / self.current_wall.delta, my / self.current_wall.delta
+            self.current_item.raw_rect.x = x - self.current_item.raw_rect.w/2
+            self.current_item.raw_rect.y = y - self.current_item.raw_rect.h/2
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("function", "game", "center_item", self.current_item.name, self.current_room_id, self.current_wall_id, mx, my)
+
+    # function useful for network
+    def center_item(self, obj_name, room_id, wall_id, mx, my):
+        src_wall = self.room_list[room_id][wall_id] # find the wall we want to take the object from
+        object = None
+        for obj in src_wall.objects:                # find the object we are talking about
+            if obj.name == obj_name:
+                object = obj
+        if object is None:
+            print(f"center_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
+            return 1
+
+        x, y = mx / src_wall.delta, my / src_wall.delta
+        object.raw_rect.x = x - object.raw_rect.w/2
+        object.raw_rect.y = y - object.raw_rect.h/2
 
 
     def select_current_item(self, event):
@@ -236,10 +254,7 @@ class Game:
 
     # function useful for network
     def drop_item(self, obj_name, room_id, wall_id, collision_rect_id): # move an object on a given wall in a given room to a given collision_rect
-        dest_wall = self.room_list[room_id][wall_id]                 # on which wall do we want to put it
-        print("object list")
-        for obj in dest_wall.objects:
-            print(obj.name)
+        dest_wall = self.room_list[room_id][wall_id]                    # on which wall do we want to put it
 
         object = None
         for obj in dest_wall.objects:
@@ -249,8 +264,6 @@ class Game:
             print(f"drop_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
-        #dest_wall.objects.add(object)                                   # add the object on the wall
-        #object.change_collision_rects(dest_wall.collision_layers_dir)   # update its collision rects
         object.drop_in_collision_rect(collision_rect_id)                # set the new collision rect id of the object and put it inside
 
 
