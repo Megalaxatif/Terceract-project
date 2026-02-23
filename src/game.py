@@ -220,25 +220,38 @@ class Game:
 
 
     def drop_current_item(self, event):
-        dropped = self.current_item.drop_at_pos(event.pos[0], event.pos[1])
-        if dropped:
+        dropped = self.current_item.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
+        if dropped and self.network_manager.is_connected:
             self.network_manager.send_package(
                 "function",
                 "game",
                 "drop_item",
-                self.current_item, # TODO: IMPORTANT!!!! WE CANNOT USE A REFERENCE TO AN OBJECT
+                self.current_item.name,
                 self.current_room_id,
                 self.current_wall_id,
                 self.current_item.collision_rect_id
             )
         self.current_item = None
 
+
     # function useful for network
-    def drop_item(self, obj, room_id, wall_id, collision_rect_id):
+    def drop_item(self, obj_name, room_id, wall_id, collision_rect_id): # move an object on a given wall in a given room to a given collision_rect
         dest_wall = self.room_list[room_id][wall_id]                 # on which wall do we want to put it
-        dest_wall.objects.add(obj)                                   # add the object on the wall
-        obj.change_collision_rects(dest_wall.collision_layers_dir)    # update its collision rects
-        obj.drop_in_collision_rect(collision_rect_id)           # set the new collision rect id of the object and put it inside
+        print("object list")
+        for obj in dest_wall.objects:
+            print(obj.name)
+
+        object = None
+        for obj in dest_wall.objects:
+            if obj.name == obj_name:
+                object = obj
+        if object is None:
+            print(f"drop_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
+            return 1
+
+        #dest_wall.objects.add(object)                                   # add the object on the wall
+        #object.change_collision_rects(dest_wall.collision_layers_dir)   # update its collision rects
+        object.drop_in_collision_rect(collision_rect_id)                # set the new collision rect id of the object and put it inside
 
 
     def display_room_counter(self): # for debug purposes

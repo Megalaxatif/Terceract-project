@@ -138,17 +138,23 @@ class Inventory:
 
 
     def store_current_item(self, row, col):
-        # put objet from wall to inventory
         obj = self.game_context.current_item
-        # if there is an object in the slot, it becomes the current item
-        #self.current_item = self.slots[row][col] #TODO: what ??
         self.slots[row][col] = obj
-        #if obj in self.game_context.current_wall.objects:
         self.game_context.current_wall.objects.remove(obj)
-        #print("Put in inventory")
+        if self.game_context.network_manager.is_connected:
+            #send the information to the other player
+            self.game_context.network_manager.send_package(
+                "function",
+                "inventory",
+                "inventory_store_item",
+                row,
+                col,
+                obj.name,
+                self.game_context.current_room_id,
+                self.game_context.current_wall_id
+            )
         self.game_context.current_item = None
         self.current_item = None #TODO: what ??
-        # TODO: send the information to the other player
 
 
     def drop_current_item(self, row, col):
@@ -156,28 +162,51 @@ class Inventory:
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
         if obj.drop_at_pos(mx, my):
+
+            if self.game_context.network_manager.is_connected:
+                #send the information to the other player
+                self.game_context.network_manager.send_package(
+                    "function",
+                    "inventory",
+                    "inventory_drop_item",
+                    row,
+                    col,
+                    self.game_context.current_room_id,
+                    self.game_context.current_wall_id,
+                    obj.collision_rect_id
+                )
+
             self.slots[row][col] = None
             self.game_context.current_wall.objects.add(obj)
             self.game_context.current_item = None
             self.current_item = None
-            #print("Put out inventory")
-        #TODO: send the informatoin to the other player
 
 #-------------------------NETWORK-------------------------------------
 
     # function useful for network
-    def inventory_store_item(self, row, col, obj, room_id, wall_id):
-        src_wall = self.game_context.room_list[room_id][wall_id]
-        self.slots[row][col] = obj                                                      # put the object in inventory
-        obj.change_collision_rect(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
-        src_wall.objects.remove(obj)                                                    # remove the object from the wall
+    def inventory_store_item(self, row, col, obj_name, room_id, wall_id):
+        src_wall = self.game_context.room_list[room_id][wall_id]                            # find the wall we want to take the object from
+        object = None
+        for obj in src_wall.objects:                                                        # find the object we are talking about
+            if obj.name == obj_name:
+                object = obj
+        if object is None:
+            print(f"inventory_store_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
+            return 1
+
+        self.slots[row][col] = object                                                       # put the object in inventory
+        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir)   # change its collision rects
+        src_wall.objects.remove(object)                                                     # remove the object from the wall
 
 
     # function useful for network
     def inventory_drop_item(self, obj_row, obj_col, room_id, wall_id, collision_rect_id):
-        obj = self.slots[obj_row][obj_col]                                      # which object are we talking about
-        self.game_context.drop_item(obj, room_id, wall_id, collision_rect_id)   # do all the operations
-        self.slots[obj_row][obj_col] = None                                     # remove it from inventory
+        obj = self.slots[obj_row][obj_col]                                          # which object are we talking about
+        dest_wall = self.game_context.room_list[room_id][wall_id]                   # on which wall do we want to put it
+        dest_wall.objects.add(obj)                                                  # add the object on the wall
+        obj.change_collision_rects(dest_wall.collision_layers_dir)                  # update its collision rects
+        obj.drop_in_collision_rect(collision_rect_id)                               # put it in the right collision rect
+        self.slots[obj_row][obj_col] = None                                         # remove it from inventory
 
 #-------------------------------------------------------------------
 
