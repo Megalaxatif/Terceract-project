@@ -60,7 +60,12 @@ class Inventory:
 
 
     def init_images(self):
-        objects_data = load_json_file(self.json_path)
+        objects_data = {}
+        if self.game_context.network_manager.is_host:
+            objects_data = load_json_file(self.json_path)
+        else:
+            objects_data = self.game_context.game_data["inv_data"]
+
         collision_layers_dir = self.game_context.current_wall.collision_layers_dir
         for key in objects_data:
             if key == "data":

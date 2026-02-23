@@ -220,9 +220,18 @@ class Game:
 
 
     def drop_current_item(self, event):
-        self.current_item.drop_at_pos(event.pos[0], event.pos[1])
+        dropped = self.current_item.drop_at_pos(event.pos[0], event.pos[1])
+        if dropped:
+            self.network_manager.send_package(
+                "function",
+                "game",
+                "drop_item",
+                self.current_item, # TODO: IMPORTANT!!!! WE CANNOT USE A REFERENCE TO AN OBJECT
+                self.current_room_id,
+                self.current_wall_id,
+                self.current_item.collision_rect_id
+            )
         self.current_item = None
-        # TODO: send information to second player
 
     # function useful for network
     def drop_item(self, obj, room_id, wall_id, collision_rect_id):
