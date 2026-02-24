@@ -159,6 +159,9 @@ class Inventory:
 
     def drop_current_item(self, row, col):
         obj = self.current_item
+        if obj is None:
+            print("drop_current_item error: current_item is None")
+            return -1
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
         if obj.drop_at_pos(mx, my):
@@ -169,8 +172,7 @@ class Inventory:
                     "function",
                     "inventory",
                     "inventory_drop_item",
-                    row,
-                    col,
+                    obj.name,
                     self.game_context.current_room_id,
                     self.game_context.current_wall_id,
                     obj.collision_rect_id
@@ -200,13 +202,28 @@ class Inventory:
 
 
     # function useful for network
-    def inventory_drop_item(self, obj_row, obj_col, room_id, wall_id, collision_rect_id):
-        obj = self.slots[obj_row][obj_col]                                          # which object are we talking about
+    def inventory_drop_item(self, obj_name, room_id, wall_id, collision_rect_id):
+        obj = None
+        row = 0
+        col = 0
+        for i in range(self.rows):
+            for j in range(self.cols):
+                current_obj = self.slots[i][j]
+                if current_obj is not None:
+                    if current_obj.name == obj_name:
+                        obj = current_obj
+                        row = i
+                        col = j
+
+        if obj is None:
+            print(f"inventory_drop_item error: impossible to find the object {obj_name} in the inventory")
+            return -1
+
         dest_wall = self.game_context.room_list[room_id][wall_id]                   # on which wall do we want to put it
         dest_wall.objects.add(obj)                                                  # add the object on the wall
         obj.change_collision_rects(dest_wall.collision_layers_dir)                  # update its collision rects
         obj.drop_in_collision_rect(collision_rect_id)                               # put it in the right collision rect
-        self.slots[obj_row][obj_col] = None                                         # remove it from inventory
+        self.slots[row][col] = None                                                 # remove it from inventory
 
 #-------------------------------------------------------------------
 

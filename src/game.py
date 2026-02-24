@@ -79,7 +79,6 @@ class Game:
 
         self.R5 = [self.back_wall_R5, self.left_wall_R5, self.front_wall_R5, self.right_wall_R5]
 
-
         self.room_list = [
            self.R1,
            self.R2,
@@ -89,7 +88,7 @@ class Game:
         ]
 
         self.current_room_id = 0
-        self.current_wall_id = 0 # back wall
+        self.current_wall_id = 0
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_item = None
         self.mini_game_menu = Menu(self)
@@ -212,7 +211,7 @@ class Game:
             self.current_item.raw_rect.x = x - self.current_item.raw_rect.w/2
             self.current_item.raw_rect.y = y - self.current_item.raw_rect.h/2
             if self.network_manager.is_connected:
-                self.network_manager.send_package("function", "game", "center_item", self.current_item.name, self.current_room_id, self.current_wall_id, mx, my)
+                self.network_manager.send_package("function", "game", "center_item", self.current_item.name, self.current_room_id, self.current_wall_id, x, y)
 
     # function useful for network
     def center_item(self, obj_name, room_id, wall_id, mx, my):
@@ -225,9 +224,9 @@ class Game:
             print(f"center_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
-        x, y = mx / src_wall.delta, my / src_wall.delta
-        object.raw_rect.x = x - object.raw_rect.w/2
-        object.raw_rect.y = y - object.raw_rect.h/2
+        #x, y = mx / src_wall.delta, my / src_wall.delta
+        object.raw_rect.x = mx - object.raw_rect.w/2
+        object.raw_rect.y = my - object.raw_rect.h/2
 
 
     def select_current_item(self, event):
@@ -238,8 +237,8 @@ class Game:
 
 
     def drop_current_item(self, event):
-        dropped = self.current_item.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
-        if dropped and self.network_manager.is_connected:
+        self.current_item.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
+        if self.network_manager.is_connected:
             self.network_manager.send_package(
                 "function",
                 "game",
@@ -264,7 +263,10 @@ class Game:
             print(f"drop_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
-        object.drop_in_collision_rect(collision_rect_id)                # set the new collision rect id of the object and put it inside
+        if collision_rect_id == -1: # we tried to move the object at a wrong position when it was at its initial position
+            object.raw_rect.center = object.valid_rect.center
+        else:
+            object.drop_in_collision_rect(collision_rect_id)                # set the new collision rect id of the object and put it inside
 
 
     def display_room_counter(self): # for debug purposes

@@ -68,7 +68,7 @@ class Network_manager:
         else:
             receive_buffer = raw_data.split("\n")
             for line in receive_buffer:
-                if line: #the line can be empty with split
+                if line: # the line can be empty with split
                     line_data = {}
                     try:
                         line_data = json.loads(line)
