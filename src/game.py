@@ -90,7 +90,8 @@ class Game:
         self.current_room_id = 0
         self.current_wall_id = 0
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
-        self.current_item = None
+        self.current_object = None
+        self.other_player_object_name = None
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
@@ -173,7 +174,7 @@ class Game:
             print("change_room : Error, impossible to go in that direction")
             return 1
 
-        self.current_item = None
+        self.current_object = None
         self.change_current_wall()
 
 
@@ -186,7 +187,7 @@ class Game:
         elif direction == "left":
             self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
 
-        self.current_item = None
+        self.current_object = None
         self.change_current_wall()
 
 
@@ -205,13 +206,13 @@ class Game:
 
 
     def center_current_item(self): # put the center of the current item at the mouse position
-        if self.current_item is not None and self.current_item.movable:
+        if self.current_object is not None and self.current_object.movable:
             mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
             x, y = mx / self.current_wall.delta, my / self.current_wall.delta
-            self.current_item.raw_rect.x = x - self.current_item.raw_rect.w/2
-            self.current_item.raw_rect.y = y - self.current_item.raw_rect.h/2
+            self.current_object.raw_rect.x = x - self.current_object.raw_rect.w/2
+            self.current_object.raw_rect.y = y - self.current_object.raw_rect.h/2
             if self.network_manager.is_connected:
-                self.network_manager.send_package("function", "game", "center_item", self.current_item.name, self.current_room_id, self.current_wall_id, x, y)
+                self.network_manager.send_package("function", "game", "center_item", self.current_object.name, self.current_room_id, self.current_wall_id, x, y)
 
     # function useful for network
     def center_item(self, obj_name, room_id, wall_id, mx, my):
@@ -232,23 +233,28 @@ class Game:
     def select_current_item(self, event):
         for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
             if obj.rect.collidepoint(event.pos):
-                self.current_item = obj
-                break
+                if self.network_manager.is_connected and obj.name == self.other_player_object_name:
+                    return
+                self.current_object = obj
+                # send the information to the other player
+                if self.network_manager.is_connected:
+                    self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
+                    return
 
 
     def drop_current_item(self, event):
-        self.current_item.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
+        self.current_object.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
         if self.network_manager.is_connected:
             self.network_manager.send_package(
                 "function",
                 "game",
                 "drop_item",
-                self.current_item.name,
+                self.current_object.name,
                 self.current_room_id,
                 self.current_wall_id,
-                self.current_item.collision_rect_id
+                self.current_object.collision_rect_id
             )
-        self.current_item = None
+        self.current_object = None
 
 
     # function useful for network
@@ -304,10 +310,10 @@ class Game:
 
             self.inventory.handle_left_click(event)
 
-            if self.current_item is None and self.inventory.current_item is None:
+            if self.current_object is None and self.inventory.current_item is None:
                 self.select_current_item(event)
 
-            elif self.current_item is not None and self.current_item.movable:
+            elif self.current_object is not None and self.current_object.movable:
                 self.drop_current_item(event)
 
 
