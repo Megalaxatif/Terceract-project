@@ -91,7 +91,7 @@ class Game:
         self.current_wall_id = 0
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_object = None
-        self.other_player_object_name = None
+        self.other_player_object_name = ""
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
@@ -162,6 +162,7 @@ class Game:
 
     def switch_back_to_solo_mode(self):
         self.network_manager.is_connected = False
+        self.other_player_object_name = ""
         self.network_manager.reset_client()
 
 
@@ -205,24 +206,24 @@ class Game:
                 wall.update(event)
 
 
-    def center_current_item(self): # put the center of the current item at the mouse position
+    def center_current_object(self): # put the center of the current object at the mouse position
         if self.current_object is not None and self.current_object.movable:
             mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
             x, y = mx / self.current_wall.delta, my / self.current_wall.delta
             self.current_object.raw_rect.x = x - self.current_object.raw_rect.w/2
             self.current_object.raw_rect.y = y - self.current_object.raw_rect.h/2
             if self.network_manager.is_connected:
-                self.network_manager.send_package("function", "game", "center_item", self.current_object.name, self.current_room_id, self.current_wall_id, x, y)
+                self.network_manager.send_package("function", "game", "center_object", self.current_object.name, self.current_room_id, self.current_wall_id, x, y)
 
     # function useful for network
-    def center_item(self, obj_name, room_id, wall_id, mx, my):
+    def center_object(self, obj_name, room_id, wall_id, mx, my):
         src_wall = self.room_list[room_id][wall_id] # find the wall we want to take the object from
         object = None
         for obj in src_wall.objects:                # find the object we are talking about
             if obj.name == obj_name:
                 object = obj
         if object is None:
-            print(f"center_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
+            print(f"center_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
         #x, y = mx / src_wall.delta, my / src_wall.delta
@@ -230,7 +231,7 @@ class Game:
         object.raw_rect.y = my - object.raw_rect.h/2
 
 
-    def select_current_item(self, event):
+    def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
             if obj.rect.collidepoint(event.pos):
                 if self.network_manager.is_connected and obj.name == self.other_player_object_name:
@@ -239,16 +240,17 @@ class Game:
                 # send the information to the other player
                 if self.network_manager.is_connected:
                     self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
-                    return
+                return
 
 
-    def drop_current_item(self, event):
+    def drop_current_object(self, event):
         self.current_object.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
         if self.network_manager.is_connected:
+            self.network_manager.send_package("variable", "game", "other_player_object_name", "")
             self.network_manager.send_package(
                 "function",
                 "game",
-                "drop_item",
+                "drop_object",
                 self.current_object.name,
                 self.current_room_id,
                 self.current_wall_id,
@@ -258,7 +260,7 @@ class Game:
 
 
     # function useful for network
-    def drop_item(self, obj_name, room_id, wall_id, collision_rect_id): # move an object on a given wall in a given room to a given collision_rect
+    def drop_object(self, obj_name, room_id, wall_id, collision_rect_id): # move an object on a given wall in a given room to a given collision_rect
         dest_wall = self.room_list[room_id][wall_id]                    # on which wall do we want to put it
 
         object = None
@@ -266,7 +268,7 @@ class Game:
             if obj.name == obj_name:
                 object = obj
         if object is None:
-            print(f"drop_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
+            print(f"drop_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
         if collision_rect_id == -1: # we tried to move the object at a wrong position when it was at its initial position
@@ -310,15 +312,15 @@ class Game:
 
             self.inventory.handle_left_click(event)
 
-            if self.current_object is None and self.inventory.current_item is None:
-                self.select_current_item(event)
+            if self.current_object is None and self.inventory.current_object is None:
+                self.select_current_object(event)
 
             elif self.current_object is not None and self.current_object.movable:
-                self.drop_current_item(event)
+                self.drop_current_object(event)
 
 
         elif event.type == pygame.MOUSEMOTION:
-            self.center_current_item()
+            self.center_current_object()
 
 
     def handle_all_events(self):
