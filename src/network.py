@@ -29,6 +29,7 @@ class Network_manager:
 
             self.clock.tick(self.FPS)
 
+
     def setup_server(self):
         self.server.setblocking(False) # TODO: I don't remember why I put this here, do we realy need the server socket to be non-blocking ?
         self.server.bind(("", self.server_port))

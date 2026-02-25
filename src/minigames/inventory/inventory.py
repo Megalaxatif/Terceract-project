@@ -139,22 +139,24 @@ class Inventory:
 
     def store_current_item(self, row, col):
         obj = self.game_context.current_item
-        self.slots[row][col] = obj
-        self.game_context.current_wall.objects.remove(obj)
-        if self.game_context.network_manager.is_connected:
-            #send the information to the other player
-            self.game_context.network_manager.send_package(
-                "function",
-                "inventory",
-                "inventory_store_item",
-                row,
-                col,
-                obj.name,
-                self.game_context.current_room_id,
-                self.game_context.current_wall_id
-            )
-        self.game_context.current_item = None
-        self.current_item = None #TODO: what ??
+        if self.slots[row][col] is None:
+
+            self.slots[row][col] = obj
+            self.game_context.current_wall.objects.remove(obj)
+            if self.game_context.network_manager.is_connected:
+                #send the information to the other player
+                self.game_context.network_manager.send_package(
+                    "function",
+                    "inventory",
+                    "inventory_store_item",
+                    row,
+                    col,
+                    obj.name,
+                    self.game_context.current_room_id,
+                    self.game_context.current_wall_id
+                )
+            self.game_context.current_item = None
+            self.current_item = None #TODO: what ??
 
 
     def drop_current_item(self, row, col):
@@ -196,8 +198,19 @@ class Inventory:
             print(f"inventory_store_item error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
+        if self.slots[row][col] is not None: # find a new column on the row to store the object if there was already an object in the slot
+            full = True
+            for i in range(self.cols):
+                if self.slots[row][i] is None:
+                    full = False
+                    col = i
+                    break
+            if full:
+                print(f"inventory_store_item error: impossible to store the item {obj_name} because the inventory is full") # this case should never happen
+                return 2
+
         self.slots[row][col] = object                                                       # put the object in inventory
-        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir)   # change its collision rects
+        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
         src_wall.objects.remove(object)                                                     # remove the object from the wall
 
 
