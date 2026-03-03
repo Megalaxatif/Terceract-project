@@ -29,6 +29,7 @@ class Network_manager:
 
             self.clock.tick(self.FPS)
 
+
     def setup_server(self):
         self.server.setblocking(False) # TODO: I don't remember why I put this here, do we realy need the server socket to be non-blocking ?
         self.server.bind(("", self.server_port))
@@ -117,6 +118,8 @@ class Network_manager:
                             except Exception as e:
                                 print(f"check_incoming_client_data error: the variable {name} located in {location} couldn't be set to the value {args[0]} because of an error:\n{e}")
 
+                        else:
+                            print(f"check_incoming_client_data error: the package type {package_type} is not taken in charge")
                         #self.receive_buffer += raw_data
                         #make sure that we process every line if there are multiple lines received at once
                         #TODO: change this, I don't like it
