@@ -1,0 +1,13 @@
+{
+    "calculator": {
+        "image": "C:/Users/sarah/Documents/projetJ3D/Terceract-project/assets/cropped_images/cropped_calculator.png",
+        "rect": [
+            173,
+            539,
+            260,
+            346
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
+}
