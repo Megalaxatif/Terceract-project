@@ -1,9 +1,6 @@
 import json
 import pygame
 from pathlib import Path
-from objects.vase import Vase
-from objects.digicode import Digicode
-from objects.Connect4_Beta import Connect
 
 
 #---------------------JSON-----------------------------------
@@ -56,7 +53,7 @@ def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
 
 #------------------------------------------------------------------
 
-# #returns the list of the paths of all the collision layers of an object
+#returns the list of the paths of all the collision layers of an object
 def load_collision_layers_path(collision_layers_dir: Path, object_name: str) -> list[Path]:
     collision_layers_path = list(collision_layers_dir.iterdir())
 
@@ -138,6 +135,10 @@ def create_sub_surface(
 
 #---------------------CREATE OBJECT-------------------------------------
 def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id):
+    # Imports locaux pour éviter les importations circulaires
+    from objects.vase import Vase
+    from objects.digicode import Digicode
+    from objects.Connect4_Beta import Connect
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")

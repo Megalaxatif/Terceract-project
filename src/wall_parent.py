@@ -1,12 +1,9 @@
 import pygame
 from pathlib import Path
-from objects.vase import Vase
-from objects.digicode import Digicode
-from objects.Connect4_Beta import Connect
 from utils import *
 
 class Wall:
-    def __init__(self, game_context, root_dir):
+    def __init__(self, game_context, root_dir, room_id, wall_id):
         self.game_context = game_context
         self.root_dir = root_dir
 
@@ -23,17 +20,21 @@ class Wall:
             self.collision_layers_dir.mkdir(parents=True, exist_ok=True)
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
+        #self.clear_object_layers()
+        #self.clear_cropped_objects() # TODO: to remove
+        #self.clear_json() # TODO: to remove also
 
         #clear_json(self.json_path) # TODO: to remove also
 
         self.background = self.create_background()
         self.original_background = self.background
         self.objects = pygame.sprite.Group()
-        self.create_wall_objects()
+        self.wall_id = wall_id # for network
+        self.room_id = room_id # for network
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
-
+        self.create_wall_objects()
 
 #---------------------------INIT---------------------------------------
     def create_background(self) -> pygame.Surface:
@@ -69,10 +70,15 @@ class Wall:
 
 
     def create_wall_objects(self):
-        objects_data = load_json_file(self.json_path) # load or init the JSON file
-        # case where we launched the game for the first time or we previously reset the progression
-        if not objects_data:
-            objects_data = self.get_objects_data()
+        objects_data = {}
+        if self.game_context.network_manager.is_host:
+            objects_data = load_json_file(self.json_path) # load or init the JSON file
+            # case where we launched the game for the first time or we previously reset the progression
+            if not objects_data:
+                objects_data = self.get_objects_data()
+
+        else:
+            objects_data = self.game_context.game_data["wall_data"][self.room_id][self.wall_id]
 
         for key in objects_data:
             img_path = objects_data[key]["image"] # load the relative path
@@ -98,7 +104,7 @@ class Wall:
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = formated_rect
             new_obj_data[object.name]["collisions"] = formated_collision_rects
-            new_obj_data[object.name]["collision_id"] = object.collision_rect_index
+            new_obj_data[object.name]["collision_id"] = object.collision_rect_id
         save_data_in_json(new_obj_data, self.json_path)
 
 

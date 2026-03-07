@@ -1,5 +1,6 @@
 import pygame
 from pathlib import Path
+from utils import get_collision_rects, convert_to_pygame_rect_list
 
 class Game_object(pygame.sprite.Sprite):
 
@@ -28,27 +29,32 @@ class Game_object(pygame.sprite.Sprite):
 
         self.collision_rects = collisions
         self.raw_collision_rects = self.collision_rects.copy()
-        self.collision_rect_index = collision_index # which collision rect the object is in
+        self.collision_rect_id = collision_index # which collision rect the object is in
 
         self.rect = rect
         self.raw_rect = self.rect
-        if self.collision_rect_index != -1 :
-            self.valid_rect = self.collision_rects[self.collision_rect_index]
+        if self.collision_rect_id != -1 :
+            self.valid_rect = self.collision_rects[self.collision_rect_id]
         else:
             self.valid_rect = self.rect.copy()
         self.displayed = True
         self.movable = movable
 
-    def drop(self, x, y) -> bool: # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
-            print(f"Trying to drop {self.name} at ({x}, {y})")
+
+    def drop_in_collision_rect(self, collision_index):
+        self.raw_rect.center = self.raw_collision_rects[collision_index].center
+        self.valid_rect = self.raw_collision_rects[collision_index]
+        self.collision_rect_id = collision_index
+        #print(f"Dropped {self.name} in collision rect {collision_index}")
+
+
+    def drop_at_pos(self, x, y) -> bool: # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
+            #print(f"Trying to drop {self.name} at ({x}, {y})")
             return_code = False
             point_rect = pygame.Rect(int(x), int(y), 1, 1)
             collision_index = point_rect.collidelist(self.collision_rects)
             if collision_index != -1:
-                self.raw_rect.center = self.raw_collision_rects[collision_index].center
-                self.valid_rect = self.raw_collision_rects[collision_index]
-                self.collision_rect_index = collision_index
-                print(f"Dropped {self.name} in collision rect {collision_index}")
+                self.drop_in_collision_rect(collision_index)
                 return_code = True
 
             else:
@@ -72,9 +78,11 @@ class Game_object(pygame.sprite.Sprite):
             self.collision_rects[i] = pygame.Rect(delta * raw_collision_rect.x, delta * raw_collision_rect.y, delta * raw_collision_rect.w, delta * raw_collision_rect.h)
 
 
-    def set_collision_rects(self, new_collision_rects):
-        self.collision_rects = new_collision_rects
-        self.raw_collision_rects = new_collision_rects.copy()
+    def change_collision_rects(self, collision_layers_dir):
+        new_collision_rects = get_collision_rects(collision_layers_dir, self.name)
+        converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
+        self.collision_rects = converted_collision_rects
+        self.raw_collision_rects = converted_collision_rects.copy()
 
 
     def display_collision_rect(self):
