@@ -1,9 +1,10 @@
 import pygame
 #import pyscroll
 from pytmx.util_pygame import load_pygame
-import sys
+
 from pathlib import Path
-from object import Object
+from object import Game_object
+
 pygame.init()
 pygame.display.set_caption("The Grief Cube")
 tmx_data = load_pygame("grid.tmx") # raw data from the tile file
@@ -11,14 +12,14 @@ magnet_image = pygame.image.load("magnet.png").convert_alpha() # load the image 
 key_image = pygame.image.load("key.png").convert_alpha() # load the image of the key
 
 
-class Magnet(Object):
+class Magnet(Game_object):
     def __init__(self, game_context, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
         super().__init__(game_context, "magnet", image_path, rect, collisions, collision_index)
         self.tmxdata = tmx_data.get_object_by_type("départ")
         self.rect = pygame.Rect(self.tmxdata[0].x, self.tmxdata[0].y, self.tmxdata[0].width, self.tmxdata[0].height)
 
 
-class Key(Object):
+class Key(Game_object):
     def __init__(self, game_context, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
         super().__init__(game_context, "key", image_path, rect, collisions, collision_index)
         self.tmxdata = tmx_data.get_object_by_type("arrivée")
@@ -43,7 +44,8 @@ class Grid(pygame.sprite.Sprite):
                 elif obj.type == "départ":
                     self.rect_depart.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
                 elif obj.type == "arrivée":
-                    self.rect_arrivee.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height)) 
+                    self.rect_arrivee.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
     def update(self, event):
         if self.ongoing:
             magnet.displayed = True #ca suit la souris la
@@ -59,8 +61,8 @@ class Grid(pygame.sprite.Sprite):
         if event.type == pygame.MOUSEBUTTONUP and self.ongoing:
             self.ongoing = False
             magnet.rect = self.rect_depart[0] #ca remet magnet à sa place de départ
-        
-            
+
+
 grille = Grid(None, "grid.tmx", pygame.Rect(0, 0, 0, 0), [], -1, tmx_data)
 key = Key(None, "key.png", None, [], -1)
 magnet = Magnet(None, "magnet.png", None, [], -1)
