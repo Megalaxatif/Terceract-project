@@ -20,9 +20,6 @@ class Wall:
             self.collision_layers_dir.mkdir(parents=True, exist_ok=True)
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
-        #self.clear_object_layers()
-        #self.clear_cropped_objects() # TODO: to remove
-        #self.clear_json() # TODO: to remove also
 
         #clear_json(self.json_path) # TODO: to remove also
 

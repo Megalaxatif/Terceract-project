@@ -106,7 +106,7 @@ class Game:
             self.inventory.save_images()
 
 
-    def start(self): # TODO: adapt this function to make it work again
+    def start(self):
         #gamemode = "s"
         gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
 
@@ -123,8 +123,6 @@ class Game:
         else:
             print("invalid answer, dumbass")
             sys.exit(1)
-
-        #self.load_data_in_memory(self.game_data)
 
         incoming_data_thread = threading.Thread(target=self.network_manager.network_manager, daemon=True)
         incoming_data_thread.start()
@@ -316,8 +314,7 @@ class Game:
                 self.select_current_object(event)
 
             elif self.current_object is not None and self.current_object.movable:
-                self.drop_current_object(event)
-
+                self.current_object.handle_left_click(event)
 
         elif event.type == pygame.MOUSEMOTION:
             self.center_current_object()

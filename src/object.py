@@ -96,5 +96,10 @@ class Game_object(pygame.sprite.Sprite):
         if self.displayed:
             self.game_context.screen.blit(self.image, self.rect)
 
+
     def update(self, event):
         pass
+
+
+    def handle_left_click(self, event):
+        self.game_context.drop_current_object(event)

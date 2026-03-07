@@ -135,10 +135,11 @@ def create_sub_surface(
 
 #---------------------CREATE OBJECT-------------------------------------
 def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id):
-    # Imports locaux pour éviter les importations circulaires
+    # local import to avoid circular import
     from objects.vase import Vase
     from objects.digicode import Digicode
     from objects.Connect4_Beta import Connect
+    from object import Game_object
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
@@ -147,13 +148,14 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
         return Vase(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
 
     elif obj_name == "frame":
-        return Vase(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
 
     elif obj_name == "table":
-        return Vase(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
 
     elif obj_name == "connect4":
         return Connect(game_context, obj_name,img_path, rect, 0)
 
     else:
-        print("create_object error: invalid object name")
+        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        #print("create_object error: invalid object name")
