@@ -1,32 +1,57 @@
 {
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_9_mirror.png": [
-        1486,
-        52,
-        270,
-        574
-    ],
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_9_exit_sign.png": [
-        866,
-        42,
-        189,
-        67
-    ],
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_9_door.png": [
-        276,
-        104,
-        1329,
-        976
-    ],
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_plank2.png": [
-        690,
-        309,
-        565,
-        294
-    ],
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_plank1.png": [
-        677,
-        620,
-        567,
-        288
-    ]
+    "mirror": {
+        "image": "assets/cropped_images/cropped_mirror.png",
+        "rect": [
+            1486,
+            52,
+            270,
+            574
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "exit_sign": {
+        "image": "assets/cropped_images/cropped_exit_sign.png",
+        "rect": [
+            866,
+            42,
+            189,
+            67
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "door": {
+        "image": "assets/cropped_images/cropped_door.png",
+        "rect": [
+            276,
+            104,
+            1329,
+            976
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank2": {
+        "image": "assets/cropped_images/cropped_plank2.png",
+        "rect": [
+            690,
+            309,
+            565,
+            294
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank1": {
+        "image": "assets/cropped_images/cropped_plank1.png",
+        "rect": [
+            677,
+            620,
+            567,
+            288
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
 }

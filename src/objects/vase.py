@@ -1,7 +1,7 @@
 import pygame
 from pathlib import Path
-from object import Object
+from object import Game_object
 
-class Vase(Object):
-    def __init__(self, game_context, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect]):
-        super().__init__(game_context, "vase", image_path, rect, collisions)
+class Vase(Game_object):
+    def __init__(self, game_context, object_name, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
+        super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)

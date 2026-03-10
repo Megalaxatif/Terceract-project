@@ -1,23 +1,17 @@
 import pygame
-import sys
 from pathlib import Path
-import json
-from objects.vase import Vase
-from objects.digicode import Digicode
+from object import Game_object
 from utils import *
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
-
-pygame.init()
 
 
 class Inventory:
     def __init__(self, game_context, x, y, rows, cols, block_size, center):
         self.game_context = game_context
         self.root_dir = Path(__file__).resolve().parent
-        self.entities = pygame.sprite.Group()
-        self.current_entity = None
+        self.json_path = Path(self.root_dir / "objects_info.json")
 
         self.raw_x = x
         self.x = int(self.raw_x * self.game_context.delta)
@@ -30,60 +24,65 @@ class Inventory:
         self.raw_block_size = block_size
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
-        self.slots = [[None for _ in range(cols)] for _ in range(rows)]
-        self.slots_entities = [[None for _ in range(cols)] for _ in range(rows)]
+        self.slots : list[list[Game_object]] | list = [[None for _ in range(cols)] for _ in range(rows)]
+        self.slots_entities = [[None for _ in range(cols)] for _ in range(rows)] # what ??
 
-        self.display = False
         self.center = center
 
         self.last_row, self.last_col = 0, 0
         self.mouse_x, self.mouse_y = 0, 0
 
         # load images
-        self.images = {}
-
-        self.current_item = None
+        self.current_object = None
 
         self.init_images()
 
 
+    def save_images(self):
+        objects_list = {"data": [[]]}
+        for i in range(len(self.slots)):
+            objects_list["data"].append([])
+            for obj in self.slots[i]:
+                if not obj:
+                    objects_list["data"][i].append(None)
+                else:
+                    converted_rect = convert_to_tuple_rect(obj.raw_rect)
+
+                    objects_list["data"][i].append(
+                        {
+                            "name" : obj.name,
+                            "image" : obj.image_path.as_posix(),
+                            "rect" : converted_rect
+                        }
+                    )
+
+        save_data_in_json(objects_list, self.json_path)
+
+
     def init_images(self):
-        json_path = Path(self.root_dir / "objects_info.json")
-        objects_data = load_json_file(json_path)
-
-        # delete extra keys
-        expected_keys = {
-            p for p in self.images
-        }
-
-        for key in list(objects_data.keys()):
-            if key not in expected_keys:
-                del objects_data[key]
-
-        for key in list(self.images):
-            save_path = Path(Path(self.game_context.root_dir) / key).as_posix()
-
-            image = pygame.image.load(save_path).convert_alpha()
-            bbox = 0, 0, image.get_width(), image.get_height()
-            pygame.image.save(image, save_path)
-            print(f"Cropped image saved to {save_path}")
-            
-            self.entities.add(
-                Vase(self.game_context, save_path, pygame.Rect(bbox), [])
-            )
-
-            # put x, y, w, h in objects_data
-            objects_data[key] = bbox
-
-        # delete extra images
-        self.delete_extra_images(objects_data)
-
-        # save the data in the json file
-        with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(objects_data, f, indent=4, ensure_ascii=False)
+        #objects_data = load_json_file(self.json_path)
+        #for obj in objects_data:
+        
+        pass
 
 
-    def update(self):
+    def resize_objects(self):
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+                    obj.resize_image()
+                    obj.resize_collision_rects()
+
+
+    def update_object_collision_rects(self):
+        collision_layers_dir = self.game_context.current_wall.collision_layers_dir
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+                    obj.change_collision_rects(collision_layers_dir)
+
+
+    def display(self):
         self.block_size = int(self.raw_block_size * self.game_context.delta)
 
         if self.center:
@@ -94,225 +93,139 @@ class Inventory:
 
         self.y = int(self.raw_y * self.game_context.delta)
 
+        self.resize_objects()
+        self.display_collision_rects()
         self.draw_grid()
-        self.draw_items()
-
-        # Display current item
-        if self.current_item:  # if not None
-            self.game_context.dragging = True
-            mx, my = pygame.mouse.get_pos()
-            self.game_context.screen.blit(
-                self.images[f"{self.current_item}"][0],
-                (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
-            )
+        self.draw_objects()
+        self.draw_current_object()
 
 
-    def resize_in_inventory(self, path):
-        return pygame.transform.scale(
-            pygame.image.load(path),
-            (self.block_size * 0.9, self.block_size * 0.9)
-        )
+    def handle_left_click(self, event):
+        self.mouse_x, self.mouse_y = event.pos
 
-
-    def handle_click(self, event):
-        pos = event.pos
-        self.mouse_x, self.mouse_y = pos
-
-        # Area in inventory
         if (
             self.x <= self.mouse_x < self.x + self.cols * self.block_size and
             self.y <= self.mouse_y < self.y + self.rows * self.block_size
         ):
-            col = (self.mouse_x - self.x) // self.block_size
-            row = (self.mouse_y - self.y) // self.block_size
+            self.col = (self.mouse_x - self.x) // self.block_size
+            self.row = (self.mouse_y - self.y) // self.block_size
 
-            slot = self.slots[row][col]
-
-            if not self.current_item:
-                if slot:
-                    self.current_item = slot
-                    self.current_entity = self.slots_entities[row][col]
-
-                external_obj = self.game_context.current_item
-
-                # Put object in inventory
-                if external_obj:
-                    self.put_object_in_inventory(external_obj, row, col)
-
-                # Take object from inventory
-                else:
-                    self.slots[row][col] = None
-                    self.slots_entities[row][col] = None
-
-                self.last_row, self.last_col = row, col
-
-            # Swap object in inventory
-            elif self.current_item:
-                self.game_context.dragging = False
-                self.slots[row][col], self.current_item = (
-                    self.current_item,
-                    self.slots[row][col]
-                )
-
-                self.slots_entities[row][col], self.current_entity = (
-                    self.current_entity,
-                    self.slots_entities[row][col]
-                )
-
-
-        # Drop object out of inventory
-        elif self.current_item != None:
-            self.inventory_drop()
-            self.game_context.current_wall.sort_entities_by_image_name()
-
-
-    def put_object_in_inventory(self, external_obj, row, col):
-        wall_save_path = f"{self.root_dir}/images/{external_obj.image_name}"
-        inventory_save_path = f"src/minigames/inventory/images/{external_obj.image_name}"
-
-        if not Path(wall_save_path).exists():
-            pygame.image.save(external_obj.image, wall_save_path)  # put image in inventory directory
-
-        self.images[inventory_save_path] = [
-            self.resize_in_inventory(wall_save_path),
-            wall_save_path
-        ]
-
-        self.slots[row][col] = inventory_save_path
-        self.slots_entities[row][col] = external_obj
-
-        json_path = Path(self.root_dir / "objects_info.json")
-        json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
-
-        objects_data = load_json_file(json_path)
-        objects_data_wall = load_json_file(json_path_wall)
-
-        cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
-        object_path = Path(Path(self.game_context.root_dir) / external_obj.image_id)
-        save_path = Path(cropped_object_dir / object_path.name)
-        origin_path = Path(wall_save_path)
-
-        image = pygame.image.load(origin_path).convert_alpha()
-
-        if save_path.exists():
-            save_path.unlink()
-
-        objects_data[inventory_save_path] = (
-            objects_data_wall[external_obj.image_id][0],
-            objects_data_wall[external_obj.image_id][1],
-            image.get_width(),
-            image.get_height()
-        )
-        
-        del objects_data_wall[external_obj.image_id]
-
-        if inventory_save_path not in objects_data:
-            objects_data[inventory_save_path] = objects_data_wall[external_obj.image_id]
-
-        save_data_in_json(objects_data, json_path)
-        save_data_in_json(objects_data_wall, json_path_wall)
-        
-        if self.game_context.current_item:
-            self.entities.add(self.game_context.current_item)
-            self.game_context.current_wall.entities.remove(self.game_context.current_item)
-
-        self.game_context.dragging = False
-        self.game_context.current_item = None
-
-
-    def inventory_drop(self):
-        # ensure self.current_entity has collision_layers
-        if self.current_entity and self.game_context.current_wall.load_collision_layers_path(Path(self.game_context.current_wall.root_dir / "images/collision_layers"), self.current_entity.name):
-            
-            mouse_rect = pygame.Rect(self.mouse_x, self.mouse_y, 1, 1)
-            collision_index = mouse_rect.collidelist(self.current_entity.collision_rects)
-            
-            if collision_index != -1:
-                
-                self.current_entity.raw_rect.center = self.current_entity.raw_collision_rects[collision_index].center
-                print(self.current_entity.raw_rect)
-                self.current_entity.valid_rect = self.current_entity.raw_collision_rects[collision_index]
-            
-                object_path = Path(Path(self.game_context.root_dir) / self.current_item)
-                cropped_object_dir = Path(self.game_context.current_wall.root_dir / "images/cropped_objects")
-
-                # load le JSON
-                json_path = Path(self.root_dir / "objects_info.json")
-                json_path_wall = Path(self.game_context.current_wall.root_dir / "images/objects_info.json")
-
-                objects_data = load_json_file(json_path)
-                objects_data_wall = load_json_file(json_path_wall)
-
-                parts = cropped_object_dir.parts
-                new_path_cropped = (Path(*parts[-6:]) / object_path.name).as_posix()
-
-                if self.current_item != str(self.current_item):
-                    self.current_item = (self.current_item).as_posix()
-
-                save_path = Path(cropped_object_dir / object_path.name)
-                origin_path = Path(self.images[f"src/minigames/inventory/images/{object_path.name}"][1])
-
-                image = pygame.image.load(origin_path).convert_alpha()
-                delta = self.game_context.current_wall.delta
-
-                bbox = (
-                    int(self.current_entity.raw_rect[0]),
-                    int(self.current_entity.raw_rect[1]),
-                    int(image.get_width() / delta),
-                    int(image.get_height() / delta)
-                )
-
-                pygame.image.save(image, save_path)
-                print(f"Image saved to {save_path}")
-
-                objects_data_wall[new_path_cropped] = bbox
-
-                # create the sprite
-                sprite_rect_tupple = objects_data_wall[new_path_cropped]
-
-                name_without_layer = object_path.name
-                
-                self.game_context.current_wall.entities.add(self.current_entity)
-                self.current_entity.dragging = False
-                self.entities.remove(self.current_entity)
-
-                del objects_data[self.current_item]
-
-                # save the data in the json file
-                save_data_in_json(objects_data, json_path)
-                save_data_in_json(objects_data_wall, json_path_wall)
-
-                del self.images[self.current_item]
-
-                self.delete_extra_images(objects_data)
-
-                self.current_item = None
-                self.current_entity = None
-
-                self.game_context.mouse_enabled = False
-                self.game_context.dragging = False
-                
+            if self.game_context.current_object is not None:
+                self.store_current_object(self.row, self.col)
             else:
-                print("no collision here")
+                self.current_object, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_object
+
+        elif self.current_object is not None:
+            self.drop_current_object(self.row, self.col)
 
 
-    def delete_extra_images(self, objects_data):
-        object_dir = Path(self.root_dir / "images")
+    def store_current_object(self, row, col):
+        obj = self.game_context.current_object
+        if self.slots[row][col] is None:
 
-        for image_file in object_dir.iterdir():
-            if not image_file.is_file():
-                continue
+            self.slots[row][col] = obj
+            self.game_context.current_wall.objects.remove(obj)
+            if self.game_context.network_manager.is_connected:
+                #send the information to the other player
+                self.game_context.network_manager.send_package(
+                    "function",
+                    "inventory",
+                    "inventory_store_object",
+                    row,
+                    col,
+                    obj.name,
+                    self.game_context.current_room_id,
+                    self.game_context.current_wall_id
+                )
+            # TODO: make a function
+            self.game_context.current_object = None
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "game", "other_player_object_name", "")
+            self.current_object = None #TODO: what ??
 
-            if image_file.suffix.lower() != ".png":
-                continue
 
-            src_index = image_file.parts.index("src")
-            relative_path = Path(*image_file.parts[src_index:]).as_posix()
+    def drop_current_object(self, row, col):
+        obj = self.current_object
+        if obj is None:
+            print("drop_current_object error: current_object is None")
+            return -1
+        # Mettre à jour la position de l'objet à la position actuelle de la souris
+        mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+        if obj.drop_at_pos(mx, my):
 
-            if relative_path not in self.images:
-                print(f"Removing extra inventory image: {relative_path}")
-                image_file.unlink()
+            if self.game_context.network_manager.is_connected:
+                #send the information to the other player
+                self.game_context.network_manager.send_package(
+                    "function",
+                    "inventory",
+                    "inventory_drop_object",
+                    obj.name,
+                    self.game_context.current_room_id,
+                    self.game_context.current_wall_id,
+                    obj.collision_rect_id
+                )
 
+            self.slots[row][col] = None
+            self.game_context.current_wall.objects.add(obj)
+            self.game_context.current_object = None
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "game", "other_player_object_name", "")
+            self.current_object = None
+
+#-------------------------NETWORK-------------------------------------
+
+    # function useful for network
+    def inventory_store_object(self, row, col, obj_name, room_id, wall_id):
+        src_wall = self.game_context.room_list[room_id][wall_id]                            # find the wall we want to take the object from
+        object = None
+        for obj in src_wall.objects:                                                        # find the object we are talking about
+            if obj.name == obj_name:
+                object = obj
+        if object is None:
+            print(f"inventory_store_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
+            return 1
+
+        if self.slots[row][col] is not None: # find a new column on the row to store the object if there was already an object in the slot
+            full = True
+            for i in range(self.cols):
+                if self.slots[row][i] is None:
+                    full = False
+                    col = i
+                    break
+            if full:
+                print(f"inventory_store_object error: impossible to store the object {obj_name} because the inventory is full") # this case should never happen
+                return 2
+
+        self.slots[row][col] = object                                                       # put the object in inventory
+        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
+        src_wall.objects.remove(object)                                                     # remove the object from the wall
+
+
+    # function useful for network
+    def inventory_drop_object(self, obj_name, room_id, wall_id, collision_rect_id):
+        obj = None
+        row = 0
+        col = 0
+        for i in range(self.rows):
+            for j in range(self.cols):
+                current_obj = self.slots[i][j]
+                if current_obj is not None:
+                    if current_obj.name == obj_name:
+                        obj = current_obj
+                        row = i
+                        col = j
+
+        if obj is None:
+            print(f"inventory_drop_object error: impossible to find the object {obj_name} in the inventory")
+            return -1
+
+        dest_wall = self.game_context.room_list[room_id][wall_id]                   # on which wall do we want to put it
+        dest_wall.objects.add(obj)                                                  # add the object on the wall
+        obj.change_collision_rects(dest_wall.collision_layers_dir)                  # update its collision rects
+        obj.drop_in_collision_rect(collision_rect_id)                               # put it in the right collision rect
+        self.slots[row][col] = None                                                 # remove it from inventory
+
+#-------------------------------------------------------------------
 
     def draw_grid(self):
         for row in range(self.rows):
@@ -326,16 +239,41 @@ class Inventory:
                 pygame.draw.rect(self.game_context.screen, WHITE, rect, 2)
 
 
-    def draw_items(self):
+    def draw_objects(self):
         for row in range(self.rows):
             for col in range(self.cols):
-                item = self.slots[row][col]
-                if item:  # Not None
+                object = self.slots[row][col]
+                if object and object != self.current_object:
+                    # Redimensionner le sprite du sprite
+                    scaled_image = pygame.transform.scale(
+                        object.image,
+                        (int(self.block_size * 0.9), int(self.block_size * 0.9))
+                    )
                     self.game_context.screen.blit(
-                        self.images[item][0],
+                        scaled_image,
                         (
                             self.x + col * self.block_size + 0.05 * self.block_size,
                             self.y + row * self.block_size + 0.05 * self.block_size
                         )
                     )
+
+
+    def draw_current_object(self):
+        if self.current_object:  # if not None
+            mx, my = pygame.mouse.get_pos()
+            scaled_image = pygame.transform.scale(
+                self.current_object.image,
+                (int(self.block_size * 0.9), int(self.block_size * 0.9))
+            )
+            self.game_context.screen.blit(
+                scaled_image,
+                (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
+            )
+
+
+    def display_collision_rects(self):
+        for i in range(len(self.slots)):
+            for obj in self.slots[i]:
+                if obj is not None:
+                    obj.display_collision_rect()
 

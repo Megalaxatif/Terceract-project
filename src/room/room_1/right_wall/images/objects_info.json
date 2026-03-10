@@ -1,26 +1,46 @@
 {
-    "src/room/room_1/right_wall/images/cropped_objects/cropped_9_drawer.png": [
-        4,
-        343,
-        1146,
-        737
-    ],
-    "src/room/room_1/right_wall/images/cropped_objects/cropped_9_closed_closet.png": [
-        1047,
-        3,
-        873,
-        1077
-    ],
-    "src/room/room_1/right_wall/images/cropped_objects/cropped_9_big_frame.png": [
-        36,
-        0,
-        481,
-        439
-    ],
-    "src/room/room_1/right_wall/images/cropped_objects/cropped_5_bottle.png": [
-        691,
-        299,
-        113,
-        256
-    ]
+    "drawer": {
+        "image": "assets/cropped_images/cropped_drawer.png",
+        "rect": [
+            4,
+            343,
+            1146,
+            737
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "closed_closet": {
+        "image": "assets/cropped_images/cropped_closed_closet.png",
+        "rect": [
+            1047,
+            3,
+            873,
+            1077
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "big_frame": {
+        "image": "assets/cropped_images/cropped_big_frame.png",
+        "rect": [
+            36,
+            0,
+            481,
+            439
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "bottle": {
+        "image": "assets/cropped_images/cropped_bottle.png",
+        "rect": [
+            691,
+            299,
+            113,
+            256
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
 }

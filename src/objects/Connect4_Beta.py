@@ -1,13 +1,13 @@
-from object import Object
+from object import Game_object
 import random
 import time
 import pygame
 from pathlib import Path
 
 
-class Connect(Object):
-    def __init__(self, game_context, image_path: Path, rect: pygame.Rect, nb_def: int):
-        super().__init__(game_context, "connect4", image_path, rect, [])
+class Connect(Game_object):
+    def __init__(self, game_context, object_name, image_path: Path, rect: pygame.Rect, nb_def: int):
+        super().__init__(game_context, object_name, image_path, rect, [])
         self.nb_def = nb_def
         self.coeff_lose = 1 * (3/4)**nb_def
         self.grid = [['_', '_', '_', '_', '_', '_', '_'],
@@ -18,11 +18,11 @@ class Connect(Object):
                      ['_', '_', '_', '_', '_', '_', '_']]
         self.tours = 0
         self.is_full = [False, False, False, False, False, False, False]
-        
+
         self.last_played = '_'
         self.last_played_col = random.randint(0, 6)
-        
-        
+
+
 # /------------------------ FONCTIONS AUXILIAIRES ------------------------\
 
 
@@ -35,39 +35,39 @@ class Connect(Object):
         while i < 6 and self.grid[i][col] == '_':
             i += 1
         return i
-    
-    
+
+
     # Vérifie les nb-series de d'un caractère dans une orientation donnée
     def verif(self, lign, col, char, orien):
         if self.grid[lign][col] != char or char == '_':
             return 0
-        
+
         if (orien[:3] == "hau" and lign == 0) or (orien[:3] == "bas" and lign == 5) or (orien[-3:] == "gau" and col == 0) or (orien[-3:] == "dra" and col == 6): # Pour les bords
             return 1
-        
+
         ln = len(orien)
         nlg, ncl = lign, col
         if ln != 3 and ln != 7:
             raise ValueError("Incorrect len of orien")
-        
+
         # Vérifie déjà pour haut et bas (s'ils existent)
         if orien[:3] == "hau":
             nlg -= 1
         elif orien[:3] == "bas":
             nlg += 1
-        
+
         # Vérifie les cotés (et diagonales)
         if orien[-3:] == "gau":
             ncl -= 1
         elif orien[-3:] == "dra":
             ncl += 1
-        
+
         # Vérif si certaines valeurs ont changés, puis retourne
         if nlg == lign and ncl == col:
             raise ValueError("Incorrect arg in orien")
         return 1 + self.verif(nlg, ncl, char, orien)
-            
-        
+
+
     # Verifie qui a gagné
     def who_has_win(self):
         char = self.last_played
@@ -77,9 +77,9 @@ class Connect(Object):
             print("Bot won")
         else:
             raise ValueError("Not valid token")
-    
-    
-        
+
+
+
     # Génère les cases valides
     def generate(self, lign, cln):
         lst = []
@@ -100,11 +100,11 @@ class Connect(Object):
         if lign < 5 and self.grid[lign+1][cln] != '_':
             lst.append([1, 0, "bas"])
         return lst
-            
-    
+
+
 # \-----------------------------------------------------------------------/
-    
-    
+
+
     # Au tour du joueur
     def play_move(self, col):
         i = self.hit_bottom(col) - 1
@@ -123,8 +123,8 @@ class Connect(Object):
                 self.bot_move()
         else:
             print("Full")
-    
-    
+
+
     # Vérifie si le joueur ou le bot à gagné
     def has_win(self):
         if self.tours < 4:
@@ -141,8 +141,8 @@ class Connect(Object):
             self.who_has_win()
             return True
         return False
-             
-        
+
+
     # Au tour du bot
     def bot_move(self):
         coeff_rand = random.random()
@@ -151,7 +151,7 @@ class Connect(Object):
         # Est-ce qu'il décide d'être intelligent ?
         if coeff_rand < self.coeff_lose:
             #print("Intelligent way")
-            
+
             # Quoi faire pour les 4 premiers tours
             if self.tours < 4:
                 binf, bsup = self.last_played_col, self.last_played_col
@@ -161,7 +161,7 @@ class Connect(Object):
                     bsup += 1
                 #print(binf, bsup)
                 col = random.randint(binf, bsup)
-                
+
             # Quoi faire le reste du temps
             else:
                 id_imp = -1
@@ -194,16 +194,16 @@ class Connect(Object):
                         col = random.randint(0, 6)
                         if self.is_full[col] == False:
                             break
-                
+
         # Là, non.
         else:
             #print("Dumb way")
-            
+
             while True:
                 col = random.randint(0, 6)
                 if self.is_full[col] == False:
                     break
-        
+
         # Action de fin
         #print(col)
         self.last_played = 'X'
@@ -217,14 +217,14 @@ class Connect(Object):
         else:
             if i == 0:
                 self.is_full[col] = True
-    
-    
+
+
     # Afficher la grille
     def show(self):
         for i in range(6):
             print(self.grid[i])
         print("  0    1    2    3    4    5    6")
-        
+
     # Retourner la grille
     def ret_grid(self):
         return self.grid

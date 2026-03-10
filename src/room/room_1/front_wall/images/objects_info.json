@@ -1,20 +1,35 @@
 {
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_5_plank2.png": [
-        690,
-        309,
-        565,
-        294
-    ],
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_5_plank1.png": [
-        677,
-        620,
-        567,
-        288
-    ],
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_9_door.png": [
-        276,
-        104,
-        1329,
-        976
-    ]
+    "clean_door": {
+        "image": "assets/cropped_images/cropped_clean_door.png",
+        "rect": [
+            276,
+            104,
+            1329,
+            976
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank2": {
+        "image": "assets/cropped_images/cropped_plank2.png",
+        "rect": [
+            690,
+            309,
+            565,
+            294
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank1": {
+        "image": "assets/cropped_images/cropped_plank1.png",
+        "rect": [
+            677,
+            620,
+            567,
+            288
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
 }
