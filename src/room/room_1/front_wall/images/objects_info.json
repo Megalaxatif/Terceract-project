@@ -1,20 +1,20 @@
 {
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_3_frame.png": [
-        278,
-        118,
-        377,
-        473
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_5_plank2.png": [
+        690,
+        309,
+        565,
+        294
     ],
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_2_table.png": [
-        1211,
-        623,
-        695,
-        457
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_5_plank1.png": [
+        677,
+        620,
+        567,
+        288
     ],
-    "src/room/room_1/front_wall/images/cropped_objects/cropped_0_vase.png": [
-        1659,
-        497,
-        171,
-        300
+    "src/room/room_1/front_wall/images/cropped_objects/cropped_9_door.png": [
+        276,
+        104,
+        1329,
+        976
     ]
 }

@@ -1,8 +1,32 @@
 {
-    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_calculator.png": [
-        1144,
-        660,
-        257,
-        343
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_9_mirror.png": [
+        1486,
+        52,
+        270,
+        574
+    ],
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_9_exit_sign.png": [
+        866,
+        42,
+        189,
+        67
+    ],
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_9_door.png": [
+        276,
+        104,
+        1329,
+        976
+    ],
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_plank2.png": [
+        690,
+        309,
+        565,
+        294
+    ],
+    "src/room/room_1/back_wall/images/cropped_objects/cropped_5_plank1.png": [
+        677,
+        620,
+        567,
+        288
     ]
 }

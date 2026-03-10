@@ -100,6 +100,7 @@ class Wall:
                 self.entities.add(
                     Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
                 )
+                
             elif object_name == "frame":
                 self.entities.add(
                     Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
@@ -113,6 +114,11 @@ class Wall:
             elif object_name == "connect4":
                 self.entities.add(
                     Connect(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), 0)
+                )
+
+            else:
+                self.entities.add(
+                    Vase(self.game_context, save_path, pygame.Rect(sprite_rect_tupple), collision_rects)
                 )
 
         save_data_in_json(objects_data, json_path)

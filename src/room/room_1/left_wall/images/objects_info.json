@@ -1,1 +1,26 @@
-{}
+{
+    "src/room/room_1/left_wall/images/cropped_objects/cropped_9_table.png": [
+        898,
+        605,
+        963,
+        475
+    ],
+    "src/room/room_1/left_wall/images/cropped_objects/cropped_9_big_frame.png": [
+        258,
+        56,
+        378,
+        506
+    ],
+    "src/room/room_1/left_wall/images/cropped_objects/cropped_5_vase.png": [
+        1446,
+        322,
+        314,
+        330
+    ],
+    "src/room/room_1/left_wall/images/cropped_objects/cropped_5_little_frame.png": [
+        1058,
+        432,
+        169,
+        189
+    ]
+}
