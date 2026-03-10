@@ -1,28 +1,6 @@
 {
-    "mirror": {
-        "image": "assets/cropped_images/cropped_mirror.png",
-        "rect": [
-            1486,
-            52,
-            270,
-            574
-        ],
-        "collisions": [],
-        "collision_id": -1
-    },
-    "exit_sign": {
-        "image": "assets/cropped_images/cropped_exit_sign.png",
-        "rect": [
-            866,
-            42,
-            189,
-            67
-        ],
-        "collisions": [],
-        "collision_id": -1
-    },
-    "door": {
-        "image": "assets/cropped_images/cropped_door.png",
+    "clean_door": {
+        "image": "assets/cropped_images/cropped_clean_door.png",
         "rect": [
             276,
             104,

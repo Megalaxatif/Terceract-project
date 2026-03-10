@@ -1,0 +1,46 @@
+{
+    "table": {
+        "image": "assets/cropped_images/cropped_table.png",
+        "rect": [
+            898,
+            605,
+            963,
+            475
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "big_frame": {
+        "image": "assets/cropped_images/cropped_big_frame.png",
+        "rect": [
+            258,
+            56,
+            378,
+            506
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "little_frame": {
+        "image": "assets/cropped_images/cropped_little_frame.png",
+        "rect": [
+            1058,
+            432,
+            169,
+            189
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "blue_vase": {
+        "image": "assets/cropped_images/cropped_blue_vase.png",
+        "rect": [
+            1446,
+            322,
+            314,
+            330
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
+}
