@@ -157,5 +157,5 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
         return Connect(game_context, obj_name,img_path, rect, 0)
 
     else:
-        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id, False)
         #print("create_object error: invalid object name")
