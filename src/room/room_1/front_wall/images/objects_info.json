@@ -1,11 +1,11 @@
 {
-    "clean_door": {
-        "image": "assets/cropped_images/cropped_clean_door.png",
+    "door": {
+        "image": "assets/cropped_images/cropped_door.png",
         "rect": [
-            276,
-            104,
-            1329,
-            976
+            726,
+            131,
+            467,
+            949
         ],
         "collisions": [],
         "collision_id": -1
@@ -16,7 +16,7 @@
             690,
             309,
             565,
-            294
+            292
         ],
         "collisions": [],
         "collision_id": -1
@@ -25,9 +25,9 @@
         "image": "assets/cropped_images/cropped_plank1.png",
         "rect": [
             677,
-            620,
+            635,
             567,
-            288
+            273
         ],
         "collisions": [],
         "collision_id": -1
