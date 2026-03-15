@@ -134,28 +134,49 @@ def create_sub_surface(
 
 
 #---------------------CREATE OBJECT-------------------------------------
-def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id):
+def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id, objects_data):
     # local import to avoid circular import
-    from objects.vase import Vase
+    from objects.common import Common
     from objects.digicode import Digicode
     from objects.Connect4_Beta import Connect
+    from objects.closet import Closet
     from object import Game_object
-
+    
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
 
     elif obj_name in ["vase", "vase2"]:
-        return Vase(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Common(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id)
 
     elif obj_name == "frame":
-        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect,
+                           collision_rects, current_collision_id)
 
     elif obj_name == "table":
-        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect,
+                           collision_rects, current_collision_id)
 
     elif obj_name == "connect4":
         return Connect(game_context, obj_name,img_path, rect, 0)
 
+    elif obj_name == "closed_closet":
+        return Closet(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, True,
+                      None)
+   
+    elif obj_name == "opened_closet":
+        return Closet(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, False,
+                      objects_data)
+    
+    elif "obj_in_closet" in obj_name:
+        temp = Common(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id)
+        temp.displayed = False
+        return temp
+    
     else:
-        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id, False)
+        return Game_object(game_context, obj_name, img_path, rect,
+                           collision_rects, current_collision_id, False)
         #print("create_object error: invalid object name")

@@ -39,6 +39,7 @@ class Game_object(pygame.sprite.Sprite):
             self.valid_rect = self.rect.copy()
         self.displayed = True
         self.movable = movable
+        self.interactable = False
 
 
     def drop_in_collision_rect(self, collision_index):

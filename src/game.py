@@ -107,8 +107,8 @@ class Game:
 
 
     def start(self):
-        #gamemode = "s"
-        gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
+        gamemode = "s"
+        #gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -231,30 +231,34 @@ class Game:
 
     def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
-            if obj.rect.collidepoint(event.pos):
-                if self.network_manager.is_connected and obj.name == self.other_player_object_name:
-                    return
-                self.current_object = obj
-                # send the information to the other player
-                if self.network_manager.is_connected:
-                    self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
+            if obj.displayed and obj.rect.collidepoint(event.pos):
+                if obj.movable:
+                    if self.network_manager.is_connected and obj.name == self.other_player_object_name:
+                        return
+                    self.current_object = obj
+                    # send the information to the other player
+                    if self.network_manager.is_connected:
+                        self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
+                if obj.interactable:
+                    obj.handle_left_click(event)
                 return
 
 
     def drop_current_object(self, event):
-        self.current_object.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
-        if self.network_manager.is_connected:
-            self.network_manager.send_package("variable", "game", "other_player_object_name", "")
-            self.network_manager.send_package(
-                "function",
-                "game",
-                "drop_object",
-                self.current_object.name,
-                self.current_room_id,
-                self.current_wall_id,
-                self.current_object.collision_rect_id
-            )
-        self.current_object = None
+        if event and self.current_object:
+            self.current_object.drop_at_pos(event.pos[0], event.pos[1]) # TODO: change to return the collision rect id
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "other_player_object_name", "")
+                self.network_manager.send_package(
+                    "function",
+                    "game",
+                    "drop_object",
+                    self.current_object.name,
+                    self.current_room_id,
+                    self.current_wall_id,
+                    self.current_object.collision_rect_id
+                )
+            self.current_object = None
 
 
     # function useful for network
