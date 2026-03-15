@@ -1,6 +1,6 @@
 import pygame
 from pytmx.util_pygame import load_pygame
-import sys
+
 from pathlib import Path
 from object import Game_object
 

@@ -39,6 +39,7 @@ class Game_object(pygame.sprite.Sprite):
             self.valid_rect = self.rect.copy()
         self.displayed = True
         self.movable = movable
+        self.interactable = False
 
 
     def drop_in_collision_rect(self, collision_index):
@@ -96,5 +97,10 @@ class Game_object(pygame.sprite.Sprite):
         if self.displayed:
             self.game_context.screen.blit(self.image, self.rect)
 
+
     def update(self, event):
         pass
+
+
+    def handle_left_click(self, event):
+        self.game_context.drop_current_object(event)

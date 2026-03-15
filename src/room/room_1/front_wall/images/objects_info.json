@@ -1,0 +1,35 @@
+{
+    "door": {
+        "image": "assets/cropped_images/cropped_door.png",
+        "rect": [
+            726,
+            131,
+            467,
+            949
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank2": {
+        "image": "assets/cropped_images/cropped_plank2.png",
+        "rect": [
+            690,
+            309,
+            565,
+            292
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank1": {
+        "image": "assets/cropped_images/cropped_plank1.png",
+        "rect": [
+            677,
+            635,
+            567,
+            273
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
+}

@@ -20,9 +20,6 @@ class Wall:
             self.collision_layers_dir.mkdir(parents=True, exist_ok=True)
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
-        #self.clear_object_layers()
-        #self.clear_cropped_objects() # TODO: to remove
-        #self.clear_json() # TODO: to remove also
 
         #clear_json(self.json_path) # TODO: to remove also
 
@@ -49,9 +46,12 @@ class Wall:
 
     def get_objects_data(self):
         objects_data = {}
-        object_layers_path = list(self.object_layers_dir.iterdir())
+        object_layers_path = list(self.object_layers_dir.rglob('*.png'))
         for object_path in reversed(object_layers_path): # reversed so we draw the object with the lowest layer id first
-            object_name = object_path.stem[2:] # example : "vase" instead of ".../.../.../1_vase.png"
+            if object_path.parent == self.object_layers_dir:
+                object_name = object_path.stem[2:] # example : "vase" instead of ".../.../.../1_vase.png"
+            else:
+                object_name = f"{object_path.parent.name}_{object_path.stem[2:]}"
             cropped_name = f"cropped_{object_name}.png"
             save_path = Path(self.cropped_object_dir / cropped_name) # place where we save the cropped image
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
@@ -89,7 +89,7 @@ class Wall:
             converted_rect = convert_to_pygame_rect(rect)
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
 
-            object = create_object(key, self.game_context, img_path, converted_rect, converted_collision_rects, current_collision_id)
+            object = create_object(key, self.game_context, img_path, converted_rect, converted_collision_rects, current_collision_id, self.objects)
             self.objects.add(object)
 
 

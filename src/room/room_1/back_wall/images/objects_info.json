@@ -1,11 +1,55 @@
 {
-    "calculator": {
-        "image": "C:/Users/sarah/Documents/projetJ3D/Terceract-project/assets/cropped_images/cropped_calculator.png",
+    "mirror": {
+        "image": "assets/cropped_images/cropped_mirror.png",
         "rect": [
-            173,
-            539,
-            260,
-            346
+            1486,
+            52,
+            270,
+            574
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "exit_sign": {
+        "image": "assets/cropped_images/cropped_exit_sign.png",
+        "rect": [
+            866,
+            42,
+            189,
+            67
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "door": {
+        "image": "assets/cropped_images/cropped_door.png",
+        "rect": [
+            726,
+            131,
+            467,
+            949
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank2": {
+        "image": "assets/cropped_images/cropped_plank2.png",
+        "rect": [
+            690,
+            309,
+            565,
+            292
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "plank1": {
+        "image": "assets/cropped_images/cropped_plank1.png",
+        "rect": [
+            677,
+            635,
+            567,
+            273
         ],
         "collisions": [],
         "collision_id": -1

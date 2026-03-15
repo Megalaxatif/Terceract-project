@@ -1,0 +1,189 @@
+{
+    "drawer": {
+        "image": "assets/cropped_images/cropped_drawer.png",
+        "rect": [
+            85,
+            529,
+            761,
+            551
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "closed_closet": {
+        "image": "assets/cropped_images/cropped_closed_closet.png",
+        "rect": [
+            1148,
+            84,
+            671,
+            996
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "big_frame": {
+        "image": "assets/cropped_images/cropped_big_frame.png",
+        "rect": [
+            152,
+            47,
+            353,
+            338
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "bottle": {
+        "image": "assets/cropped_images/cropped_bottle.png",
+        "rect": [
+            691,
+            309,
+            76,
+            226
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "opened_closet": {
+        "image": "assets/cropped_images/cropped_opened_closet.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_vhs": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_vhs.png",
+        "rect": [
+            1121,
+            595,
+            130,
+            87
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_umbrella": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_umbrella.png",
+        "rect": [
+            679,
+            720,
+            528,
+            113
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_shoes": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_shoes.png",
+        "rect": [
+            664,
+            864,
+            161,
+            151
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_screwdriver": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_screwdriver.png",
+        "rect": [
+            1077,
+            967,
+            180,
+            31
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_plush2": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_plush2.png",
+        "rect": [
+            900,
+            545,
+            117,
+            128
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_plush": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_plush.png",
+        "rect": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_lightbulb": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_lightbulb.png",
+        "rect": [
+            680,
+            611,
+            94,
+            56
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_glasses": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_glasses.png",
+        "rect": [
+            734,
+            302,
+            134,
+            48
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_clothes3": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_clothes3.png",
+        "rect": [
+            829,
+            377,
+            168,
+            152
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_clothes2": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_clothes2.png",
+        "rect": [
+            1058,
+            377,
+            168,
+            152
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_clothes": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_clothes.png",
+        "rect": [
+            659,
+            380,
+            147,
+            135
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "obj_in_closet_ball": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_ball.png",
+        "rect": [
+            866,
+            862,
+            153,
+            155
+        ],
+        "collisions": [],
+        "collision_id": -1
+    }
+}
