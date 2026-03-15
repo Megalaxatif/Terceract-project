@@ -1,4 +1,15 @@
 {
+    "grid_wall": {
+        "image": "assets/cropped_images/cropped_grid_wall.png",
+        "rect": [
+            846,
+            191,
+            271,
+            271
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
     "drawer": {
         "image": "assets/cropped_images/cropped_drawer.png",
         "rect": [
@@ -182,6 +193,124 @@
             862,
             153,
             155
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "grid": {
+        "image": "assets/cropped_images/cropped_grid.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            631,
+            207,
+            51,
+            51
+        ],
+        "collisions": [
+            [
+                531,
+                486,
+                166,
+                421
+            ],
+            [
+                448,
+                33,
+                249,
+                156
+            ],
+            [
+                697,
+                33,
+                273,
+                67
+            ],
+            [
+                961,
+                81,
+                438,
+                193
+            ],
+            [
+                789,
+                194,
+                78,
+                595
+            ],
+            [
+                449,
+                173,
+                160,
+                143
+            ],
+            [
+                541,
+                278,
+                268,
+                256
+            ],
+            [
+                801,
+                365,
+                498,
+                256
+            ],
+            [
+                1390,
+                258,
+                53,
+                538
+            ],
+            [
+                1133,
+                712,
+                271,
+                266
+            ],
+            [
+                858,
+                603,
+                181,
+                186
+            ],
+            [
+                641,
+                880,
+                503,
+                116
+            ],
+            [
+                711,
+                550,
+                62,
+                60
+            ],
+            [
+                629,
+                203,
+                57,
+                62
+            ]
+        ],
+        "collision_id": -1
+    },
+    "key": {
+        "image": "assets/cropped_images/cropped_key.png",
+        "rect": [
+            700,
+            542,
+            93,
+            76
         ],
         "collisions": [],
         "collision_id": -1

@@ -5,7 +5,9 @@ from utils import get_collision_rects, convert_to_pygame_rect_list
 from objects.grid import key
 
 class Magnet(Game_object):
-    def __init__(self, game_context, object_name : str, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
+    def __init__(self, game_context, object_name : str, image_path : str,
+                 rect : pygame.Rect, collisions : list[pygame.Rect],
+                 collision_index : int):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)
         #self.collision_rects = convert_to_pygame_rect_list(get_collision_rects(Path(self.game_context.root_dir / "src/room/room_1/right_wall/images/collision_layers"), self.name))
         #self.raw_collision_rects = self.collision_rects.copy()
@@ -14,6 +16,7 @@ class Magnet(Game_object):
         #self.arrivee_rect = self.collision_rects[len(self.collision_rects)-2]
         #self.collision_rects.pop()
         #self.collision_rects.pop()
+        self.grid_displayed = False
         self.key_given = False
         self.ongoing = False
 
@@ -21,23 +24,26 @@ class Magnet(Game_object):
         depart_rect = self.collision_rects[len(self.collision_rects)-1]
         arrivee_rect = self.collision_rects[len(self.collision_rects)-2]
         #TODO : seuls pb restants : rectangles de collision visibles, clé apparait pas a l'arrivee, l'aimant se pose encore dans les rects autres
-        print(f"Ongoing: {self.ongoing} / key given : {self.key_given} / mousebuttonup : {event.type == pygame.MOUSEBUTTONUP}")
+        #print(f"Ongoing: {self.ongoing} / key given : {self.key_given} / mousebuttonup : {event.type == pygame.MOUSEBUTTONUP}")
         if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and depart_rect.collidepoint(pygame.mouse.get_pos()) and not self.key_given:
             self.ongoing = True #mouse on beginning
         if self.ongoing and any(self.collision_rects[i].collidepoint(pygame.mouse.get_pos()) for i in range(len(self.collision_rects)-2)):
             self.ongoing = False #mouse on death
-            self.rect.x, self.rect.y = depart_rect.x, depart_rect.y #ca remet magnet à sa place de départ (marche pas)
+            print("touched")
+            self.rect.x, self.rect.y = depart_rect.x, depart_rect.y
+            self.game_context.drop_current_object(event) #ca remet magnet à sa place de départ (marche pas)
         if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and self.ongoing and arrivee_rect.collidepoint(pygame.mouse.get_pos()):
             self.ongoing = False #mouse on end
             self.key_given = True #give the key
             for obj in self.game_context.current_wall.objects:
+                print(f"name: {obj.name}, bool:{obj.displayed}")
                 if obj.name == "key":
-                    obj.displayed = True #ca fait apparaitre la clé à l'arrivée (marche pas)
-                if obj.name == "magnet":
-                    obj.displayed = False #ca fait disparaitre l'aimant à l'arrivée (marche)
+                    obj.key_given = True #ca fait apparaitre la clé à l'arrivée (marche pas)
+            self.game_context.drop_current_object(event)
         if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and self.ongoing and not arrivee_rect.collidepoint(pygame.mouse.get_pos()) and not depart_rect.collidepoint(pygame.mouse.get_pos()):
             self.ongoing = False
             self.rect.x, self.rect.y = depart_rect.x, depart_rect.y #ca remet magnet à sa place de départ (jsp si ca marche ou c la fonction drop qui override)
+            self.game_context.drop_current_object(event)
     
     def handle_left_click(self, event):
         pass #tt passe par update

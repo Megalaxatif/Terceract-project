@@ -140,6 +140,8 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
     from objects.digicode import Digicode
     from objects.Connect4_Beta import Connect
     from objects.grid.magnet import Magnet
+    from objects.grid.key import Key
+    from objects.grid.grid import Grid
     from objects.closet import Closet
     from object import Game_object
     
@@ -163,7 +165,20 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
 
     elif obj_name == "magnet":
         return Magnet(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
-    
+
+    elif obj_name == "key":
+        return Key(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+
+    elif obj_name == "grid_wall":
+        return Grid(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, True,
+                      None)
+
+    elif obj_name == "grid":
+        return Grid(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, False,
+                      objects_data)
+        
     elif obj_name == "closed_closet":
         return Closet(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id, True,

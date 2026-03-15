@@ -144,7 +144,7 @@ class Wall:
         self.resize_wall()
         self.draw_background()
         self.draw_objects()
-        self.display_collision_rects()
+        #self.display_collision_rects()
 #--------------------------------------------------------
 
     # NOTE: can be redefined in child classes
