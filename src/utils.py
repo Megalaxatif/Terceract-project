@@ -139,6 +139,8 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
     from objects.vase import Vase
     from objects.digicode import Digicode
     from objects.Connect4_Beta import Connect
+    from objects.grid.magnet import Magnet
+    from object import Game_object
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
@@ -155,5 +157,8 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
     elif obj_name == "connect4":
         return Connect(game_context, obj_name,img_path, rect, 0)
 
+    elif obj_name == "magnet":
+        return Magnet(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+
     else:
-        print("create_object error: invalid object name")
+        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id, False)
