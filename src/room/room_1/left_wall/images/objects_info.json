@@ -1,4 +1,22 @@
 {
+    "table": {
+        "image": "assets/cropped_images/cropped_table.png",
+        "rect": [
+            898,
+            605,
+            963,
+            475
+        ],
+        "collisions": [
+            [
+                898,
+                605,
+                963,
+                475
+            ]
+        ],
+        "collision_id": -1
+    },
     "big_frame": {
         "image": "assets/cropped_images/cropped_big_frame.png",
         "rect": [

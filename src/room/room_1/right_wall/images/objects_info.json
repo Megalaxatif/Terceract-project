@@ -87,7 +87,7 @@
                 226
             ]
         ],
-        "collision_id": -1
+        "collision_id": 0
     },
     "opened_closet": {
         "image": "assets/cropped_images/cropped_opened_closet.png",

@@ -60,10 +60,28 @@ class Inventory:
 
 
     def init_images(self):
-        #objects_data = load_json_file(self.json_path)
-        #for obj in objects_data:
+        objects_data = {}
+        if self.game_context.network_manager.is_host:
+            objects_data = load_json_file(self.json_path)
+        else:
+            objects_data = self.game_context.game_data["inv_data"]
 
-        pass
+        collision_layers_dir = self.game_context.current_wall.collision_layers_dir
+        for key in objects_data:
+            if key == "data":
+                for i in range(len(objects_data["data"])):
+                    for j in range(len(objects_data["data"][i])):
+                        sprite_dict = objects_data["data"][i][j]
+                        if sprite_dict:
+                            name = sprite_dict["name"]
+                            image = sprite_dict["image"]
+                            rect = sprite_dict["rect"]
+                            converted_rect = convert_to_pygame_rect(rect)
+
+                            collision_rects = get_collision_rects(collision_layers_dir, name)
+                            converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
+                            object = create_object(name, self.game_context, image, converted_rect, converted_collision_rects, -1, None)
+                            self.slots[i][j] = object
 
 
     def resize_objects(self):
