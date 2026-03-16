@@ -137,11 +137,13 @@ def create_sub_surface(
 def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id, objects_data):
     # local import to avoid circular import
     from objects.common import Common
+    from objects.padlock import Padlock
+    from objects.padlock_door import Padlock_door
     from objects.digicode import Digicode
     from objects.Connect4_Beta import Connect
     from objects.closet import Closet
     from object import Game_object
-    
+
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
 
@@ -164,18 +166,26 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
         return Closet(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id, True,
                       None)
-   
+
     elif obj_name == "opened_closet":
         return Closet(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id, False,
                       objects_data)
-    
+
     elif "obj_in_closet" in obj_name:
         temp = Common(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id)
         temp.displayed = False
         return temp
-    
+
+    elif obj_name == "padlock":
+        return Padlock(game_context, obj_name, img_path, rect,
+                           collision_rects, current_collision_id)
+
+    elif obj_name == "padlock_door":
+        return Padlock_door(game_context, obj_name, img_path, rect,
+                           collision_rects, current_collision_id)
+
     else:
         return Game_object(game_context, obj_name, img_path, rect,
                            collision_rects, current_collision_id, False)

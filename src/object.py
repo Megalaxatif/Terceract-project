@@ -11,7 +11,8 @@ class Game_object(pygame.sprite.Sprite):
                  rect : pygame.Rect,
                  collisions : list[pygame.Rect],
                  collision_index : int = -1,
-                 movable : bool = True
+                 movable : bool = True,
+                 displayed : bool = True
                  ):
         super().__init__()
 
@@ -37,9 +38,13 @@ class Game_object(pygame.sprite.Sprite):
             self.valid_rect = self.collision_rects[self.collision_rect_id]
         else:
             self.valid_rect = self.rect.copy()
-        self.displayed = True
+        self.displayed = displayed
         self.movable = movable
-        self.interactable = False
+        self.interactible = False
+
+
+    def replace(self):
+        self.raw_rect.center = self.valid_rect.center
 
 
     def drop_in_collision_rect(self, collision_index):
@@ -59,7 +64,7 @@ class Game_object(pygame.sprite.Sprite):
                 return_code = True
 
             else:
-                self.raw_rect.center = self.valid_rect.center
+                self.replace()
 
             return return_code
 

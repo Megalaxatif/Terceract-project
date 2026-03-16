@@ -62,7 +62,7 @@ class Inventory:
     def init_images(self):
         #objects_data = load_json_file(self.json_path)
         #for obj in objects_data:
-        
+
         pass
 
 
@@ -121,7 +121,7 @@ class Inventory:
 
     def store_current_object(self, row, col):
         obj = self.game_context.current_object
-        if self.slots[row][col] is None:
+        if self.slots[row][col] is None and obj.movable:
 
             self.slots[row][col] = obj
             self.game_context.current_wall.objects.remove(obj)

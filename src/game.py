@@ -23,6 +23,8 @@ LEFT_WALL = 1
 FRONT_WALL = 2
 RIGHT_WALL = 3
 
+CUSTOM_DROP_EVENT = pygame.USEREVENT + 1
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -86,6 +88,11 @@ class Game:
            self.R4,
            self.R5
         ]
+
+        self.room_1_unlocked = True
+        self.room_2_unlocked = False
+        self.room_3_unlocked = False
+        self.room_4_unlocked = False
 
         self.current_room_id = 0
         self.current_wall_id = 0
@@ -165,28 +172,42 @@ class Game:
 
 
     def change_room(self): # change the room we are in
+        # create a custom event
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        custom_event = pygame.event.Event(CUSTOM_DROP_EVENT, {'pos': (mouse_x, mouse_y)})
+
         if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5:
-            self.current_room_id += 1
+            if self.is_room_unlocked(self.current_room_id):
+                self.current_room_id += 1
+                self.drop_current_object(custom_event)
+                self.change_current_wall()
+
         elif self.current_wall_id == BACK_WALL and self.current_room_id > 0:
             self.current_room_id -= 1
+            self.drop_current_object(custom_event)
+            self.change_current_wall()
+
         else:
             print("change_room : Error, impossible to go in that direction")
             return 1
 
-        self.current_object = None
-        self.change_current_wall()
-
 
     def change_wall(self, direction : str):  # change the wall we are facing
+
         if direction != "right" and direction != "left":
             print("change_wall : Error, invalid direction")
             return 1
-        elif direction == "right":
+
+        # create a custom event
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        custom_event = pygame.event.Event(CUSTOM_DROP_EVENT, {'pos': (mouse_x, mouse_y)})
+
+        if direction == "right":
             self.current_wall_id = (self.current_wall_id - 1) % ROOM_5 # python is magic
-        elif direction == "left":
+        if direction == "left":
             self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
 
-        self.current_object = None
+        self.drop_current_object(custom_event)
         self.change_current_wall()
 
 
@@ -229,17 +250,39 @@ class Game:
         object.raw_rect.y = my - object.raw_rect.h/2
 
 
+    def is_room_unlocked(self, room_id):
+        if room_id == 0:
+            return self.room_1_unlocked
+        elif room_id == 1:
+            return self.room_2_unlocked
+        elif room_id == 2:
+            return self.room_3_unlocked
+        elif room_id == 3:
+            return self.room_4_unlocked
+
+
+    def unlock_room(self, room_id):
+        if room_id == 0:
+            self.room_1_unlocked = True
+        elif room_id == 1:
+            self.room_2_unlocked = True
+        elif room_id == 2:
+            self.room_3_unlocked = True
+        elif room_id == 3:
+            self.room_4_unlocked = True
+
+
     def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
             if obj.displayed and obj.rect.collidepoint(event.pos):
-                if obj.movable:
-                    if self.network_manager.is_connected and obj.name == self.other_player_object_name:
-                        return
-                    self.current_object = obj
-                    # send the information to the other player
-                    if self.network_manager.is_connected:
-                        self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
-                if obj.interactable:
+                if self.network_manager.is_connected and obj.name == self.other_player_object_name:
+                    return
+                self.current_object = obj
+                # send the information to the other player
+
+                if self.network_manager.is_connected:
+                    self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
+                if obj.interactible:
                     obj.handle_left_click(event)
                 return
 
@@ -317,7 +360,7 @@ class Game:
             if self.current_object is None and self.inventory.current_object is None:
                 self.select_current_object(event)
 
-            elif self.current_object is not None and self.current_object.movable:
+            elif self.current_object is not None:
                 self.current_object.handle_left_click(event)
 
         elif event.type == pygame.MOUSEMOTION:
