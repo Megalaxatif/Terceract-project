@@ -62,7 +62,6 @@ class Game_object(pygame.sprite.Sprite):
             if collision_index != -1:
                 self.drop_in_collision_rect(collision_index)
                 return_code = True
-
             else:
                 self.replace()
 

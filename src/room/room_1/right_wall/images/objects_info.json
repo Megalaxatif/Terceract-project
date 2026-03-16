@@ -1,4 +1,22 @@
 {
+    "grid_wall": {
+        "image": "assets/cropped_images/cropped_grid_wall.png",
+        "rect": [
+            846,
+            191,
+            271,
+            271
+        ],
+        "collisions": [
+            [
+                846,
+                191,
+                271,
+                271
+            ]
+        ],
+        "collision_id": -1
+    },
     "drawer": {
         "image": "assets/cropped_images/cropped_drawer.png",
         "rect": [
@@ -7,7 +25,14 @@
             761,
             551
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                85,
+                529,
+                761,
+                551
+            ]
+        ],
         "collision_id": -1
     },
     "closed_closet": {
@@ -18,7 +43,14 @@
             671,
             996
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1148,
+                84,
+                671,
+                996
+            ]
+        ],
         "collision_id": -1
     },
     "big_frame": {
@@ -29,7 +61,14 @@
             353,
             338
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                152,
+                47,
+                353,
+                338
+            ]
+        ],
         "collision_id": -1
     },
     "bottle": {
@@ -40,7 +79,14 @@
             76,
             226
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                691,
+                309,
+                76,
+                226
+            ]
+        ],
         "collision_id": -1
     },
     "opened_closet": {
@@ -51,7 +97,14 @@
             1920,
             1080
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                0,
+                0,
+                1920,
+                1080
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_vhs": {
@@ -62,7 +115,14 @@
             130,
             87
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1121,
+                595,
+                130,
+                87
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_umbrella": {
@@ -73,7 +133,14 @@
             528,
             113
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                679,
+                720,
+                528,
+                113
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_shoes": {
@@ -84,7 +151,14 @@
             161,
             151
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                664,
+                864,
+                161,
+                151
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_screwdriver": {
@@ -95,7 +169,14 @@
             180,
             31
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1077,
+                967,
+                180,
+                31
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_plush2": {
@@ -106,7 +187,14 @@
             117,
             128
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                900,
+                545,
+                117,
+                128
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_plush": {
@@ -117,7 +205,14 @@
             111,
             124
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1049,
+                231,
+                111,
+                124
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_lightbulb": {
@@ -128,7 +223,14 @@
             94,
             56
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                680,
+                611,
+                94,
+                56
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_glasses": {
@@ -139,7 +241,14 @@
             134,
             48
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                734,
+                302,
+                134,
+                48
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_clothes3": {
@@ -150,7 +259,14 @@
             168,
             152
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                829,
+                377,
+                168,
+                152
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_clothes2": {
@@ -161,7 +277,14 @@
             168,
             152
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1058,
+                377,
+                168,
+                152
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_clothes": {
@@ -172,7 +295,14 @@
             147,
             135
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                659,
+                380,
+                147,
+                135
+            ]
+        ],
         "collision_id": -1
     },
     "obj_in_closet_ball": {
@@ -182,6 +312,131 @@
             862,
             153,
             155
+        ],
+        "collisions": [
+            [
+                866,
+                862,
+                153,
+                155
+            ]
+        ],
+        "collision_id": -1
+    },
+    "grid": {
+        "image": "assets/cropped_images/cropped_grid.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collisions": [],
+        "collision_id": -1
+    },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            631,
+            207,
+            51,
+            51
+        ],
+        "collisions": [
+            [
+                531,
+                486,
+                166,
+                421
+            ],
+            [
+                448,
+                33,
+                249,
+                156
+            ],
+            [
+                697,
+                33,
+                273,
+                67
+            ],
+            [
+                961,
+                81,
+                438,
+                193
+            ],
+            [
+                789,
+                194,
+                78,
+                595
+            ],
+            [
+                449,
+                173,
+                160,
+                143
+            ],
+            [
+                541,
+                278,
+                268,
+                256
+            ],
+            [
+                801,
+                365,
+                498,
+                256
+            ],
+            [
+                1390,
+                258,
+                53,
+                538
+            ],
+            [
+                1133,
+                712,
+                271,
+                266
+            ],
+            [
+                858,
+                603,
+                181,
+                186
+            ],
+            [
+                641,
+                880,
+                503,
+                116
+            ],
+            [
+                711,
+                550,
+                62,
+                60
+            ],
+            [
+                629,
+                203,
+                57,
+                62
+            ]
+        ],
+        "collision_id": -1
+    },
+    "key": {
+        "image": "assets/cropped_images/cropped_key.png",
+        "rect": [
+            700,
+            542,
+            93,
+            76
         ],
         "collisions": [],
         "collision_id": -1

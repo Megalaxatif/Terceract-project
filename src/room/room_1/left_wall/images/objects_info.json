@@ -1,15 +1,4 @@
 {
-    "table": {
-        "image": "assets/cropped_images/cropped_table.png",
-        "rect": [
-            898,
-            605,
-            963,
-            475
-        ],
-        "collisions": [],
-        "collision_id": -1
-    },
     "big_frame": {
         "image": "assets/cropped_images/cropped_big_frame.png",
         "rect": [
@@ -18,18 +7,14 @@
             347,
             500
         ],
-        "collisions": [],
-        "collision_id": -1
-    },
-    "vase": {
-        "image": "assets/cropped_images/cropped_vase.png",
-        "rect": [
-            1607,
-            343,
-            127,
-            276
+        "collisions": [
+            [
+                265,
+                56,
+                347,
+                500
+            ]
         ],
-        "collisions": [],
         "collision_id": -1
     },
     "little_frame": {
@@ -40,7 +25,14 @@
             164,
             183
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1063,
+                432,
+                164,
+                183
+            ]
+        ],
         "collision_id": -1
     }
 }

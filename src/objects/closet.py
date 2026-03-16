@@ -1,7 +1,5 @@
 import pygame
-from pathlib import Path
 from object import Game_object
-from utils import load_json_file, convert_to_pygame_rect, convert_to_pygame_rect_list, create_object
 
 class Closet(Game_object):
     def __init__(self, game_context, object_name, image_path : str,

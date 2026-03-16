@@ -7,7 +7,14 @@
             270,
             574
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1486,
+                52,
+                270,
+                574
+            ]
+        ],
         "collision_id": -1
     },
     "exit_sign": {
@@ -18,7 +25,14 @@
             189,
             67
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                866,
+                42,
+                189,
+                67
+            ]
+        ],
         "collision_id": -1
     },
     "door": {
@@ -29,7 +43,14 @@
             467,
             949
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                726,
+                131,
+                467,
+                949
+            ]
+        ],
         "collision_id": -1
     },
     "plank2": {
@@ -40,7 +61,14 @@
             565,
             292
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                690,
+                309,
+                565,
+                292
+            ]
+        ],
         "collision_id": -1
     },
     "plank1": {
@@ -51,7 +79,14 @@
             567,
             273
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                677,
+                635,
+                567,
+                273
+            ]
+        ],
         "collision_id": -1
     }
 }

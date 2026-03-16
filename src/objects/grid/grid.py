@@ -1,68 +1,40 @@
 import pygame
-#import pyscroll
 from pytmx.util_pygame import load_pygame
 
 from pathlib import Path
 from object import Game_object
 
-pygame.init()
-pygame.display.set_caption("The Grief Cube")
-tmx_data = load_pygame("grid.tmx") # raw data from the tile file
-magnet_image = pygame.image.load("magnet.png").convert_alpha() # load the image of the magnet
-key_image = pygame.image.load("key.png").convert_alpha() # load the image of the key
-
-
-class Magnet(Game_object):
-    def __init__(self, game_context, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
-        super().__init__(game_context, "magnet", image_path, rect, collisions, collision_index)
-        self.tmxdata = tmx_data.get_object_by_type("départ")
-        self.rect = pygame.Rect(self.tmxdata[0].x, self.tmxdata[0].y, self.tmxdata[0].width, self.tmxdata[0].height)
-
-
-class Key(Game_object):
-    def __init__(self, game_context, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
-        super().__init__(game_context, "key", image_path, rect, collisions, collision_index)
-        self.tmxdata = tmx_data.get_object_by_type("arrivée")
-        self.rect = pygame.Rect(self.tmxdata[0].x, self.tmxdata[0].y, self.tmxdata[0].width, self.tmxdata[0].height)
-
-class Grid(pygame.sprite.Sprite):
-    def __init__(self, game_context, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int, tmx_data):
-        super().__init__(game_context, "grid", image_path, rect, collisions, collision_index)
-        self.tmxdata = tmx_data.objects
-        self.image = tmx_data.image
-        self.object_group = pygame.sprite.Group() # create a sprite group to hold the objects
-        self.rect_mort = []
-        self.rect_depart = []
-        self.rect_arrivee = []
-        self.key_given = False
-        self.ongoing = False
-        for obj in self.tmxdata:
-            self.object_group.add(obj)
-            if obj:
-                if obj.type == "mort":
-                    self.rect_mort.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
-                elif obj.type == "départ":
-                    self.rect_depart.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
-                elif obj.type == "arrivée":
-                    self.rect_arrivee.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+class Grid(Game_object):
+    def __init__(self, game_context, object_name, image_path : str,
+                 rect : pygame.Rect, collisions : list[pygame.Rect],
+                 collision_index : int, displayed, objects_data):
+        super().__init__(game_context, object_name, image_path, rect,
+                         collisions, collision_index)
+        self.movable = False
+        self.interactible = True
+        self.displayed = displayed
+        self.on_wall = self.displayed
+        if objects_data:
+            self.objects_data = list(objects_data)
+        else:
+            self.objects_data = None
 
     def update(self, event):
-        if self.ongoing:
-            magnet.displayed = True #ca suit la souris la
-        if event.type == pygame.MOUSEBUTTONDOWN and any(r.collidepoint(pygame.mouse.get_pos()) for r in self.rect_depart) and not self.key_given:
-            self.ongoing = True #mouse on beginning
-        if event.type == pygame.MOUSEBUTTONDOWN and self.ongoing and any(r.collidepoint(pygame.mouse.get_pos()) for r in self.rect_mort):
-            self.ongoing = False #mouse on death
-            magnet.rect = self.rect_depart[0] #ca remet magnet à sa place de départ
-        if event.type == pygame.MOUSEBUTTONUP and self.ongoing and any(r.collidepoint(pygame.mouse.get_pos()) for r in self.rect_arrivee):
-            self.ongoing = False #mouse on end, normalement l'aimant disparait
-            self.key_given = True #give the key
-            key.displayed = True #ca fait apparaitre la clé à l'arrivée
-        if event.type == pygame.MOUSEBUTTONUP and self.ongoing:
-            self.ongoing = False
-            magnet.rect = self.rect_depart[0] #ca remet magnet à sa place de départ
+        if not self.on_wall:
+            wall = self.game_context.current_wall.objects
+            for obj in wall:
+                if obj.name == "magnet":
+                    obj.grid_displayed = self.displayed
+                    obj.displayed = obj.grid_displayed and not obj.key_given
+                if obj.name == "key":
+                    obj.grid_displayed = self.displayed
+                    obj.displayed = obj.grid_displayed and obj.key_given
 
 
-grille = Grid(None, "grid.tmx", pygame.Rect(0, 0, 0, 0), [], -1, tmx_data)
-key = Key(None, "key.png", None, [], -1)
-magnet = Magnet(None, "magnet.png", None, [], -1)
+
+    def handle_left_click(self, event):
+        wall = self.game_context.current_wall.objects
+        for obj in wall:
+            if isinstance(obj, Grid) and not obj.on_wall:
+                obj.displayed = not obj.displayed
+        self.game_context.drop_current_object(event)
