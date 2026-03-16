@@ -36,6 +36,5 @@ class Grid(Game_object):
         wall = self.game_context.current_wall.objects
         for obj in wall:
             if isinstance(obj, Grid) and not obj.on_wall:
-                print(self.game_context.current_object)
                 obj.displayed = not obj.displayed
         self.game_context.drop_current_object(event)

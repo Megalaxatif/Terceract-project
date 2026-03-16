@@ -34,6 +34,7 @@ class Inventory:
 
         # load images
         self.current_object = None
+        self.displayed = True
 
         self.init_images()
 
@@ -83,40 +84,47 @@ class Inventory:
 
 
     def display(self):
-        self.block_size = int(self.raw_block_size * self.game_context.delta)
+        if self.displayed:
+            self.block_size = int(self.raw_block_size * self.game_context.delta)
 
-        if self.center:
-            mid_block = len(self.slots_entities[0]) // 2 + len(self.slots_entities[0]) % 2
-            self.x = self.game_context.screen.get_width() // 2 - mid_block * self.block_size
-        else:
-            self.x = int(self.raw_x * self.game_context.delta)
+            if self.center:
+                mid_block = len(self.slots_entities[0]) // 2 + len(self.slots_entities[0]) % 2
+                self.x = self.game_context.screen.get_width() // 2 - mid_block * self.block_size
+            else:
+                self.x = int(self.raw_x * self.game_context.delta)
 
-        self.y = int(self.raw_y * self.game_context.delta)
+            self.y = int(self.raw_y * self.game_context.delta)
 
-        self.resize_objects()
-        self.display_collision_rects()
-        self.draw_grid()
-        self.draw_objects()
-        self.draw_current_object()
+            self.resize_objects()
+            self.draw_grid()
+            self.draw_objects()
+        if self.current_object:
+            self.draw_current_object()
+            self.display_collision_rects()
 
 
     def handle_left_click(self, event):
-        self.mouse_x, self.mouse_y = event.pos
+        if self.displayed:
+            self.mouse_x, self.mouse_y = event.pos
 
-        if (
-            self.x <= self.mouse_x < self.x + self.cols * self.block_size and
-            self.y <= self.mouse_y < self.y + self.rows * self.block_size
-        ):
-            self.col = (self.mouse_x - self.x) // self.block_size
-            self.row = (self.mouse_y - self.y) // self.block_size
+            if (
+                self.x <= self.mouse_x < self.x + self.cols * self.block_size and
+                self.y <= self.mouse_y < self.y + self.rows * self.block_size
+            ):
+                self.col = (self.mouse_x - self.x) // self.block_size
+                self.row = (self.mouse_y - self.y) // self.block_size
 
-            if self.game_context.current_object is not None:
-                self.store_current_object(self.row, self.col)
-            else:
-                self.current_object, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_object
-
+                if self.game_context.current_object is not None:
+                    self.store_current_object(self.row, self.col)
+                else:
+                    self.current_object, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_object
+                return True
+                
+            elif self.current_object is not None:
+                self.drop_current_object(self.row, self.col, event)
         elif self.current_object is not None:
-            self.drop_current_object(self.row, self.col)
+            self.drop_current_object(self.row, self.col, event)
+        return False
 
 
     def store_current_object(self, row, col):
@@ -144,15 +152,15 @@ class Inventory:
             self.current_object = None #TODO: what ??
 
 
-    def drop_current_object(self, row, col):
+    def drop_current_object(self, row, col, event):
         obj = self.current_object
+        obj.handle_left_click(event)
         if obj is None:
             print("drop_current_object error: current_object is None")
             return -1
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
         if obj.drop_at_pos(mx, my):
-
             if self.game_context.network_manager.is_connected:
                 #send the information to the other player
                 self.game_context.network_manager.send_package(

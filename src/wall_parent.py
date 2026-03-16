@@ -59,6 +59,12 @@ class Wall:
 
             collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
 
+            if object_name not in ["key", "magnet", "grid"]:
+                if collision_rects:
+                    collision_rects.append(bbox)
+                else:
+                        collision_rects = [bbox]
+            
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
             objects_data[object_name]["rect"] = bbox
@@ -144,7 +150,7 @@ class Wall:
         self.resize_wall()
         self.draw_background()
         self.draw_objects()
-        #self.display_collision_rects()
+        self.display_collision_rects()
 #--------------------------------------------------------
 
     # NOTE: can be redefined in child classes

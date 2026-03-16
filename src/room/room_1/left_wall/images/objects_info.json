@@ -7,7 +7,14 @@
             963,
             475
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                898,
+                605,
+                963,
+                475
+            ]
+        ],
         "collision_id": -1
     },
     "big_frame": {
@@ -18,7 +25,14 @@
             347,
             500
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                265,
+                56,
+                347,
+                500
+            ]
+        ],
         "collision_id": -1
     },
     "vase": {
@@ -29,7 +43,14 @@
             127,
             276
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1607,
+                343,
+                127,
+                276
+            ]
+        ],
         "collision_id": -1
     },
     "little_frame": {
@@ -40,7 +61,14 @@
             164,
             183
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1063,
+                432,
+                164,
+                183
+            ]
+        ],
         "collision_id": -1
     }
 }

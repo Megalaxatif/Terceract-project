@@ -11,6 +11,7 @@ from room import *
 from network import Network_manager
 from minigames import *
 from pathlib import Path
+from dialogues import Dialogue
 
 ROOM_1 = 0
 ROOM_2 = 1
@@ -29,6 +30,8 @@ class Game:
         self.delta_h = 1
         self.delta_w = 1
         self.delta = 1
+        self.height = self.screen.get_height()
+        self.width = self.screen.get_width()
         self.fullscreen = True
         self.FPS = 60
         self.clock = pygame.time.Clock()
@@ -95,6 +98,7 @@ class Game:
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
+        self.dialogues = Dialogue(self)
 
     def save_game(self): # save all the game data
         if self.network_manager.is_host:
@@ -290,6 +294,8 @@ class Game:
 
 
     def recalculate_deltas(self): # recalculate the delta values when the window is resized
+        self.height = self.screen.get_height()
+        self.width = self.screen.get_width()
         self.delta_h = self.screen.get_height() / 720
         self.delta_w = self.screen.get_width() / 1080
         self.delta = min(self.delta_h, self.delta_w)
@@ -309,17 +315,22 @@ class Game:
                 self.change_wall("right")
             elif event.key == pygame.K_UP:
                 self.change_room()
+            elif event.key == pygame.K_i:
+                self.inventory.displayed = not self.inventory.displayed
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            
+            temp_inv_obj = self.inventory.current_object
+            in_inventory = self.inventory.handle_left_click(event)
 
-            self.inventory.handle_left_click(event)
-
-            if self.current_object is None and self.inventory.current_object is None:
+            if not in_inventory and not temp_inv_obj and self.current_object is None and self.inventory.current_object is None:
                 self.select_current_object(event)
 
-            elif self.current_object is not None and self.current_object.movable:
+            elif not in_inventory and not temp_inv_obj and self.current_object is not None and self.current_object.movable:
                 self.current_object.handle_left_click(event)
 
+            
+            
         elif event.type == pygame.MOUSEMOTION:
             self.center_current_object()
 
@@ -338,6 +349,7 @@ class Game:
             elif self.current_mini_game == "game":
                 self.handle_basic_game_events(event)
                 self.update_walls(event)
+                self.dialogues.handle_event(event)
 
             elif self.current_mini_game == "menu": # TODO
                 pass
@@ -353,6 +365,7 @@ class Game:
             self.current_wall.display()
             self.inventory.display()
             self.display_room_counter()
+            self.dialogues.afficher()
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update() # TODO: separate update from display

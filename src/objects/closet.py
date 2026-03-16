@@ -11,6 +11,7 @@ class Closet(Game_object):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)
         self.movable = False
         self.interactable = True
+        self.collision_rects = []
         self.displayed = displayed
         self.open = self.displayed
         if objects_data:

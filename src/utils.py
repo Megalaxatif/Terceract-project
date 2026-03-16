@@ -136,21 +136,23 @@ def create_sub_surface(
 #---------------------CREATE OBJECT-------------------------------------
 def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id, objects_data):
     # local import to avoid circular import
-    from objects.common import Common
     from objects.digicode import Digicode
     from objects.Connect4_Beta import Connect
     from objects.grid.magnet import Magnet
     from objects.grid.key import Key
     from objects.grid.grid import Grid
     from objects.closet import Closet
+    from objects.plank import Plank
+    from objects.screwdriver import Screwdriver
     from object import Game_object
+    
     
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
 
     elif obj_name in ["vase", "vase2"]:
-        return Common(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, True)
 
     elif obj_name == "frame":
         return Game_object(game_context, obj_name, img_path, rect,
@@ -190,11 +192,18 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
                       objects_data)
     
     elif "obj_in_closet" in obj_name:
-        temp = Common(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id)
+        if "screwdriver" in obj_name:
+            return Screwdriver(game_context, obj_name, img_path, rect,
+                        collision_rects, current_collision_id)
+        temp = Game_object(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, True)
         temp.displayed = False
         return temp
-    
+
+    elif "plank" in obj_name:
+        return Plank(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id)
+
     else:
         return Game_object(game_context, obj_name, img_path, rect,
                            collision_rects, current_collision_id, False)
