@@ -48,13 +48,14 @@ class Inventory:
                     objects_list["data"][i].append(None)
                 else:
                     converted_rect = convert_to_tuple_rect(obj.raw_rect)
+                    converted_default_rect = convert_to_tuple_rect(obj.default_collision)
 
                     objects_list["data"][i].append(
                         {
                             "name" : obj.name,
                             "image" : obj.image_path.as_posix(),
                             "rect" : converted_rect,
-                            "default_collision": obj.default_collision,
+                            "default_collision": converted_default_rect,
                             "default_wall_id" : obj.default_wall
                         }
                     )
