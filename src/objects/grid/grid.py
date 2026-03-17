@@ -20,21 +20,18 @@ class Grid(Game_object):
             self.objects_data = None
 
     def update(self, event):
-        if not self.on_wall:
-            wall = self.game_context.current_wall.objects
-            for obj in wall:
-                if obj.name == "magnet":
-                    obj.grid_displayed = self.displayed
-                    obj.displayed = obj.grid_displayed and not obj.key_given
-                if obj.name == "key":
-                    obj.grid_displayed = self.displayed
-                    obj.displayed = obj.grid_displayed and obj.key_given
-
-
+        pass
 
     def handle_left_click(self, event):
         wall = self.game_context.current_wall.objects
         for obj in wall:
             if isinstance(obj, Grid) and not obj.on_wall:
                 obj.displayed = not obj.displayed
+                for obj2 in wall:
+                    if obj2.name == "magnet":
+                        obj2.grid_displayed = self.displayed
+                        obj2.displayed = obj2.grid_displayed and not obj2.key_given
+                    if obj2.name == "key":
+                        obj2.grid_displayed = self.displayed
+                        obj2.displayed = obj2.grid_displayed and obj2.key_given
         self.game_context.drop_current_object(event)

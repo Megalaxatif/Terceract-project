@@ -36,7 +36,9 @@ def convert_to_pygame_rect(rect) -> pygame.Rect:
 def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
     pygame_rect_list = []
     for rect in rect_list:
-        pygame_rect_list.append(pygame.Rect(rect))
+        #print(rect_list)
+        if rect:
+            pygame_rect_list.append(pygame.Rect(rect))
     return pygame_rect_list
 
 
@@ -134,7 +136,8 @@ def create_sub_surface(
 
 
 #---------------------CREATE OBJECT-------------------------------------
-def create_object(obj_name, game_context, img_path, rect, collision_rects, current_collision_id, objects_data):
+def create_object(obj_name, game_context, img_path, rect, collision_rects,
+                  current_collision_id, objects_data, default_collision, default_wall):
     # local import to avoid circular import
     from objects.padlock import Padlock
     from objects.padlock_door import Padlock_door
@@ -153,27 +156,34 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
 
     elif obj_name in ["vase", "vase2"]:
         return Game_object(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True)
+                      collision_rects, current_collision_id, True, True,
+                      default_collision, default_wall)
 
     elif obj_name == "frame":
         return Game_object(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id)
+                           collision_rects, current_collision_id,
+                           default_collision, default_wall)
 
     elif obj_name == "table":
         return Game_object(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id)
+                           collision_rects, current_collision_id, False, True,
+                           default_collision, default_wall)
 
     elif obj_name == "connect4":
         return Connect(game_context, obj_name,img_path, rect, 0)
 
     elif obj_name == "magnet":
-        return Magnet(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Magnet(game_context, obj_name, img_path, rect, collision_rects,
+                      current_collision_id)
 
     elif obj_name == "key":
-        return Key(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Key(game_context, obj_name, img_path, rect, collision_rects,
+                   current_collision_id)
 
     elif obj_name == "clock":
-        return Game_object(game_context, obj_name, img_path, rect, collision_rects, current_collision_id)
+        return Game_object(game_context, obj_name, img_path, rect, collision_rects,
+                           current_collision_id, True, True,
+                            default_collision, default_wall)
 
     elif obj_name == "grid_wall":
         return Grid(game_context, obj_name, img_path, rect,
@@ -199,9 +209,11 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
 
         if "screwdriver" in obj_name:
             return Screwdriver(game_context, obj_name, img_path, rect,
-                        collision_rects, current_collision_id)
+                        collision_rects, current_collision_id,
+                        default_collision, default_wall)
         temp = Game_object(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True)
+                      collision_rects, current_collision_id, True, True,
+                      default_collision, default_wall)
         temp.displayed = False
         return temp
 
@@ -218,5 +230,6 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects, curre
 
     else:
         return Game_object(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id, False)
+                           collision_rects, current_collision_id, False, True,
+                            default_collision, default_wall)
         #print("create_object error: invalid object name")

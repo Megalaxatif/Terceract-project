@@ -16,10 +16,12 @@ class Magnet(Game_object):
         #self.arrivee_rect = self.collision_rects[len(self.collision_rects)-2]
         #self.collision_rects.pop()
         #self.collision_rects.pop()
+        self.displayed = False
         self.initial_center = rect.center
         self.grid_displayed = False
         self.key_given = False
         self.ongoing = False
+        self.display_collision_rect_bool = False
 
     def update(self, event):
         depart_rect = self.collision_rects[-1]
@@ -45,16 +47,20 @@ class Magnet(Game_object):
                 )
             self.game_context.current_object = None
             self.raw_rect.center = self.initial_center #ca remet magnet à sa place de départ
-            
-        if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and self.ongoing and arrivee_rect.collidepoint(pygame.mouse.get_pos()):
+ 
+        if (event.type == pygame.MOUSEBUTTONDOWN) and self.ongoing and arrivee_rect.collidepoint(pygame.mouse.get_pos()):
             self.ongoing = False #mouse on end
             self.key_given = True #give the key
             for obj in self.game_context.current_wall.objects:
                 if obj.name == "key":
                     obj.key_given = True #ca fait apparaitre la clé à l'arrivée (marche pas)
+                    obj.displayed = True
+                if obj.name == "magnet":
+                    obj.grid_displayed = self.displayed
+                    obj.displayed = obj.grid_displayed and not obj.key_given
             self.game_context.drop_current_object(event)
-            
-        if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and self.ongoing and not arrivee_rect.collidepoint(pygame.mouse.get_pos()) and not depart_rect.collidepoint(pygame.mouse.get_pos()):
+
+        if (event.type == pygame.MOUSEBUTTONDOWN) and self.ongoing and not arrivee_rect.collidepoint(pygame.mouse.get_pos()) and not depart_rect.collidepoint(pygame.mouse.get_pos()):
             self.ongoing = False
             self.rect.x, self.rect.y = depart_rect.x, depart_rect.y #ca remet magnet à sa place de départ (jsp si ca marche ou c la fonction drop qui override)
             self.game_context.drop_current_object(event)

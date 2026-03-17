@@ -97,7 +97,7 @@ class Inventory:
         for i in range(len(self.slots)):
             for obj in self.slots[i]:
                 if obj is not None:
-                    obj.change_collision_rects(collision_layers_dir)
+                    obj.change_collision_rects(collision_layers_dir, self.game_context.current_wall.wall_id_str)
 
 
     def display(self):
@@ -117,7 +117,7 @@ class Inventory:
             self.draw_objects()
         if self.current_object:
             self.draw_current_object()
-            self.display_collision_rects()
+            #self.display_collision_rects()
 
 
     def handle_left_click(self, event):
@@ -221,9 +221,10 @@ class Inventory:
                 print(f"inventory_store_object error: impossible to store the object {obj_name} because the inventory is full") # this case should never happen
                 return 2
 
-        self.slots[row][col] = object                                                       # put the object in inventory
-        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir)  # change its collision rects
-        src_wall.objects.remove(object)                                                     # remove the object from the wall
+        self.slots[row][col] = object # put the object in inventory
+        wall_id_str = f"{self.room_id + 1}{self.wall_id + 1}"
+        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir, wall_id_str)     # change its collision rects
+        src_wall.objects.remove(object)                                                                     # remove the object from the wall
 
 
     # function useful for network

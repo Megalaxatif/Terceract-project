@@ -7,15 +7,15 @@
             467,
             949
         ],
-        "collisions": [
-            [
-                726,
-                131,
-                467,
-                949
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            726,
+            131,
+            467,
+            949
         ],
-        "collision_id": -1
+        "default_wall_id": "13"
     },
     "plank2": {
         "image": "assets/cropped_images/cropped_plank2.png",
@@ -25,15 +25,15 @@
             565,
             292
         ],
-        "collisions": [
-            [
-                690,
-                309,
-                565,
-                292
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            690,
+            309,
+            565,
+            292
         ],
-        "collision_id": -1
+        "default_wall_id": "13"
     },
     "plank1": {
         "image": "assets/cropped_images/cropped_plank1.png",
@@ -43,14 +43,14 @@
             567,
             273
         ],
-        "collisions": [
-            [
-                677,
-                635,
-                567,
-                273
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            677,
+            635,
+            567,
+            273
         ],
-        "collision_id": -1
+        "default_wall_id": "13"
     }
 }
