@@ -63,7 +63,7 @@ class Wall:
             if object_name not in ["key", "magnet", "grid"]:
                 default_collision = bbox
             else:
-                default_collision = []
+                default_collision = None
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
@@ -120,7 +120,7 @@ class Wall:
             formated_rect = convert_to_tuple_rect(object.raw_rect)
             formated_collision_rects = convert_to_tuple_rect_list(object.raw_collision_rects)
 
-            formated_default_collision = []
+            formated_default_collision = None
             if object.default_collision:
                 formated_default_collision = convert_to_tuple_rect(object.default_collision)
 

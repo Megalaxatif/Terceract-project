@@ -49,6 +49,18 @@
                 52,
                 270,
                 574
+            ],
+            [
+                1486,
+                52,
+                270,
+                574
+            ],
+            [
+                1486,
+                52,
+                270,
+                574
             ]
         ],
         "collision_id": -1,
@@ -69,6 +81,18 @@
             67
         ],
         "collisions": [
+            [
+                866,
+                42,
+                189,
+                67
+            ],
+            [
+                866,
+                42,
+                189,
+                67
+            ],
             [
                 866,
                 42,
@@ -171,6 +195,18 @@
                 131,
                 467,
                 949
+            ],
+            [
+                726,
+                131,
+                467,
+                949
+            ],
+            [
+                726,
+                131,
+                467,
+                949
             ]
         ],
         "collision_id": -1,
@@ -192,7 +228,7 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [],
+        "default_collision": null,
         "default_wall_id": ""
     },
     "plank1": {
@@ -205,7 +241,7 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [],
+        "default_collision": null,
         "default_wall_id": ""
     }
 }
