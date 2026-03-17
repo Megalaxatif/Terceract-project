@@ -55,12 +55,14 @@ class Magnet(Game_object):
                 if obj.name == "key":
                     obj.key_given = True #ca fait apparaitre la clé à l'arrivée (marche pas)
                     obj.displayed = True
-                    self.game_context.network_manager.send_package("variable", "key", "key_given", "True")
-                    self.game_context.network_manager.send_package("variable", "key", "displayed", "True")
+                    if self.game_context.network_manager.is_connected:
+                        self.game_context.network_manager.send_package("variable", "key", "key_given", "True")
+                        self.game_context.network_manager.send_package("variable", "key", "displayed", "True")
                 if obj.name == "magnet":
                     obj.grid_displayed = self.displayed
                     obj.displayed = obj.grid_displayed and not obj.key_given
-                    self.game_context.network_manager.send_package("variable", "magnet", "displayed", f"{obj.displayed}")
+                    if self.game_context.network_manager.is_connected:
+                        self.game_context.network_manager.send_package("variable", "magnet", "displayed", f"{obj.displayed}")
             self.game_context.drop_current_object(event)
 
         if (event.type == pygame.MOUSEBUTTONDOWN) and self.ongoing and not arrivee_rect.collidepoint(pygame.mouse.get_pos()) and not depart_rect.collidepoint(pygame.mouse.get_pos()):
