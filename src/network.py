@@ -5,6 +5,7 @@ import json
 import socket
 from utils import *
 
+
 class Network_manager:
     def __init__(self, game_context):
         self.game_context = game_context
@@ -129,7 +130,7 @@ class Network_manager:
             # update the data in the json file before sending
             self.game_context.save_game()
             data = self.get_all_data()
-            raw_data = json.dumps(data) + "\x00"  # convert json into raw text
+            raw_data = json.dumps(data) + "<END>" # convert json into raw text
 
             try:
                 self.client.sendall(raw_data.encode("utf-8"))
@@ -170,7 +171,7 @@ class Network_manager:
             "name" : name,
             "args" : args
         }
-        package = json.dumps(package) + "\n" + "\x00"
+        package = json.dumps(package) + "\n" + "<END>"
         self.client.sendall(package.encode("utf-8"))
         return 0
 
@@ -179,7 +180,7 @@ class Network_manager:
         raw_data = b""
         chunk = b""
 
-        while b"\x00" not in raw_data:
+        while b"<END>" not in raw_data:
             try:
                 chunk = self.client.recv(4096)
 
@@ -200,14 +201,14 @@ class Network_manager:
                 print("receive_package : Error ", e)
                 return b""
 
-        raw_data = raw_data.replace(b"\x00", b"")
+        raw_data = raw_data.replace(b"<END>", b"")
         return raw_data
 
 
     def get_reference(self, name):
         for room in self.game_context.room_list:
             for wall in room:
-                for obj in wall:
+                for obj in wall.objects:
                     if obj.name == name:
                         return obj
         return None
