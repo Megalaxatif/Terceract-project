@@ -7,15 +7,15 @@
             271,
             271
         ],
-        "collisions": [
-            [
-                846,
-                191,
-                271,
-                271
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            846,
+            191,
+            271,
+            271
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "drawer": {
         "image": "assets/cropped_images/cropped_drawer.png",
@@ -25,15 +25,15 @@
             761,
             551
         ],
-        "collisions": [
-            [
-                85,
-                529,
-                761,
-                551
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            85,
+            529,
+            761,
+            551
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "closed_closet": {
         "image": "assets/cropped_images/cropped_closed_closet.png",
@@ -43,15 +43,15 @@
             671,
             996
         ],
-        "collisions": [
-            [
-                1148,
-                84,
-                671,
-                996
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1148,
+            84,
+            671,
+            996
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "big_frame": {
         "image": "assets/cropped_images/cropped_big_frame.png",
@@ -61,15 +61,15 @@
             353,
             338
         ],
-        "collisions": [
-            [
-                152,
-                47,
-                353,
-                338
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            152,
+            47,
+            353,
+            338
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "bottle": {
         "image": "assets/cropped_images/cropped_bottle.png",
@@ -79,15 +79,15 @@
             76,
             226
         ],
-        "collisions": [
-            [
-                691,
-                309,
-                76,
-                226
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            691,
+            309,
+            76,
+            226
         ],
-        "collision_id": 0
+        "default_wall_id": "14"
     },
     "opened_closet": {
         "image": "assets/cropped_images/cropped_opened_closet.png",
@@ -97,15 +97,15 @@
             1920,
             1080
         ],
-        "collisions": [
-            [
-                0,
-                0,
-                1920,
-                1080
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_vhs": {
         "image": "assets/cropped_images/cropped_obj_in_closet_vhs.png",
@@ -115,15 +115,15 @@
             130,
             87
         ],
-        "collisions": [
-            [
-                1121,
-                595,
-                130,
-                87
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1121,
+            595,
+            130,
+            87
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_umbrella": {
         "image": "assets/cropped_images/cropped_obj_in_closet_umbrella.png",
@@ -133,15 +133,15 @@
             528,
             113
         ],
-        "collisions": [
-            [
-                679,
-                720,
-                528,
-                113
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            679,
+            720,
+            528,
+            113
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_shoes": {
         "image": "assets/cropped_images/cropped_obj_in_closet_shoes.png",
@@ -151,15 +151,15 @@
             161,
             151
         ],
-        "collisions": [
-            [
-                664,
-                864,
-                161,
-                151
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            664,
+            864,
+            161,
+            151
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_screwdriver": {
         "image": "assets/cropped_images/cropped_obj_in_closet_screwdriver.png",
@@ -169,15 +169,15 @@
             180,
             31
         ],
-        "collisions": [
-            [
-                1077,
-                967,
-                180,
-                31
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1077,
+            967,
+            180,
+            31
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_plush2": {
         "image": "assets/cropped_images/cropped_obj_in_closet_plush2.png",
@@ -187,15 +187,15 @@
             117,
             128
         ],
-        "collisions": [
-            [
-                900,
-                545,
-                117,
-                128
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            900,
+            545,
+            117,
+            128
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_plush": {
         "image": "assets/cropped_images/cropped_obj_in_closet_plush.png",
@@ -205,15 +205,15 @@
             111,
             124
         ],
-        "collisions": [
-            [
-                1049,
-                231,
-                111,
-                124
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1049,
+            231,
+            111,
+            124
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_lightbulb": {
         "image": "assets/cropped_images/cropped_obj_in_closet_lightbulb.png",
@@ -223,15 +223,15 @@
             94,
             56
         ],
-        "collisions": [
-            [
-                680,
-                611,
-                94,
-                56
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            680,
+            611,
+            94,
+            56
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_glasses": {
         "image": "assets/cropped_images/cropped_obj_in_closet_glasses.png",
@@ -241,15 +241,15 @@
             134,
             48
         ],
-        "collisions": [
-            [
-                734,
-                302,
-                134,
-                48
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            734,
+            302,
+            134,
+            48
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_clothes3": {
         "image": "assets/cropped_images/cropped_obj_in_closet_clothes3.png",
@@ -259,15 +259,15 @@
             168,
             152
         ],
-        "collisions": [
-            [
-                829,
-                377,
-                168,
-                152
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            829,
+            377,
+            168,
+            152
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_clothes2": {
         "image": "assets/cropped_images/cropped_obj_in_closet_clothes2.png",
@@ -277,15 +277,15 @@
             168,
             152
         ],
-        "collisions": [
-            [
-                1058,
-                377,
-                168,
-                152
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1058,
+            377,
+            168,
+            152
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_clothes": {
         "image": "assets/cropped_images/cropped_obj_in_closet_clothes.png",
@@ -295,15 +295,15 @@
             147,
             135
         ],
-        "collisions": [
-            [
-                659,
-                380,
-                147,
-                135
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            659,
+            380,
+            147,
+            135
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "obj_in_closet_ball": {
         "image": "assets/cropped_images/cropped_obj_in_closet_ball.png",
@@ -313,15 +313,15 @@
             153,
             155
         ],
-        "collisions": [
-            [
-                866,
-                862,
-                153,
-                155
-            ]
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            866,
+            862,
+            153,
+            155
         ],
-        "collision_id": -1
+        "default_wall_id": "14"
     },
     "grid": {
         "image": "assets/cropped_images/cropped_grid.png",
@@ -332,7 +332,9 @@
             1080
         ],
         "collisions": [],
-        "collision_id": -1
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": "14"
     },
     "magnet": {
         "image": "assets/cropped_images/cropped_magnet.png",
@@ -428,7 +430,9 @@
                 62
             ]
         ],
-        "collision_id": -1
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": "14"
     },
     "key": {
         "image": "assets/cropped_images/cropped_key.png",
@@ -439,6 +443,8 @@
             76
         ],
         "collisions": [],
-        "collision_id": -1
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": "14"
     }
 }

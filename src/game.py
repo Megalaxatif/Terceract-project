@@ -236,6 +236,7 @@ class Game:
             x, y = mx / self.current_wall.delta, my / self.current_wall.delta
             self.current_object.raw_rect.x = x - self.current_object.raw_rect.w/2
             self.current_object.raw_rect.y = y - self.current_object.raw_rect.h/2
+            #self.current_object.display_collision_rect()
             if self.network_manager.is_connected:
                 self.network_manager.send_package("function", "game", "center_object", self.current_object.name, self.current_room_id, self.current_wall_id, x, y)
 
@@ -280,13 +281,14 @@ class Game:
     def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()): # reversed so we click the top object first
             if obj.displayed and obj.rect.collidepoint(event.pos):
-                if self.network_manager.is_connected and obj.name == self.other_player_object_name:
-                    return
-                self.current_object = obj
-                # send the information to the other player
+                if obj.movable:
+                    if self.network_manager.is_connected and obj.name == self.other_player_object_name:
+                        return
+                    self.current_object = obj
+                    # send the information to the other player
 
-                if self.network_manager.is_connected:
-                    self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
+                    if self.network_manager.is_connected:
+                        self.network_manager.send_package("variable", "game", "other_player_object_name", obj.name)
                 if obj.interactible:
                     obj.handle_left_click(event)
                 return
@@ -340,8 +342,10 @@ class Game:
 
     def display_current_object_name(self):
         name = ""
-        if self.current_object is not None:
+        if self.current_object:
             name = self.current_object.name
+        elif self.inventory.current_object:
+            name = self.inventory.current_object.name
         else:
             name = "None"
         text_surface = self.font.render(
@@ -407,8 +411,9 @@ class Game:
 
             elif self.current_mini_game == "game":
                 self.handle_basic_game_events(event)
+                #self.current_wall.update(event)
                 self.update_walls(event)
-                self.dialogues.handle_event(event)
+                #self.dialogues.handle_event(event)
 
             elif self.current_mini_game == "menu": # TODO
                 pass
@@ -425,7 +430,7 @@ class Game:
             self.inventory.display()
             self.display_room_counter()
             self.display_current_object_name()
-            self.dialogues.display()
+            #self.dialogues.display()
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update() # TODO: separate update from display

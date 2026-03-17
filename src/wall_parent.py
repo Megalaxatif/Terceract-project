@@ -26,8 +26,9 @@ class Wall:
         self.background = self.create_background()
         self.original_background = self.background
         self.objects = pygame.sprite.Group()
-        self.wall_id = wall_id # for network
         self.room_id = room_id # for network
+        self.wall_id = wall_id # for network
+        self.wall_id_str = f"{self.room_id + 1}{self.wall_id + 1}"
         self.delta_w = self.game_context.delta_w * (1080/1920)
         self.delta_h = self.game_context.delta_h * (720/1080)
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
@@ -60,16 +61,17 @@ class Wall:
             collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
 
             if object_name not in ["key", "magnet", "grid"]:
-                if collision_rects:
-                    collision_rects.append(bbox)
-                else:
-                        collision_rects = [bbox]
+                default_collision = bbox 
+            else:
+                default_collision = None
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
             objects_data[object_name]["rect"] = bbox
             objects_data[object_name]["collisions"] = collision_rects
             objects_data[object_name]["collision_id"] = -1
+            objects_data[object_name]["default_collision"] = default_collision
+            objects_data[object_name]["default_wall_id"] = self.wall_id_str
 
         save_data_in_json(objects_data, self.json_path)
         return objects_data
@@ -91,11 +93,13 @@ class Wall:
             rect = objects_data[key]["rect"]
             collision_rects = objects_data[key]["collisions"]
             current_collision_id = objects_data[key]["collision_id"]
+            default_collision = objects_data[key]["default_collision"]
+            default_wall = objects_data[key]["default_wall_id"]
 
             converted_rect = convert_to_pygame_rect(rect)
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
 
-            object = create_object(key, self.game_context, img_path, converted_rect, converted_collision_rects, current_collision_id, self.objects)
+            object = create_object(key, self.game_context, img_path, converted_rect, converted_collision_rects, current_collision_id, self.objects, default_collision, default_wall)
             self.objects.add(object)
 
 
@@ -136,6 +140,11 @@ class Wall:
         for entity in self.objects:
             entity.display_collision_rect()
 
+    def display_current_collision_rect(self):
+        if self.game_context.current_object:
+            self.game_context.current_object.display_collision_rect()
+        elif self.game_context.inventory.current_object:
+            self.game_context.inventory.current_object.display_collision_rect()
 
     def draw_objects(self):
         for obj in self.objects:
@@ -150,10 +159,12 @@ class Wall:
         self.resize_wall()
         self.draw_background()
         self.draw_objects()
+        self.display_current_collision_rect()
         #self.display_collision_rects()
 #--------------------------------------------------------
 
     # NOTE: can be redefined in child classes
     def update(self, event):
         for obj in self.objects:
-            obj.update(event) # interactions relative to each object
+            if obj.displayed:
+                obj.update(event) # interactions relative to each object

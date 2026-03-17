@@ -12,7 +12,9 @@ class Game_object(pygame.sprite.Sprite):
                  collisions : list[pygame.Rect],
                  collision_index : int = -1,
                  movable : bool = True,
-                 displayed : bool = True
+                 displayed : bool = True,
+                 default_collision : pygame.Rect = [],
+                 default_wall : str = ""
                  ):
         super().__init__()
 
@@ -29,8 +31,13 @@ class Game_object(pygame.sprite.Sprite):
         self.image_name = str(self.image_path.name)
 
         self.collision_rects = collisions
+        self.default_collision = default_collision
+        self.default_wall = default_wall
+        if self.default_collision:
+            self.collision_rects.append(pygame.Rect(self.default_collision))
         self.raw_collision_rects = self.collision_rects.copy()
         self.collision_rect_id = collision_index # which collision rect the object is in
+        
 
         self.rect = rect
         self.raw_rect = self.rect
@@ -41,6 +48,7 @@ class Game_object(pygame.sprite.Sprite):
         self.displayed = displayed
         self.movable = movable
         self.interactible = False
+        self.display_collision_rect_bool = True
 
 
     def replace(self):
@@ -59,11 +67,12 @@ class Game_object(pygame.sprite.Sprite):
             return_code = False
             point_rect = pygame.Rect(int(x), int(y), 1, 1)
             collision_index = point_rect.collidelist(self.collision_rects)
-            if collision_index != -1:
-                self.drop_in_collision_rect(collision_index)
-                return_code = True
-            else:
-                self.replace()
+            if self.display_collision_rect_bool:
+                if collision_index != -1:
+                    self.drop_in_collision_rect(collision_index)
+                    return_code = True
+                else:
+                    self.replace()
 
             return return_code
 
@@ -83,18 +92,21 @@ class Game_object(pygame.sprite.Sprite):
             self.collision_rects[i] = pygame.Rect(delta * raw_collision_rect.x, delta * raw_collision_rect.y, delta * raw_collision_rect.w, delta * raw_collision_rect.h)
 
 
-    def change_collision_rects(self, collision_layers_dir):
+    def change_collision_rects(self, collision_layers_dir, wall_id_str):
         new_collision_rects = get_collision_rects(collision_layers_dir, self.name)
+        if self.default_wall == wall_id_str:
+            new_collision_rects.append(self.default_collision)
         converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
         self.collision_rects = converted_collision_rects
         self.raw_collision_rects = converted_collision_rects.copy()
 
 
     def display_collision_rect(self):
-        for rect in self.collision_rects:
-            temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-            pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
-            self.game_context.screen.blit(temp_surface, rect)
+        if self.display_collision_rect_bool:
+            for rect in self.collision_rects:
+                temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+                pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
+                self.game_context.screen.blit(temp_surface, rect)
 
 
     def draw(self): # draw every entities and the non entities

@@ -16,16 +16,23 @@ class Closet(Game_object):
             self.objects_data = None
 
     def update(self, event):
-        if not self.open:
-            wall = self.game_context.current_wall.objects
-            for obj in wall:
-                if "obj_in_closet" in obj.name:
-                    obj.displayed = self.displayed
+        pass
 
 
     def handle_left_click(self, event):
         wall = self.game_context.current_wall.objects
+        inv = self.game_context.inventory
         for obj in wall:
             if isinstance(obj, Closet) and not obj.open:
                 obj.displayed = not obj.displayed
+                for obj2 in wall:
+                    if "obj_in_closet" in obj2.name:
+                        obj2.displayed = self.displayed
+                        obj2.display_collision_rect_bool = self.displayed
+        for i in range(inv.rows):
+            for j in range(inv.cols):
+                if inv.slots[i][j]:
+                    if "obj_in_closet" in inv.slots[i][j].name:
+                        inv.slots[i][j].displayed = self.displayed
+                        inv.slots[i][j].display_collision_rect_bool = self.displayed
         self.game_context.drop_current_object(event)
