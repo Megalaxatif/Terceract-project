@@ -4,16 +4,13 @@ from object import Game_object
 class Closet(Game_object):
     def __init__(self, game_context, object_name, image_path : str,
                  rect : pygame.Rect, collisions : list[pygame.Rect],
-                 collision_index : int, displayed, objects_data):
+                 collision_index : int, displayed):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)
         self.movable = False
         self.interactible = True
         self.displayed = displayed
         self.open = self.displayed
-        if objects_data:
-            self.objects_data = list(objects_data)
-        else:
-            self.objects_data = None
+
 
     def update(self, event):
         pass

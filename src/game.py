@@ -119,8 +119,8 @@ class Game:
 
 
     def start(self):
-        gamemode = "s"
-        #gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
+        #gamemode = "s"
+        gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
 
         if gamemode == "s":
             print("launching solo...")

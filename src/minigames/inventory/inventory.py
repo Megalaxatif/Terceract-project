@@ -53,7 +53,9 @@ class Inventory:
                         {
                             "name" : obj.name,
                             "image" : obj.image_path.as_posix(),
-                            "rect" : converted_rect
+                            "rect" : converted_rect,
+                            "default_collision": obj.default_collision,
+                            "default_wall_id" : obj.default_wall
                         }
                     )
         save_data_in_json(objects_list, self.json_path)
@@ -76,11 +78,24 @@ class Inventory:
                             name = sprite_dict["name"]
                             image = sprite_dict["image"]
                             rect = sprite_dict["rect"]
-                            converted_rect = convert_to_pygame_rect(rect)
+                            default_collision = sprite_dict["default_collision"]
+                            default_wall = sprite_dict["default_wall_id"]
 
+                            converted_rect = convert_to_pygame_rect(rect)
+                            converted_default_collision = convert_to_pygame_rect(default_collision)
                             collision_rects = get_collision_rects(collision_layers_dir, name)
                             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
-                            object = create_object(name, self.game_context, image, converted_rect, converted_collision_rects, -1, None)
+                            object = create_object(
+                                name,
+                                self.game_context,
+                                image,
+                                converted_rect,
+                                converted_collision_rects,
+                                -1,
+                                converted_default_collision,
+                                default_wall
+                            )
+
                             self.slots[i][j] = object
 
 
@@ -166,15 +181,15 @@ class Inventory:
             self.game_context.current_object = None
             if self.game_context.network_manager.is_connected:
                 self.game_context.network_manager.send_package("variable", "game", "other_player_object_name", "")
-            self.current_object = None #TODO: what ??
+            self.current_object = None
 
 
     def drop_current_object(self, row, col, event):
         obj = self.current_object
-        obj.handle_left_click(event)
         if obj is None:
             print("drop_current_object error: current_object is None")
             return -1
+        obj.handle_left_click(event)
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
         if obj.drop_at_pos(mx, my):
@@ -222,13 +237,13 @@ class Inventory:
                 return 2
 
         self.slots[row][col] = object # put the object in inventory
-        wall_id_str = f"{self.room_id + 1}{self.wall_id + 1}"
-        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir, wall_id_str)     # change its collision rects
+        dest_wall_id = f"{self.game_context.current_room_id + 1}{self.game_context.current_wall_id + 1}"
+        object.change_collision_rects(self.game_context.current_wall.collision_layers_dir, dest_wall_id)     # change its collision rects
         src_wall.objects.remove(object)                                                                     # remove the object from the wall
 
 
     # function useful for network
-    def inventory_drop_object(self, obj_name, room_id, wall_id, collision_rect_id):
+    def inventory_drop_object(self, obj_name, dest_room_id, dest_wall_id, collision_rect_id):
         obj = None
         row = 0
         col = 0
@@ -245,9 +260,10 @@ class Inventory:
             print(f"inventory_drop_object error: impossible to find the object {obj_name} in the inventory")
             return -1
 
-        dest_wall = self.game_context.room_list[room_id][wall_id]                   # on which wall do we want to put it
+        dest_wall = self.game_context.room_list[dest_room_id][dest_wall_id]                   # on which wall do we want to put it
         dest_wall.objects.add(obj)                                                  # add the object on the wall
-        obj.change_collision_rects(dest_wall.collision_layers_dir)                  # update its collision rects
+        dest_wall_id_str = f"{dest_room_id + 1}{dest_wall_id + 1}"
+        obj.change_collision_rects(dest_wall.collision_layers_dir, dest_wall_id_str)                  # update its collision rects
         obj.drop_in_collision_rect(collision_rect_id)                               # put it in the right collision rect
         self.slots[row][col] = None                                                 # remove it from inventory
 

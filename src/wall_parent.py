@@ -61,7 +61,7 @@ class Wall:
             collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
 
             if object_name not in ["key", "magnet", "grid"]:
-                default_collision = bbox 
+                default_collision = bbox
             else:
                 default_collision = None
 
@@ -99,7 +99,15 @@ class Wall:
             converted_rect = convert_to_pygame_rect(rect)
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
 
-            object = create_object(key, self.game_context, img_path, converted_rect, converted_collision_rects, current_collision_id, self.objects, default_collision, default_wall)
+            object = create_object(key,
+                self.game_context,
+                img_path,
+                converted_rect,
+                converted_collision_rects,
+                current_collision_id,
+                default_collision,
+                default_wall)
+
             self.objects.add(object)
 
 
@@ -115,6 +123,8 @@ class Wall:
             new_obj_data[object.name]["rect"] = formated_rect
             new_obj_data[object.name]["collisions"] = formated_collision_rects
             new_obj_data[object.name]["collision_id"] = object.collision_rect_id
+            new_obj_data[object.name]["default_collision"] = object.default_collision
+            new_obj_data[object.name]["default_wall_id"] = object.default_wall
         save_data_in_json(new_obj_data, self.json_path)
 
 

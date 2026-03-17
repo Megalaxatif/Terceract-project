@@ -137,7 +137,7 @@ def create_sub_surface(
 
 #---------------------CREATE OBJECT-------------------------------------
 def create_object(obj_name, game_context, img_path, rect, collision_rects,
-                  current_collision_id, objects_data, default_collision, default_wall):
+                  current_collision_id, default_collision, default_wall):
     # local import to avoid circular import
     from objects.padlock import Padlock
     from objects.padlock_door import Padlock_door
@@ -187,23 +187,19 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
 
     elif obj_name == "grid_wall":
         return Grid(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True,
-                      None)
+                      collision_rects, current_collision_id, True)
 
     elif obj_name == "grid":
         return Grid(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, False,
-                      objects_data)
+                      collision_rects, current_collision_id, False)
 
     elif obj_name == "closed_closet":
         return Closet(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True,
-                      None)
+                      collision_rects, current_collision_id, True)
 
     elif obj_name == "opened_closet":
         return Closet(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, False,
-                      objects_data)
+                      collision_rects, current_collision_id, False)
 
     elif "obj_in_closet" in obj_name:
 
