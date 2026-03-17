@@ -93,8 +93,8 @@ class Wall:
             rect = objects_data[key]["rect"]
             collision_rects = objects_data[key]["collisions"]
             current_collision_id = objects_data[key]["collision_id"]
-            default_collision = objects_data[key]["default_collision"]
-            default_wall = objects_data[key]["default_wall_id"]
+            default_collision = objects_data[key].get("default_collision")
+            default_wall = objects_data[key].get("default_wall_id", "")
 
             converted_rect = convert_to_pygame_rect(rect)
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)

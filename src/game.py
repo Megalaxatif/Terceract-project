@@ -148,7 +148,7 @@ class Game:
         try:
             self.network_manager.client.connect((ip, port))
         except Exception as e:
-            print("launch_duo: Error", e)
+            print("launch_duo:  1", e)
             sys.exit(1)
         else:
             try:
@@ -156,14 +156,14 @@ class Game:
                 # it is undefined behavior we need to use a method that give us the length of the data
                 data = self.network_manager.client.recv(20480).decode("utf-8")
             except Exception as e:
-                print("launch_duo: Error", e)
+                print("launch_duo: Error 2", e)
                 sys.exit(1)
             else:
                 try:
                     self.game_data = json.loads(data)
 
                 except JSONDecodeError as e:
-                    print("launch_duo error: ", e)
+                    print("launch_duo Error 3: ", e)
                     sys.exit(1)
                 else:
                     self.network_manager.is_connected = True
