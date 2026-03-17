@@ -11,6 +11,7 @@ class Padlock(Game_object):
     def try_code(self):
         if self.text == self.code:
             self.game_context.unlock_room(self.game_context.current_room_id)
+            self.game_context.network_manager.send_package("variable", )
             print("code valid")
 
 

@@ -13,6 +13,7 @@ class Network_manager:
         self.is_connected = False
         self.running = True  # TODO: suppress this later on, only usefull to avoid nasty errors if we quit the game through the network thread in duo mode
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.settimeout(5)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receive_buffer = ""
         self.FPS = 100
@@ -39,6 +40,7 @@ class Network_manager:
     def reset_client(self):
         self.client.close()
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.settimeout(5)
         self.receive_buffer = ""
 
 
@@ -175,28 +177,30 @@ class Network_manager:
 
     def receive_package(self):
         raw_data = b""
+        chunk = b""
+
         while b"\x00" not in raw_data:
             try:
-                #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
-                # it is undefined behavior we need to use a method that give us the length of the data
-                raw_data += self.client.recv(4096)
+                chunk = self.client.recv(4096)
+
+                if not chunk:
+                    self.handle_disconnection()
+                    return b""
+
+                raw_data += chunk
 
             except BlockingIOError:  # no data
                 pass
 
-            except ConnectionResetError:  # the other player disconnected
-                print("disconnected")
-                if self.is_host:
-                    print("switching back to solo mode...")
-                    self.game_context.switch_back_to_solo_mode()
-                else:
-                    # we lost connection with the host so we stop everything
-                    print("shuting down...")
-                    self.running = False  # stop the network thread
-                    pygame.event.post(pygame.event.Event(pygame.QUIT))  # we send a QUIT event to the main thread
+            except ConnectionResetError:
+                self.handle_disconnection()
+                return b""
 
             except Exception as e:
                 print("receive_package : Error ", e)
+                return b""
+
+        raw_data = raw_data.replace(b"\x00", b"")
         return raw_data
 
 
@@ -207,3 +211,15 @@ class Network_manager:
                     if obj.name == name:
                         return obj
         return None
+
+
+    def handle_disconnection(self):
+        print("disconnected")
+        if self.is_host:
+            print("switching back to solo mode...")
+            self.game_context.switch_back_to_solo_mode()
+        else:
+            # we lost connection with the host so we stop everything
+            print("shuting down...")
+            self.running = False  # stop the network thread
+            pygame.event.post(pygame.event.Event(pygame.QUIT))  # we send a QUIT event to the main thread
