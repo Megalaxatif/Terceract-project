@@ -13,7 +13,7 @@ class Network_manager:
         self.is_connected = False
         self.running = True  # TODO: suppress this later on, only usefull to avoid nasty errors if we quit the game through the network thread in duo mode
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(5)
+        self.client.settimeout(30)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receive_buffer = ""
         self.FPS = 100
@@ -40,7 +40,7 @@ class Network_manager:
     def reset_client(self):
         self.client.close()
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(5)
+        self.client.settimeout(30)
         self.receive_buffer = ""
 
 

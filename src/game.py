@@ -103,7 +103,7 @@ class Game:
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_object = None
         self.other_player_object_name = ""
-        self.other_player_inventory_object_name = ""
+        self.other_player_inventory_object_name = "" #TODO
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
