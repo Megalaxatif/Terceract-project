@@ -148,7 +148,7 @@ class Game:
         try:
             self.network_manager.client.connect((ip, port))
         except Exception as e:
-            print("launch_duo:  1", e)
+            print("launch_duo: Error 1", e)
             sys.exit(1)
         else:
             try:
