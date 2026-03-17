@@ -7,7 +7,14 @@
             270,
             574
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1486,
+                52,
+                270,
+                574
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             1486,
@@ -25,7 +32,14 @@
             189,
             67
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                866,
+                42,
+                189,
+                67
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             866,
@@ -43,7 +57,14 @@
             467,
             949
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                726,
+                131,
+                467,
+                949
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             726,
@@ -63,13 +84,8 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            690,
-            309,
-            565,
-            292
-        ],
-        "default_wall_id": "11"
+        "default_collision": [],
+        "default_wall_id": ""
     },
     "plank1": {
         "image": "assets/cropped_images/cropped_plank1.png",
@@ -81,12 +97,7 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            677,
-            635,
-            567,
-            273
-        ],
-        "default_wall_id": "11"
+        "default_collision": [],
+        "default_wall_id": ""
     }
 }

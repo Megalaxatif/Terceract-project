@@ -9,13 +9,8 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            846,
-            191,
-            271,
-            271
-        ],
-        "default_wall_id": "14"
+        "default_collision": [],
+        "default_wall_id": ""
     },
     "drawer": {
         "image": "assets/cropped_images/cropped_drawer.png",
@@ -25,7 +20,14 @@
             761,
             551
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                85,
+                529,
+                761,
+                551
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             85,
@@ -45,13 +47,8 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            1148,
-            84,
-            671,
-            996
-        ],
-        "default_wall_id": "14"
+        "default_collision": [],
+        "default_wall_id": ""
     },
     "big_frame": {
         "image": "assets/cropped_images/cropped_big_frame.png",
@@ -61,7 +58,14 @@
             353,
             338
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                152,
+                47,
+                353,
+                338
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             152,
@@ -79,7 +83,14 @@
             76,
             226
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                691,
+                309,
+                76,
+                226
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             691,
@@ -99,13 +110,8 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            0,
-            0,
-            1920,
-            1080
-        ],
-        "default_wall_id": "14"
+        "default_collision": [],
+        "default_wall_id": ""
     },
     "obj_in_closet_vhs": {
         "image": "assets/cropped_images/cropped_obj_in_closet_vhs.png",
@@ -115,7 +121,14 @@
             130,
             87
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1121,
+                595,
+                130,
+                87
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             1121,
@@ -133,7 +146,14 @@
             528,
             113
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                679,
+                720,
+                528,
+                113
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             679,
@@ -151,7 +171,14 @@
             161,
             151
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                664,
+                864,
+                161,
+                151
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             664,
@@ -169,7 +196,14 @@
             180,
             31
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1077,
+                967,
+                180,
+                31
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             1077,
@@ -187,7 +221,14 @@
             117,
             128
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                900,
+                545,
+                117,
+                128
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             900,
@@ -205,7 +246,14 @@
             111,
             124
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1049,
+                231,
+                111,
+                124
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             1049,
@@ -223,7 +271,14 @@
             94,
             56
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                680,
+                611,
+                94,
+                56
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             680,
@@ -241,7 +296,14 @@
             134,
             48
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                734,
+                302,
+                134,
+                48
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             734,
@@ -259,7 +321,14 @@
             168,
             152
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                829,
+                377,
+                168,
+                152
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             829,
@@ -277,7 +346,14 @@
             168,
             152
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                1058,
+                377,
+                168,
+                152
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             1058,
@@ -295,7 +371,14 @@
             147,
             135
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                659,
+                380,
+                147,
+                135
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             659,
@@ -313,7 +396,14 @@
             153,
             155
         ],
-        "collisions": [],
+        "collisions": [
+            [
+                866,
+                862,
+                153,
+                155
+            ]
+        ],
         "collision_id": -1,
         "default_collision": [
             866,
@@ -333,8 +423,8 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": "14"
+        "default_collision": [],
+        "default_wall_id": ""
     },
     "magnet": {
         "image": "assets/cropped_images/cropped_magnet.png",
@@ -431,8 +521,8 @@
             ]
         ],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": "14"
+        "default_collision": [],
+        "default_wall_id": ""
     },
     "key": {
         "image": "assets/cropped_images/cropped_key.png",
@@ -444,7 +534,7 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": "14"
+        "default_collision": [],
+        "default_wall_id": ""
     }
 }

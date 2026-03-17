@@ -3,7 +3,7 @@ import pygame
 import sys
 import json
 import socket
-from utils import load_json_file
+from utils import *
 
 class Network_manager:
     def __init__(self, game_context):
@@ -45,7 +45,7 @@ class Network_manager:
     def check_incoming_client_data(self):  # check if some data are coming either from player 1 or player 2
         raw_data = ""
         try:
-            #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 10 KB
+            #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 4 KB
             # it is undefined behavior we need to use a method that give us the length of the data
             raw_data += self.client.recv(4096).decode("utf-8")
 
@@ -88,9 +88,18 @@ class Network_manager:
                                 location = self.game_context
                             case "inventory":
                                 location = self.game_context.inventory
+                            case "magnet":
+                                location = self.get_reference("magnet")
+                            case "key":
+                                location = self.get_reference("key")
+
                             case _: # TODO
                                 print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")
+                                return
 
+                        if location == None:
+                            print(f"check_incoming_client_data error: no object with name {name} found in the game")
+                            return
 
                         if package_type == "function":
                             target_function = None
@@ -189,3 +198,12 @@ class Network_manager:
         package = json.dumps(package) + "\n"
         self.client.sendall(package.encode("utf-8"))
         return 0
+
+
+    def get_reference(self, name):
+        for room in self.game_context.room_list:
+            for wall in room:
+                for obj in wall:
+                    if obj.name == name:
+                        return obj
+        return None

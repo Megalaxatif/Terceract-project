@@ -26,12 +26,12 @@ class Magnet(Game_object):
     def update(self, event):
         depart_rect = self.collision_rects[-1]
         arrivee_rect = self.collision_rects[-2]
-        
+
         #TODO : seuls pb restants : rectangles de collision visibles, clé apparait pas a l'arrivee, l'aimant se pose encore dans les rects autres
         #print(f"Ongoing: {self.ongoing} / key given : {self.key_given} / mousebuttonup : {event.type == pygame.MOUSEBUTTONUP}")
         if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and depart_rect.collidepoint(pygame.mouse.get_pos()) and not self.key_given:
             self.ongoing = True #mouse on beginning
-            
+
         if self.ongoing and any(self.collision_rects[i].collidepoint(pygame.mouse.get_pos()) for i in range(len(self.collision_rects)-2)):
             self.ongoing = False #mouse on death
             if self.game_context.network_manager.is_connected:
@@ -47,7 +47,7 @@ class Magnet(Game_object):
                 )
             self.game_context.current_object = None
             self.raw_rect.center = self.initial_center #ca remet magnet à sa place de départ
- 
+
         if (event.type == pygame.MOUSEBUTTONDOWN) and self.ongoing and arrivee_rect.collidepoint(pygame.mouse.get_pos()):
             self.ongoing = False #mouse on end
             self.key_given = True #give the key
@@ -55,15 +55,18 @@ class Magnet(Game_object):
                 if obj.name == "key":
                     obj.key_given = True #ca fait apparaitre la clé à l'arrivée (marche pas)
                     obj.displayed = True
+                    self.game_context.network_manager.send_package("variable", "key", "key_given", "True")
+                    self.game_context.network_manager.send_package("variable", "key", "displayed", "True")
                 if obj.name == "magnet":
                     obj.grid_displayed = self.displayed
                     obj.displayed = obj.grid_displayed and not obj.key_given
+                    self.game_context.network_manager.send_package("variable", "magnet", "displayed", f"{obj.displayed}")
             self.game_context.drop_current_object(event)
 
         if (event.type == pygame.MOUSEBUTTONDOWN) and self.ongoing and not arrivee_rect.collidepoint(pygame.mouse.get_pos()) and not depart_rect.collidepoint(pygame.mouse.get_pos()):
             self.ongoing = False
             self.rect.x, self.rect.y = depart_rect.x, depart_rect.y #ca remet magnet à sa place de départ (jsp si ca marche ou c la fonction drop qui override)
             self.game_context.drop_current_object(event)
-    
+
     def handle_left_click(self, event):
         pass #tt passe par update
