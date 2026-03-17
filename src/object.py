@@ -13,7 +13,7 @@ class Game_object(pygame.sprite.Sprite):
                  collision_index : int = -1,
                  movable : bool = True,
                  displayed : bool = True,
-                 default_collision : pygame.Rect = [],
+                 default_collision : pygame.Rect | None = None,
                  default_wall : str = ""
                  ):
         super().__init__()
@@ -37,7 +37,7 @@ class Game_object(pygame.sprite.Sprite):
             self.collision_rects.append(pygame.Rect(self.default_collision))
         self.raw_collision_rects = self.collision_rects.copy()
         self.collision_rect_id = collision_index # which collision rect the object is in
-        
+
 
         self.rect = rect
         self.raw_rect = self.rect

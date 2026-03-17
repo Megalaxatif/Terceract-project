@@ -29,8 +29,11 @@ def clear_json(json_path):
 
 
 #----------------------CONVERSION--------------------------
-def convert_to_pygame_rect(rect) -> pygame.Rect:
-    return pygame.Rect(rect)
+def convert_to_pygame_rect(rect) -> pygame.Rect | None:
+    if rect:
+        return pygame.Rect(rect)
+    else:
+        return None
 
 
 def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:

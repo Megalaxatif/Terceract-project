@@ -48,14 +48,17 @@ class Inventory:
                     objects_list["data"][i].append(None)
                 else:
                     converted_rect = convert_to_tuple_rect(obj.raw_rect)
-                    converted_default_rect = convert_to_tuple_rect(obj.default_collision)
+                    converted_default_collision = []
+                    if obj.default_collision:
+                        converted_default_collision = convert_to_tuple_rect(obj.default_collision)
+
 
                     objects_list["data"][i].append(
                         {
                             "name" : obj.name,
                             "image" : obj.image_path.as_posix(),
                             "rect" : converted_rect,
-                            "default_collision": converted_default_rect,
+                            "default_collision": converted_default_collision,
                             "default_wall_id" : obj.default_wall
                         }
                     )
@@ -83,7 +86,9 @@ class Inventory:
                             default_wall = sprite_dict["default_wall_id"]
 
                             converted_rect = convert_to_pygame_rect(rect)
-                            converted_default_collision = convert_to_pygame_rect(default_collision)
+                            converted_default_collision = []
+                            if default_collision:
+                                converted_default_collision = convert_to_pygame_rect(default_collision)
                             collision_rects = get_collision_rects(collision_layers_dir, name)
                             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
                             object = create_object(

@@ -63,7 +63,7 @@ class Wall:
             if object_name not in ["key", "magnet", "grid"]:
                 default_collision = bbox
             else:
-                default_collision = None
+                default_collision = []
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
@@ -98,6 +98,7 @@ class Wall:
 
             converted_rect = convert_to_pygame_rect(rect)
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
+            converted_default_collision = convert_to_pygame_rect(default_collision)
 
             object = create_object(key,
                 self.game_context,
@@ -105,7 +106,7 @@ class Wall:
                 converted_rect,
                 converted_collision_rects,
                 current_collision_id,
-                default_collision,
+                converted_default_collision,
                 default_wall)
 
             self.objects.add(object)
@@ -118,7 +119,10 @@ class Wall:
             print(f"saving {object.name} in json")
             formated_rect = convert_to_tuple_rect(object.raw_rect)
             formated_collision_rects = convert_to_tuple_rect_list(object.raw_collision_rects)
-            formated_default_collision = object.default_collision
+
+            formated_default_collision = []
+            if object.default_collision:
+                formated_default_collision = convert_to_tuple_rect(object.default_collision)
 
             new_obj_data[object.name] = {}
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
