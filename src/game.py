@@ -154,7 +154,10 @@ class Game:
             try:
                 #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
                 # it is undefined behavior we need to use a method that give us the length of the data
-                data = self.network_manager.client.recv(20480).decode("utf-8")
+                #data = self.network_manager.client.recv(20480).decode("utf-8")
+                raw_data = self.network_manager.receive_package()
+                data = raw_data.decode("utf-8")
+
             except Exception as e:
                 print("launch_duo: Error 2", e)
                 sys.exit(1)

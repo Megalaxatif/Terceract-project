@@ -43,29 +43,7 @@ class Network_manager:
 
 
     def check_incoming_client_data(self):  # check if some data are coming either from player 1 or player 2
-        raw_data = b""
-        while b"\x00" not in raw_data:
-            try:
-                #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
-                # it is undefined behavior we need to use a method that give us the length of the data
-                raw_data += self.client.recv(4096)
-
-            except BlockingIOError:  # no data
-                pass
-
-            except ConnectionResetError:  # the other player disconnected
-                print("disconnected")
-                if self.is_host:
-                    print("switching back to solo mode...")
-                    self.game_context.switch_back_to_solo_mode()
-                else:
-                    # we lost connection with the host so we stop everything
-                    print("shuting down...")
-                    self.running = False  # stop the network thread
-                    pygame.event.post(pygame.event.Event(pygame.QUIT))  # we send a QUIT event to the main thread
-
-            except Exception as e:
-                print("check_incoming_client_data : Error ", e)
+        raw_data = self.receive_package()
 
         # we received the whole package
         raw_data = raw_data.decode("utf-8")
@@ -193,6 +171,33 @@ class Network_manager:
         package = json.dumps(package) + "\n" + "\x00"
         self.client.sendall(package.encode("utf-8"))
         return 0
+
+
+    def receive_package(self):
+        raw_data = b""
+        while b"\x00" not in raw_data:
+            try:
+                #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
+                # it is undefined behavior we need to use a method that give us the length of the data
+                raw_data += self.client.recv(4096)
+
+            except BlockingIOError:  # no data
+                pass
+
+            except ConnectionResetError:  # the other player disconnected
+                print("disconnected")
+                if self.is_host:
+                    print("switching back to solo mode...")
+                    self.game_context.switch_back_to_solo_mode()
+                else:
+                    # we lost connection with the host so we stop everything
+                    print("shuting down...")
+                    self.running = False  # stop the network thread
+                    pygame.event.post(pygame.event.Event(pygame.QUIT))  # we send a QUIT event to the main thread
+
+            except Exception as e:
+                print("receive_package : Error ", e)
+        return raw_data
 
 
     def get_reference(self, name):
