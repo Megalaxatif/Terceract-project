@@ -417,7 +417,7 @@ class Game:
                 self.handle_basic_game_events(event)
                 #self.current_wall.update(event)
                 self.update_walls(event)
-                #self.dialogues.handle_event(event)
+                self.dialogues.handle_event(event)
 
             elif self.current_mini_game == "menu": # TODO
                 pass
@@ -434,7 +434,7 @@ class Game:
             self.inventory.display()
             self.display_room_counter()
             self.display_current_object_name()
-            #self.dialogues.display()
+            self.dialogues.display()
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update() # TODO: separate update from display
