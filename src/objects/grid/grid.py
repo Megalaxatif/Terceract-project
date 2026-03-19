@@ -1,5 +1,5 @@
 import pygame
-from pytmx.util_pygame import load_pygame
+#from pytmx.util_pygame import load_pygame
 
 from pathlib import Path
 from object import Game_object

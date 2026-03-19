@@ -121,7 +121,7 @@ class Game:
 
     def start(self):
         #gamemode = "s"
-        gamemode = input("wanna play solo (s) or duo (d) bitch ? ")
+        gamemode = input("wanna play solo (s) or duo (d) ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -134,7 +134,7 @@ class Game:
             self.launch_duo(ip,self.network_manager.server_port)
 
         else:
-            print("invalid answer, dumbass")
+            print("invalid answer")
             sys.exit(1)
 
         incoming_data_thread = threading.Thread(target=self.network_manager.network_manager, daemon=True)

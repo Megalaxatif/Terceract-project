@@ -21,7 +21,7 @@ class Wall:
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
 
-        #clear_json(self.json_path) # TODO: to remove also
+        clear_json(self.json_path) # TODO: to remove also
 
         self.background = self.create_background()
         self.original_background = self.background
@@ -47,7 +47,7 @@ class Wall:
 
     def get_objects_data(self):
         objects_data = {}
-        object_layers_path = list(self.object_layers_dir.rglob('*.png'))
+        object_layers_path = [f for f in sorted(Path(self.object_layers_dir).iterdir())]
         for object_path in reversed(object_layers_path): # reversed so we draw the object with the lowest layer id first
             if object_path.parent == self.object_layers_dir:
                 object_name = object_path.stem[2:] # example : "vase" instead of ".../.../.../1_vase.png"
