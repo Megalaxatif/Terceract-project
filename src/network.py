@@ -17,7 +17,7 @@ class Network_manager:
         self.client.settimeout(30)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receive_buffer = b""
-        self.FPS = 100
+        self.FPS = 30
         self.clock = pygame.time.Clock()
 
 
@@ -46,68 +46,69 @@ class Network_manager:
 
 
     def check_incoming_client_data(self):  # check if some data are coming either from player 1 or player 2
-        raw_data = self.receive_package()
-        if raw_data:
+        package_list = self.receive_package_list()
+        if package_list:
             # we received the whole package
-            try:
-                raw_data = raw_data.decode("utf-8")
-                data = json.loads(raw_data)
+            for package in package_list:
+                try:
+                    raw_data = package.decode("utf-8")
+                    data = json.loads(raw_data)
 
-            except JSONDecodeError as e:
-                print(f"check_incoming_client_data error: impossible to decode the following package :\n{raw_data}\nfull error: {e}")
-
-            else:
-                package_type = data["type"]
-                location = data["location"]
-                name = data["name"]
-                args = data["args"]
-
-                match location:
-                    case "game":
-                        location = self.game_context
-                    case "inventory":
-                        location = self.game_context.inventory
-                    case "magnet":
-                        location = self.get_reference("magnet")
-                    case "key":
-                        location = self.get_reference("key")
-
-                    case _: # TODO
-                        print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")
-                        return
-
-                if location is None:
-                    print(f"check_incoming_client_data error: no object with name {name} found in the game")
-                    return
-
-                if package_type == "function":
-                    target_function = None
-                    try:
-                        target_function = getattr(location, name)
-
-                    except AttributeError:
-                        print(f"check_incoming_client_data error: impossible to find the function {name} located in {location}")
-
-                    else:
-                        if callable(target_function):
-                            try:
-                                target_function(*args)
-                            except Exception as e:
-                                print(f"check_incoming_client_data error: the function call of {name} located in {location} with the arguments {args} is invalid and resulted in an error:\n{e}")
-
-                        else:
-                            print(f"check_incoming_client_data error: the function {name} located in {location} is not callable")
-
-
-                elif package_type == "variable":
-                    try:
-                        setattr(location, name, args[0])
-
-                    except Exception as e:
-                        print(f"check_incoming_client_data error: the variable {name} located in {location} couldn't be set to the value {args[0]} because of an error:\n{e}")
+                except JSONDecodeError as e:
+                    print(f"check_incoming_client_data error: impossible to decode the following package :\n{raw_data}\nfull error: {e}")
 
                 else:
-                    print(f"check_incoming_client_data error: the package type {package_type} is not taken in charge")
+                    package_type = data["type"]
+                    location = data["location"]
+                    name = data["name"]
+                    args = data["args"]
+
+                    match location:
+                        case "game":
+                            location = self.game_context
+                        case "inventory":
+                            location = self.game_context.inventory
+                        case "magnet":
+                            location = self.get_reference("magnet")
+                        case "key":
+                            location = self.get_reference("key")
+
+                        case _: # TODO
+                            print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")
+                            return
+
+                    if location is None:
+                        print(f"check_incoming_client_data error: no object with name {name} found in the game")
+                        return
+
+                    if package_type == "function":
+                        target_function = None
+                        try:
+                            target_function = getattr(location, name)
+
+                        except AttributeError:
+                            print(f"check_incoming_client_data error: impossible to find the function {name} located in {location}")
+
+                        else:
+                            if callable(target_function):
+                                try:
+                                    target_function(*args)
+                                except Exception as e:
+                                    print(f"check_incoming_client_data error: the function call of {name} located in {location} with the arguments {args} is invalid and resulted in an error:\n{e}")
+
+                            else:
+                                print(f"check_incoming_client_data error: the function {name} located in {location} is not callable")
+
+
+                    elif package_type == "variable":
+                        try:
+                            setattr(location, name, args[0])
+
+                        except Exception as e:
+                            print(f"check_incoming_client_data error: the variable {name} located in {location} couldn't be set to the value {args[0]} because of an error:\n{e}")
+
+                    else:
+                        print(f"check_incoming_client_data error: the package type {package_type} is not taken in charge")
 
 
     def check_new_connection(self):  # check if someone is trying to connect
@@ -172,9 +173,8 @@ class Network_manager:
         return 0
 
 
-    def receive_package(self):
+    def receive_package_list(self):
         self.client.settimeout(30)
-        package = b""
 
         while b"\n" not in self.receive_buffer:
             try:
@@ -197,8 +197,10 @@ class Network_manager:
                 print("receive_package : Error ", e)
                 return b""
 
-        package, self.receive_buffer = self.receive_buffer.split(b"\n", 1)
-        return package
+        package_list = []
+        temp = self.receive_buffer.split(b"\n")
+        package_list, self.receive_buffer = temp[:-1], temp[-1]
+        return package_list
 
 
     def get_reference(self, name):

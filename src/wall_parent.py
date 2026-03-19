@@ -38,11 +38,11 @@ class Wall:
         self.delta = min(self.game_context.delta_w * (1080/1920), self.game_context.delta_h * (720/1080))
         self.create_wall_objects()
 
-#---------------------------INIT---------------------------------------
+    #---------------------------INIT---------------------------------------
     def create_background(self) -> pygame.Surface:
         background_dir = Path(self.root_dir / "images/background")
-        background_path = list(background_dir.iterdir()) # NOTE: we should only have one png file for the background
-        background_exist =  background_path is not None # NOTE: iterdir lists the content of the folder
+        background_path = list(background_dir.iterdir())    # NOTE: we should only have one png file for the background
+        background_exist =  background_path is not None     # NOTE: iterdir lists the content of the folder
         background = pygame.image.load(background_path[0]).convert() if background_exist else pygame.Surface(self.game_context.screen.get_size())
         if not background_exist:
             background.fill((255, 0, 0))
@@ -155,7 +155,7 @@ class Wall:
             )
             self.background_w = new_w
             self.background_h = new_h
-            
+
 
 #--------------------DRAWING--------------------------------
     def display_collision_rects(self):

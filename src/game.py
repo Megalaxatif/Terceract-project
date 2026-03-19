@@ -156,8 +156,9 @@ class Game:
                 #TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
                 # it is undefined behavior we need to use a method that give us the length of the data
                 #data = self.network_manager.client.recv(20480).decode("utf-8")
-                raw_data = self.network_manager.receive_package()
-                data = raw_data.decode("utf-8")
+                raw_data = self.network_manager.receive_package_list()
+
+                data = raw_data[0].decode("utf-8")
 
             except Exception as e:
                 print("launch_duo: Error 2", e)
@@ -378,7 +379,7 @@ class Game:
 
         self.current_wall.delta_w = self.delta_w * (1080/1920)
         self.current_wall.delta_h = self.delta_h * (720/1080)
-        self.current_wall.delta = min(self.current_wall.delta_w, 
+        self.current_wall.delta = min(self.current_wall.delta_w,
                                       self.current_wall.delta_h
                                       )
 
