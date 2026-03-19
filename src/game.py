@@ -235,11 +235,10 @@ class Game:
 
 
     def center_current_object(self): # put the center of the current object at the mouse position
-        if self.current_object is not None and self.current_object.movable:
+        if self.current_object and self.current_object.movable:
             mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
             x, y = mx / self.current_wall.delta, my / self.current_wall.delta
-            self.current_object.raw_rect.x = x - self.current_object.raw_rect.w/2
-            self.current_object.raw_rect.y = y - self.current_object.raw_rect.h/2
+            self.current_object.raw_rect.center = x, y
             #self.current_object.display_collision_rect()
             if self.network_manager.is_connected:
                 self.network_manager.send_package("function", "game", "center_object", self.current_object.name, self.current_room_id, self.current_wall_id, x, y)
@@ -256,8 +255,7 @@ class Game:
             return 1
 
         #x, y = mx / src_wall.delta, my / src_wall.delta
-        object.raw_rect.x = mx - object.raw_rect.w/2
-        object.raw_rect.y = my - object.raw_rect.h/2
+        object.raw_rect.center = mx, my
 
 
     def is_room_unlocked(self, room_id):
@@ -343,6 +341,15 @@ class Game:
         y = 3
         self.screen.blit(text_surface, (x, y))
 
+    def display_fps(self): # for debug purposes
+        text_surface = self.font.render(
+            f"FPS {int(self.clock.get_fps())}",
+            True,           # anti-aliasing
+            (0,0,0)
+        )
+        x = 40
+        y = 50
+        self.screen.blit(text_surface, (x, y))
 
     def display_current_object_name(self):
         name = ""
@@ -365,13 +372,15 @@ class Game:
     def recalculate_deltas(self): # recalculate the delta values when the window is resized
         self.height = self.screen.get_height()
         self.width = self.screen.get_width()
-        self.delta_h = self.screen.get_height() / 720
-        self.delta_w = self.screen.get_width() / 1080
+        self.delta_w = self.width / 1080
+        self.delta_h = self.height / 720
         self.delta = min(self.delta_h, self.delta_w)
 
         self.current_wall.delta_w = self.delta_w * (1080/1920)
         self.current_wall.delta_h = self.delta_h * (720/1080)
-        self.current_wall.delta = min(self.delta_w * (1080/1920), self.delta_h * (720/1080))
+        self.current_wall.delta = min(self.current_wall.delta_w, 
+                                      self.current_wall.delta_h
+                                      )
 
 
     def handle_basic_game_events(self, event):
@@ -434,6 +443,7 @@ class Game:
             self.inventory.display()
             self.display_room_counter()
             self.display_current_object_name()
+            self.display_fps()
             self.dialogues.display()
 
         elif self.current_mini_game == "menu":

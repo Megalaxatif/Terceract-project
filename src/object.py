@@ -23,7 +23,7 @@ class Game_object(pygame.sprite.Sprite):
         self.screen = self.game_context.screen
 
         self.image_path = Path(image_path)
-        self.image = pygame.image.load(Path(self.game_context.root_dir / self.image_path))
+        self.image = pygame.image.load(Path(self.game_context.root_dir / self.image_path)).convert_alpha()
         self.raw_image = self.image
 
         parts = self.image_path.parts
@@ -77,19 +77,43 @@ class Game_object(pygame.sprite.Sprite):
             return return_code
 
 
-    def resize_image (self):
+    def resize_image(self):
         delta = self.game_context.current_wall.delta
-        self.image = pygame.transform.scale(self.raw_image,
-            (int(delta * self.raw_rect.w), int(delta * self.raw_rect.h))
-        )
-        self.rect = pygame.Rect(delta * self.raw_rect.x, delta * self.raw_rect.y, delta * self.raw_rect.w, delta * self.raw_rect.h)
+        new_x = int(delta * self.raw_rect.x)
+        new_y = int(delta * self.raw_rect.y)
+        new_width = int(delta * self.raw_rect.w)
+        new_height = int(delta * self.raw_rect.h)
+        if (new_width != self.rect.w) or (new_height != self.rect.h) or (new_x != self.rect.x) or (new_y != self.rect.y):
+            self.image = pygame.transform.scale(self.raw_image,
+                (new_width, new_height)
+            )
+            self.rect = pygame.Rect(new_x,
+                                    new_y,
+                                    new_width,
+                                    new_height)
 
 
     def resize_collision_rects(self):
         delta = self.game_context.current_wall.delta
-        for i in range(len(self.collision_rects)):
+        ll = len(self.collision_rects)
+        for i in range(ll):
+            
             raw_collision_rect = self.raw_collision_rects[i]
-            self.collision_rects[i] = pygame.Rect(delta * raw_collision_rect.x, delta * raw_collision_rect.y, delta * raw_collision_rect.w, delta * raw_collision_rect.h)
+            new_x = int(delta * raw_collision_rect.x)
+            new_y = int(delta * raw_collision_rect.y)
+            new_w = int(delta * raw_collision_rect.w)
+            new_h = int(delta * raw_collision_rect.h)
+            
+            collision_rect = self.collision_rects[i]
+            
+            if ((new_x != collision_rect.x) or
+                (new_y != collision_rect.y) or
+                (new_w != collision_rect.w) or
+                (new_h != collision_rect.h)):
+
+                self.collision_rects[i] = pygame.Rect(
+                    new_x, new_y, new_w, new_h
+                    )
 
 
     def change_collision_rects(self, collision_layers_dir, wall_id_str):
@@ -110,8 +134,7 @@ class Game_object(pygame.sprite.Sprite):
 
 
     def draw(self): # draw every entities and the non entities
-        if self.displayed:
-            self.game_context.screen.blit(self.image, self.rect)
+        self.game_context.screen.blit(self.image, self.rect)
 
 
     def update(self, event):

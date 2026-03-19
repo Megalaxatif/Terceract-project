@@ -21,10 +21,14 @@ class Wall:
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
 
-        clear_json(self.json_path) # TODO: to remove also
+        #clear_json(self.json_path) # TODO: to remove also
 
         self.background = self.create_background()
+        self.background_w = self.background.get_width()
+        self.background_h = self.background.get_height()
         self.original_background = self.background
+        self.original_background_w = self.original_background.get_width()
+        self.original_background_h = self.original_background.get_height()
         self.objects = pygame.sprite.Group()
         self.room_id = room_id # for network
         self.wall_id = wall_id # for network
@@ -39,7 +43,7 @@ class Wall:
         background_dir = Path(self.root_dir / "images/background")
         background_path = list(background_dir.iterdir()) # NOTE: we should only have one png file for the background
         background_exist =  background_path is not None # NOTE: iterdir lists the content of the folder
-        background = pygame.image.load(background_path[0]) if background_exist else pygame.Surface(self.game_context.screen.get_size())
+        background = pygame.image.load(background_path[0]).convert() if background_exist else pygame.Surface(self.game_context.screen.get_size())
         if not background_exist:
             background.fill((255, 0, 0))
         return background
@@ -143,13 +147,15 @@ class Wall:
 
 
     def resize_background(self):
-        self.background = pygame.transform.scale(
-            self.background,
-            (
-                int(self.original_background.get_width() * self.delta),
-                int(self.original_background.get_height() * self.delta)
+        new_w = int(self.original_background_w * self.delta)
+        new_h = int(self.original_background_h * self.delta)
+        if (new_w != self.background_w) or (new_h != self.background_h):
+            self.background = pygame.transform.scale(
+                    self.original_background, (new_w, new_h)
             )
-        )
+            self.background_w = new_w
+            self.background_h = new_h
+            
 
 #--------------------DRAWING--------------------------------
     def display_collision_rects(self):
@@ -164,7 +170,8 @@ class Wall:
 
     def draw_objects(self):
         for obj in self.objects:
-            obj.draw()
+            if obj.displayed:
+                obj.draw()
 
 
     def draw_background(self):
