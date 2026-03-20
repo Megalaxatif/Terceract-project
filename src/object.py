@@ -49,6 +49,7 @@ class Game_object(pygame.sprite.Sprite):
         self.movable = movable
         self.interactible = False
         self.display_collision_rect_bool = True
+        self.last_inventory_pos = -1, -1
 
 
     def replace(self):
@@ -71,8 +72,11 @@ class Game_object(pygame.sprite.Sprite):
                 if collision_index != -1:
                     self.drop_in_collision_rect(collision_index)
                     return_code = True
+                elif self.game_context.inventory.current_object:
+                    return False
                 else:
                     self.replace()
+
 
             return return_code
 

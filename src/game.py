@@ -104,6 +104,7 @@ class Game:
         self.current_object = None
         self.other_player_object_name = ""
         self.other_player_inventory_object_name = "" #TODO
+        self.other_player_inventory_object = None
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True) # Create inventory (it's a line here)
 
@@ -178,6 +179,7 @@ class Game:
     def switch_back_to_solo_mode(self):
         self.network_manager.is_connected = False
         self.other_player_object_name = ""
+        self.other_player_inventory_object_name = ""
         self.network_manager.reset_client()
 
 
@@ -312,6 +314,11 @@ class Game:
                     self.current_object.collision_rect_id
                 )
             self.current_object = None
+        
+        elif event and self.inventory.current_object:
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "other_player_inventory_object_name", "")
+            self.inventory.drop_current_object(event) # TODO: change to return the collision rect id
 
 
     # function useful for network

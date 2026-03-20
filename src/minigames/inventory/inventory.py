@@ -103,6 +103,7 @@ class Inventory:
                             )
 
                             self.slots[i][j] = object
+        self.update_object_collision_rects()
 
 
     def resize_objects(self):
@@ -123,6 +124,9 @@ class Inventory:
 
 
     def display(self):
+        if not self.game_context.other_player_inventory_object_name: #TODO make an update() method
+            self.game_context.other_player_inventory_object = None
+        
         if self.displayed:
             self.block_size = int(self.raw_block_size * self.game_context.delta)
 
@@ -137,6 +141,8 @@ class Inventory:
             self.resize_objects()
             self.draw_grid()
             self.draw_objects()
+        if self.game_context.other_player_inventory_object:
+            self.draw_other_player_current_object()
         if self.current_object:
             self.draw_current_object()
             #self.display_collision_rects()
@@ -150,19 +156,29 @@ class Inventory:
                 self.x <= self.mouse_x < self.x + self.cols * self.block_size and
                 self.y <= self.mouse_y < self.y + self.rows * self.block_size
             ):
-                self.col = (self.mouse_x - self.x) // self.block_size
-                self.row = (self.mouse_y - self.y) // self.block_size
+                col = (self.mouse_x - self.x) // self.block_size
+                row = (self.mouse_y - self.y) // self.block_size
 
-                if self.game_context.current_object is not None:
-                    self.store_current_object(self.row, self.col)
+                if self.game_context.other_player_inventory_object:
+                    obj = self.game_context.other_player_inventory_object
+                    if obj.last_inventory_pos != (row, col):
+                        if self.game_context.current_object is not None:
+                            self.store_current_object(row, col)
+                        else:
+                            self.swap_object(row, col)
+                        return True
                 else:
-                    self.current_object, self.slots[self.row][self.col] = self.slots[self.row][self.col], self.current_object
+                    if self.game_context.current_object is not None:
+                        self.store_current_object(row, col)
+                    else:
+                        self.swap_object(row, col)
+                    return True
                 return True
 
             elif self.current_object is not None:
-                self.drop_current_object(self.row, self.col, event)
+                self.drop_current_object(event)
         elif self.current_object is not None:
-            self.drop_current_object(self.row, self.col, event)
+            self.drop_current_object(event)
         return False
 
 
@@ -191,14 +207,14 @@ class Inventory:
             self.current_object = None
 
 
-    def drop_current_object(self, row, col, event):
+    def drop_current_object(self, event):
         obj = self.current_object
         if obj is None:
             print("drop_current_object error: current_object is None")
             return -1
-        obj.handle_left_click(event)
+        #obj.handle_left_click(event)
         # Mettre à jour la position de l'objet à la position actuelle de la souris
-        mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+        mx, my = event.pos[0], event.pos[1]
         if obj.drop_at_pos(mx, my):
             if self.game_context.network_manager.is_connected:
                 #send the information to the other player
@@ -211,14 +227,45 @@ class Inventory:
                     self.game_context.current_wall_id,
                     obj.collision_rect_id
                 )
-
-            self.slots[row][col] = None
             self.game_context.current_wall.objects.add(obj)
-            self.game_context.current_object = None
+            self.current_object = None
             if self.game_context.network_manager.is_connected:
                 self.game_context.network_manager.send_package("variable", "game", "other_player_object_name", "")
             self.current_object = None
 
+        else:
+            row, col = self.current_object.last_inventory_pos
+            if (row == -1) or (col == -1):
+                print("drop_current_object (inventory) error: (row == -1) or (col == -1)")
+                return -1
+            self.swap_object(row, col)
+
+
+    def swap_object(self, row, col):
+        obj_name = ""
+        if self.current_object is not None:
+            obj_name = self.current_object.name
+
+        if self.game_context.network_manager.is_connected:
+            self.game_context.network_manager.send_package(
+                "function",
+                "inventory",
+                "inventory_swap_object",
+                row,
+                col,
+                obj_name
+            )
+                        
+        if self.slots[row][col]:
+            if self.current_object:
+                self.current_object.last_inventory_pos, self.slots[row][col].last_inventory_pos = self.slots[row][col].last_inventory_pos, self.current_object.last_inventory_pos
+            else:
+                self.slots[row][col].last_inventory_pos = row, col
+        if self.current_object:
+            self.current_object.last_inventory_pos = row, col
+            
+        self.current_object, self.slots[row][col] = self.slots[row][col], self.current_object
+        
 #-------------------------NETWORK-------------------------------------
 
     # function useful for network
@@ -251,7 +298,7 @@ class Inventory:
 
     # function useful for network
     def inventory_drop_object(self, obj_name, dest_room_id, dest_wall_id, collision_rect_id):
-        obj = None
+        obj = self.game_context.other_player_inventory_object
         row = 0
         col = 0
         for i in range(self.rows):
@@ -262,7 +309,7 @@ class Inventory:
                         obj = current_obj
                         row = i
                         col = j
-
+                        
         if obj is None:
             print(f"inventory_drop_object error: impossible to find the object {obj_name} in the inventory")
             return -1
@@ -271,8 +318,27 @@ class Inventory:
         dest_wall.objects.add(obj)                                                  # add the object on the wall
         dest_wall_id_str = f"{dest_room_id + 1}{dest_wall_id + 1}"
         obj.change_collision_rects(dest_wall.collision_layers_dir, dest_wall_id_str)                  # update its collision rects
-        obj.drop_in_collision_rect(collision_rect_id)                               # put it in the right collision rect
-        self.slots[row][col] = None                                                 # remove it from inventory
+        obj.drop_in_collision_rect(collision_rect_id)                             # put it in the right collision rect                                               # remove it from inventory
+        self.slots[row][col] = None
+        self.game_context.other_player_inventory_object = None
+
+    def inventory_swap_object(self, row, col, obj_name):
+        current_obj = self.game_context.other_player_inventory_object
+                        
+        if self.slots[row][col]:
+            if current_obj:
+                current_obj.last_inventory_pos, self.slots[row][col].last_inventory_pos = self.slots[row][col].last_inventory_pos, current_obj.last_inventory_pos
+            else:
+                self.slots[row][col].last_inventory_pos = row, col
+        if current_obj:
+            current_obj.last_inventory_pos = row, col
+            
+        current_obj, self.slots[row][col] = self.slots[row][col], current_obj
+        self.game_context.other_player_inventory_object = current_obj
+        
+        self.game_context.other_player_inventory_object_name = None
+        if current_obj:
+            self.game_context.other_player_inventory_object_name = self.game_context.other_player_inventory_object.name
 
 #-------------------------------------------------------------------
 
@@ -318,7 +384,41 @@ class Inventory:
                 scaled_image,
                 (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package(
+                    "function",
+                    "inventory",
+                    "center_object_inventory",
+                    self.current_object.name,
+                    mx, 
+                    my
+                    )
 
+    def center_object_inventory(self, obj_name, mx, my):
+        object = self.game_context.other_player_inventory_object
+        if object is None:
+            print(f"center_object error: invalid object name, the name {obj_name} was not found in the inventory")
+            return 1
+        
+        object.rect.x = mx * self.game_context.delta
+        object.rect.y = my * self.game_context.delta
+
+    def draw_other_player_current_object(self):
+        obj = self.game_context.other_player_inventory_object
+        pos = obj.rect.x, obj.rect.y
+
+        if obj is None or pos is None:
+            return
+
+        mx, my = pos
+        scaled_image = pygame.transform.scale(
+            obj.image,
+            (int(self.block_size * 0.9), int(self.block_size * 0.9))
+        )
+        self.game_context.screen.blit(
+            scaled_image,
+            (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
+        )
 
     def display_collision_rects(self):
         for i in range(len(self.slots)):

@@ -21,7 +21,7 @@ class Wall:
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
 
-        #clear_json(self.json_path) # TODO: to remove also
+        clear_json(self.json_path) # TODO: to remove also
 
         self.background = self.create_background()
         self.background_w = self.background.get_width()
@@ -122,12 +122,17 @@ class Wall:
         for object in self.objects:
             print(f"saving {object.name} in json")
             formated_rect = convert_to_tuple_rect(object.raw_rect)
-            formated_collision_rects = convert_to_tuple_rect_list(object.raw_collision_rects)
 
-            formated_default_collision = None
+            
             if object.default_collision:
+                formated_collision_rects = convert_to_tuple_rect_list(
+                    [row for row in object.raw_collision_rects if row != object.default_collision] # Erase object.default_collision
+                    )
                 formated_default_collision = convert_to_tuple_rect(object.default_collision)
-
+            else:
+                formated_collision_rects = convert_to_tuple_rect_list(object.raw_collision_rects)
+                formated_default_collision = None
+                
             new_obj_data[object.name] = {}
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = formated_rect
