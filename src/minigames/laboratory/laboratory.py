@@ -3,7 +3,7 @@ import pygame
 import json
 import numpy as np
 
-
+# neural network part
 class Layer:
     def __init__(self, weights, biases):
         self.weights = np.array(weights, dtype=float).T
@@ -25,7 +25,7 @@ def softmax(x):
 
 class NeuralNetwork:
     def __init__(self, json_path):
-        with open(json_path, "r") as f:
+        with open(json_path, "r") as f: # import a pre trained weights and biases (made by us from scratch with no lib)
             data = json.load(f)
 
         self.hidden1 = self._load_layer(data, "hidden1")
@@ -49,6 +49,7 @@ class NeuralNetwork:
         index = np.argmax(probs, axis=1)[0]
         return str(int(index))
 
+# end of neural network part
 
 pygame.init()
 pygame.font.init()
@@ -67,57 +68,58 @@ BRUSH = 20
 expected_outputs = ["1", ".", ".", ".",
                     ".", "4", ".", "5",
                     ".", "8", "0", ".",
-                    ".", ".", ".", "2"]
+                    ".", ".", ".", "2"] # answer of the laboratory
 
 
-class Grid:
+class Grid: # one of the 16 grids
     def __init__(self, size, screen_x, screen_y, model):
         self.size = size
         self.screen_x = screen_x
         self.screen_y = screen_y
         self.grid = [[0.0 for _ in range(self.size)] for _ in range(self.size)]
-        self.brush = BRUSH
-        self.model = model
+        self.brush = BRUSH # the size of the pen we draw with
+        self.model = model # the neural network
 
-    def reset(self):
+    def reset(self): # reset the grid by putting 0s everywhere
         self.grid = [[0.0 for _ in range(self.size)] for _ in range(self.size)]
 
-    def contains_screen_pos(self, pos):
+    def contains_screen_pos(self, pos): # check if the pos is in the grid
         x, y = pos
         return (
             self.screen_x <= x < self.screen_x + self.size
             and self.screen_y <= y < self.screen_y + self.size
         )
 
-    def screen_to_local(self, pos):
+    def screen_to_local(self, pos): # convert global coordinates to local ones
         x, y = pos
         return x - self.screen_x, y - self.screen_y
 
-    def modify(self, local_x, local_y):
-        r = self.brush / 2.0
-        cx = local_x
-        cy = local_y
+    def modify(self, local_x, local_y): # if we click on the grid, it changes the grid values
+        # here it just modifies the matrix, not the visual part
+        r = self.brush / 2.0 # radius
+        cx = local_x # center x
+        cy = local_y # center y
 
-        x_min = max(0, int(cx - r - 1))
+        x_min = max(0, int(cx - r - 1)) # max and min to ensure to not go out of the grid
         x_max = min(self.size - 1, int(cx + r + 1))
         y_min = max(0, int(cy - r - 1))
         y_max = min(self.size - 1, int(cy + r + 1))
 
         for y in range(y_min, y_max + 1):
             for x in range(x_min, x_max + 1):
-                dx = x + 0.5 - cx
+                dx = x + 0.5 - cx # 0.5 to be at the center of the pixel
                 dy = y + 0.5 - cy
-                d = math.sqrt(dx * dx + dy * dy)
+                d = math.sqrt(dx * dx + dy * dy) # compute the euclidian distance
 
                 if d <= r:
-                    val = 1.0 - (d / r)
-                    if val > self.grid[y][x]:
-                        self.grid[y][x] = val
+                    val = 1.0 - (d / r) # 1 at the center, 0 on the edge
+                    if val > self.grid[y][x]: # just keep the highest value
+                        self.grid[y][x] = val # apply this value in grid
 
-    def draw_brush(self, local_x, local_y):
+    def draw_brush(self, local_x, local_y): # just a wrapper
         self.modify(local_x, local_y)
 
-    def bbox(self, threshold=0.05):
+    def bbox(self, threshold=0.05): # get the bounding box (already used somewhere else in the code)
         min_x, min_y = self.size, self.size
         max_x, max_y = -1, -1
 
@@ -138,23 +140,23 @@ class Grid:
 
         return min_x, min_y, max_x, max_y
 
-    def resample_square(self, src, out_size):
+    def resample_square(self, src, out_size): # makes a matrix src x src to a matrix out_size x out_size
         src_h = len(src)
         src_w = len(src[0])
 
         if src_h == 0 or src_w == 0:
             return [[0.0 for _ in range(out_size)] for _ in range(out_size)]
 
-        result = [[0.0 for _ in range(out_size)] for _ in range(out_size)]
+        result = [[0.0 for _ in range(out_size)] for _ in range(out_size)] # start with filling with 0s
 
         for oy in range(out_size):
             for ox in range(out_size):
-                x0 = int(ox * src_w / out_size)
-                x1 = int((ox + 1) * src_w / out_size)
-                y0 = int(oy * src_h / out_size)
-                y1 = int((oy + 1) * src_h / out_size)
+                x0 = int(ox * src_w / out_size) # to get the points to have a little square which will be only one square in the output matrix
+                x1 = int((ox + 1) * src_w / out_size)   
+                y0 = int(oy * src_h / out_size)         
+                y1 = int((oy + 1) * src_h / out_size)   
 
-                if x1 <= x0:
+                if x1 <= x0: # to ensure to have a non zero value
                     x1 = x0 + 1
                 if y1 <= y0:
                     y1 = y0 + 1
@@ -162,45 +164,45 @@ class Grid:
                 total = 0.0
                 count = 0
 
-                for yy in range(y0, min(y1, src_h)):
+                for yy in range(y0, min(y1, src_h)): # make the sum of each value of the little square
                     for xx in range(x0, min(x1, src_w)):
                         total += src[yy][xx]
                         count += 1
 
-                result[oy][ox] = total / count if count > 0 else 0.0
+                result[oy][ox] = total / count if count > 0 else 0.0 # put the average in one value of the output matrix
 
         return result
 
-    def draw_line_from_screen_pos(self, start_pos, end_pos):
+    def draw_line_from_screen_pos(self, start_pos, end_pos): # draws a line if we draw too fast
         x0, y0 = self.screen_to_local(start_pos)
         x1, y1 = self.screen_to_local(end_pos)
 
         dx = x1 - x0
         dy = y1 - y0
-        dist = math.hypot(dx, dy)
+        dist = math.hypot(dx, dy) # gives the euclidian distance of dx, dy
 
-        if dist == 0:
+        if dist == 0: # handling edge case
             self.draw_brush(x0, y0)
             return
 
-        step = max(1, self.brush / 4)
-        steps = max(1, int(dist / step))
+        step = max(1, self.brush / 8) # size of a step
+        steps = max(1, int(dist / step)) # how many steps
 
-        for i in range(steps + 1):
+        for i in range(steps + 1): # draw the line
             t = i / steps
             x = x0 + dx * t
             y = y0 + dy * t
             self.draw_brush(x, y)
 
-    def to_28x28(self):
-        box = self.bbox()
-        if box is None:
+    def to_28x28(self): # convert a matrix to a 28 by 28 one, we are not using resample_square because we center the pixels here
+        box = self.bbox() # we only extract the important data
+        if box is None: # if nothing is drawn we ignore the grid
             return None
 
-        min_x, min_y, max_x, max_y = box
+        min_x, min_y, max_x, max_y = box 
 
         crop = []
-        for y in range(min_y, max_y + 1):
+        for y in range(min_y, max_y + 1): # put the important data in the grid
             row = []
             for x in range(min_x, max_x + 1):
                 row.append(self.grid[y][x])
@@ -209,67 +211,62 @@ class Grid:
         crop_h = len(crop)
         crop_w = len(crop[0])
 
-        if crop_h == 0 or crop_w == 0:
+        if crop_h == 0 or crop_w == 0: # edge case handling
             return None
 
-        side = max(crop_w, crop_h)
-        square = [[0.0 for _ in range(side)] for _ in range(side)]
+        side = max(crop_w, crop_h) # get the longest side to create a square of this size
+        square = [[0.0 for _ in range(side)] for _ in range(side)] # init this square
 
-        offset_x = (side - crop_w) // 2
+        offset_x = (side - crop_w) // 2 # the values needed to move x and y to fit in the square
         offset_y = (side - crop_h) // 2
 
         for y in range(crop_h):
             for x in range(crop_w):
                 square[offset_y + y][offset_x + x] = crop[y][x]
 
-        reduced = self.resample_square(square, 20)
+        reduced = self.resample_square(square, 20) # convert our square to a 20x20 one
 
-        canvas = [[0.0 for _ in range(28)] for _ in range(28)]
+        result = [[0.0 for _ in range(28)] for _ in range(28)] # init the result
         start_x = 4
         start_y = 4
 
-        for y in range(20):
+        for y in range(20): # put the data of the 20x20 square at the center of the result
             for x in range(20):
-                canvas[start_y + y][start_x + x] = reduced[y][x]
-
-        result = []
-        for y in range(28):
-            for x in range(28):
-                result.append(canvas[y][x])
+                result[start_y + y][start_x + x] = reduced[y][x]
 
         return result
 
-    def ask(self):
+    def ask(self): # from a matrix, it guesses a result
         data = self.to_28x28()
 
-        if not data:
+        if not data: # if the square is empty, we put a dot
             return "."
 
-        return self.model.predict(data)
+        return self.model.predict(data) # we use our pre trained model
 
     def draw_border(self, screen, draw_x, draw_y, draw_size_x, draw_size_y):
         pygame.draw.rect(
             screen,
-            (0, 0, 0),
-            (draw_x, draw_y, draw_size_x, draw_size_y),
-            1
+            (0, 0, 0), # color
+            (draw_x, draw_y, draw_size_x, draw_size_y), # coordinate of our grid
+            1 # thickness of the border
         )
 
-    def render(self, screen, delta):
-        draw_x = int(self.screen_x * delta)
-        draw_y = int(self.screen_y * delta)
-        draw_size_x = int(self.size * delta)
+    def render(self, screen, delta): # display black values for each drawn pixels
+        draw_x = int(self.screen_x * delta) # apply deltas to handle window size changes
+        draw_y = int(self.screen_y * delta) # whole area size
+        draw_size_x = int(self.size * delta) # grid area size
         draw_size_y = int(self.size * delta)
 
-        pixel_w = max(1, math.ceil(delta))
+        pixel_w = max(1, math.ceil(delta)) # size of a pixel
         pixel_h = max(1, math.ceil(delta))
 
         for y in range(self.size):
             for x in range(self.size):
                 v = self.grid[y][x]
-                if v > 0:
-                    gray = int(255 * (1.0 - v))
-                    pygame.draw.rect(
+                if v > 0: # only modify if non white
+                    gray = int(255 * (1.0 - v)) # add gray to simulate a real pen
+                    pygame.draw.rect( # display with rectangles
                         screen,
                         (gray, gray, gray),
                         (
@@ -306,7 +303,7 @@ class Laboratory:
         self.grids = self.create_grids()
         self.outputs = ["."] * len(self.grids)
 
-    def create_grids(self):
+    def create_grids(self): # create the 16 grids (just for the init of the class)
         grids = []
         for row in range(GRID_ROWS):
             for col in range(GRID_COLS):
@@ -315,13 +312,13 @@ class Laboratory:
                 grids.append(Grid(CELL_SIZE, x, y, self.model))
         return grids
 
-    def get_grid_at_pos(self, pos):
+    def get_grid_at_pos(self, pos): # to know on which grid we are drawing
         for grid in self.grids:
             if grid.contains_screen_pos(pos):
                 return grid
         return None
 
-    def get_delta(self):
+    def get_delta(self): # compute deltas
         self.width, self.height = self.screen.get_size()
         delta_x = self.width / BASE_WIDTH
         delta_y = self.height / BASE_HEIGHT
@@ -359,7 +356,7 @@ class Laboratory:
             int(80 * delta),
         )
 
-    def draw_button(self, rect, label, mouse, font):
+    def draw_button(self, rect, label, mouse, font): # label is text
         color = (200, 200, 200) if rect.collidepoint(mouse) else (100, 100, 100)
         pygame.draw.rect(self.screen, color, rect)
 
@@ -392,7 +389,7 @@ class Laboratory:
         self.draw_button(send_rect, "SEND", mouse, font)
         self.draw_button(back_rect, "GO BACK", mouse, font)
 
-        if self.send_message:
+        if self.send_message: # the final message 
             result_text = font.render(self.send_message, True, (0, 0, 0))
             self.screen.blit(result_text, (int(650 * delta), int(570 * delta)))
 
