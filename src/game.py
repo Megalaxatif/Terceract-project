@@ -45,7 +45,7 @@ class Game:
         self.event = None
         self.font = pygame.font.Font(None, 50)
         self.name = "game"
-        self.current_mini_game = "menu"
+        self.current_mini_game = "game"
 
         self.mouse_enabled = True
         self.network_manager = Network_manager(self)
@@ -129,7 +129,8 @@ class Game:
         self.inventory = Inventory(
             self, 40, 615, 1, 10, 100, True
         )  # Create inventory (it's a line here)
-
+        self.laboratory_game = Laboratory(self)
+        
         self.dialogues = Dialogue(self)
 
     def save_game(self):  # save all the game data
@@ -341,6 +342,7 @@ class Game:
 
     def drop_current_object(self, event):
         if event and self.current_object:
+            #self.current_object.handle_left_click(event)
             self.current_object.drop_at_pos(
                 event.pos[0], event.pos[1]
             )  # TODO: change to return the collision rect id
@@ -449,9 +451,7 @@ class Game:
 
     def handle_basic_game_events(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                self.current_mini_game = "menu"
-            elif event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT:
                 self.change_wall("left")
             elif event.key == pygame.K_RIGHT:
                 self.change_wall("right")
@@ -489,7 +489,11 @@ class Game:
                 self.game_running = False
                 pygame.quit()
                 sys.exit()
-
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.current_mini_game = "menu"
+                    
             if event.type == pygame.WINDOWSIZECHANGED:
                 self.recalculate_deltas()
 
@@ -499,14 +503,14 @@ class Game:
                 self.update_walls(event)
                 self.dialogues.handle_event(event)
 
-            elif self.current_mini_game == "menu":  # TODO
-                pass
+            elif self.current_mini_game == "laboratory":  # TODO
+                self.laboratory_game.handle_left_click(event)
 
     def update_all(self):
         self.handle_all_events()
 
         self.screen.fill((0, 0, 0))  # clear the screen
-
+        
         # render the current mini-game
         if self.current_mini_game == "game":
             self.current_wall.display()
@@ -518,7 +522,11 @@ class Game:
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display
-
+        
+        elif self.current_mini_game == "laboratory":
+            self.laboratory_game.update()
+            
+    
         self.mouse_enabled = True
 
         pygame.display.flip()

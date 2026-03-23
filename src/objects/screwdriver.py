@@ -10,9 +10,12 @@ class Screwdriver(Game_object):
         self.displayed = False
         
     def handle_left_click(self, event):
-        wall = self.game_context.current_wall.objects
-        for obj in reversed(wall.sprites()): # reversed so we click the top object first
-            if obj.displayed and obj.rect.collidepoint(event.pos):
-                if isinstance(obj, Plank):
-                    obj.displayed = not obj.displayed
-        self.game_context.drop_current_object(event)
+
+        wall = self.game_context.current_wall
+        if wall.wall_id_str == "13":
+            for obj in reversed(wall.objects.sprites()): # reversed so we click the top object first
+                if obj.displayed and obj.rect.collidepoint(event.pos):
+                    if isinstance(obj, Plank):
+                        obj.displayed = not obj.displayed
+                    
+        #self.game_context.drop_current_object(event)

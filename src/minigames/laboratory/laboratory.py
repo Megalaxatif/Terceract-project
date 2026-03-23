@@ -1,43 +1,88 @@
 import math
-
-import nn
 import pygame
+import json
+import numpy as np
 
-model = nn.NeuralNetwork("save.json")
+
+class Layer:
+    def __init__(self, weights, biases):
+        self.weights = np.array(weights, dtype=float).T
+        self.biases = np.array(biases, dtype=float)
+
+    def forward(self, x):
+        return np.dot(x, self.weights) + self.biases
+
+
+def relu(x):
+    return np.maximum(0, x)
+
+
+def softmax(x):
+    x = x - np.max(x, axis=1, keepdims=True)
+    exp_x = np.exp(x)
+    return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
+
+class NeuralNetwork:
+    def __init__(self, json_path):
+        with open(json_path, "r") as f:
+            data = json.load(f)
+
+        self.hidden1 = self._load_layer(data, "hidden1")
+        self.hidden2 = self._load_layer(data, "hidden2")
+        self.output = self._load_layer(data, "output")
+
+    def _load_layer(self, data, name):
+        if name not in data:
+            raise ValueError(f"Layer '{name}' not found")
+        return Layer(data[name]["weights"], data[name]["biases"])
+
+    def forward(self, x):
+        x = np.array(x, dtype=np.float32).reshape(1, -1)
+        x = relu(self.hidden1.forward(x))
+        x = relu(self.hidden2.forward(x))
+        x = softmax(self.output.forward(x))
+        return x
+
+    def predict(self, x):
+        probs = self.forward(x)
+        index = np.argmax(probs, axis=1)[0]
+        return str(int(index))
+
 
 pygame.init()
 pygame.font.init()
 
 background_colour = (255, 255, 255)
-(width, height) = (812, 662)
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Pattern")
-clock = pygame.time.Clock()
-FPS = 3000
+
+BASE_WIDTH = 1080
+BASE_HEIGHT = 720
+FPS = 60
 
 GRID_COLS = 4
 GRID_ROWS = 4
 CELL_SIZE = 128
-BRUSH = 15
+BRUSH = 20
 
-RESET_RECT = pygame.Rect(50, 550, 150, 80)
-CHECK_RECT = pygame.Rect(300, 550, 150, 80)
-
-smallfont = pygame.font.SysFont("Arial", 32)
+expected_outputs = ["1", ".", ".", ".",
+                    ".", "4", ".", "5",
+                    ".", "8", "0", ".",
+                    ".", ".", ".", "2"]
 
 
 class Grid:
-    def __init__(self, size, screen_x, screen_y):
+    def __init__(self, size, screen_x, screen_y, model):
         self.size = size
         self.screen_x = screen_x
         self.screen_y = screen_y
         self.grid = [[0.0 for _ in range(self.size)] for _ in range(self.size)]
         self.brush = BRUSH
+        self.model = model
 
     def reset(self):
         self.grid = [[0.0 for _ in range(self.size)] for _ in range(self.size)]
 
-    def contains_screen_pos(self, pos):  # return if clicked on grid
+    def contains_screen_pos(self, pos):
         x, y = pos
         return (
             self.screen_x <= x < self.screen_x + self.size
@@ -53,7 +98,6 @@ class Grid:
         cx = local_x
         cy = local_y
 
-        # to not get out of the grid
         x_min = max(0, int(cx - r - 1))
         x_max = min(self.size - 1, int(cx + r + 1))
         y_min = max(0, int(cy - r - 1))
@@ -66,7 +110,6 @@ class Grid:
                 d = math.sqrt(dx * dx + dy * dy)
 
                 if d <= r:
-                    # 1 at the center, 0 on the edge
                     val = 1.0 - (d / r)
                     if val > self.grid[y][x]:
                         self.grid[y][x] = val
@@ -95,7 +138,7 @@ class Grid:
 
         return min_x, min_y, max_x, max_y
 
-    def resample_square(self, src, out_size):  # resize src to out_size size matrix
+    def resample_square(self, src, out_size):
         src_h = len(src)
         src_w = len(src[0])
 
@@ -152,11 +195,10 @@ class Grid:
     def to_28x28(self):
         box = self.bbox()
         if box is None:
-            return [0.0] * (28 * 28)
+            return None
 
         min_x, min_y, max_x, max_y = box
 
-        # extract drawn content
         crop = []
         for y in range(min_y, max_y + 1):
             row = []
@@ -168,9 +210,8 @@ class Grid:
         crop_w = len(crop[0])
 
         if crop_h == 0 or crop_w == 0:
-            return [0.0] * (28 * 28)
+            return None
 
-        # put drawing in square before reducing it
         side = max(crop_w, crop_h)
         square = [[0.0 for _ in range(side)] for _ in range(side)]
 
@@ -181,10 +222,8 @@ class Grid:
             for x in range(crop_w):
                 square[offset_y + y][offset_x + x] = crop[y][x]
 
-        # we reduce at 20x20
         reduced = self.resample_square(square, 20)
 
-        # center on 28x28
         canvas = [[0.0 for _ in range(28)] for _ in range(28)]
         start_x = 4
         start_y = 4
@@ -193,7 +232,6 @@ class Grid:
             for x in range(20):
                 canvas[start_y + y][start_x + x] = reduced[y][x]
 
-        # flatten
         result = []
         for y in range(28):
             for x in range(28):
@@ -204,24 +242,28 @@ class Grid:
     def ask(self):
         data = self.to_28x28()
 
-        return model.predict(data)
+        if not data:
+            return "."
 
-    def update_from_screen_pos(self, pos):
-        if not self.contains_screen_pos(pos):
-            return
+        return self.model.predict(data)
 
-        local_x, local_y = self.screen_to_local(pos)
-        self.draw_brush(local_x, local_y)
-
-    def draw_border(self):
+    def draw_border(self, screen, draw_x, draw_y, draw_size_x, draw_size_y):
         pygame.draw.rect(
             screen,
             (0, 0, 0),
-            (self.screen_x, self.screen_y, self.size, self.size),
-            1,
+            (draw_x, draw_y, draw_size_x, draw_size_y),
+            1
         )
 
-    def render(self):
+    def render(self, screen, delta):
+        draw_x = int(self.screen_x * delta)
+        draw_y = int(self.screen_y * delta)
+        draw_size_x = int(self.size * delta)
+        draw_size_y = int(self.size * delta)
+
+        pixel_w = max(1, math.ceil(delta))
+        pixel_h = max(1, math.ceil(delta))
+
         for y in range(self.size):
             for x in range(self.size):
                 v = self.grid[y][x]
@@ -230,96 +272,198 @@ class Grid:
                     pygame.draw.rect(
                         screen,
                         (gray, gray, gray),
-                        (self.screen_x + x, self.screen_y + y, 1, 1),
+                        (
+                            draw_x + int(x * delta),
+                            draw_y + int(y * delta),
+                            pixel_w,
+                            pixel_h,
+                        ),
                     )
-        self.draw_border()
+
+        self.draw_border(screen, draw_x, draw_y, draw_size_x, draw_size_y)
 
 
-def create_grids():
-    grids = []
-    for row in range(GRID_ROWS):
-        for col in range(GRID_COLS):
-            x = col * CELL_SIZE
-            y = row * CELL_SIZE
-            grids.append(Grid(CELL_SIZE, x, y))
-    return grids
+class Laboratory:
+    def __init__(self, game_context):
+        self.game_context = game_context
+        self.model = NeuralNetwork("minigames/laboratory/save.json")
+        self.name = "pattern"
+        
+        self.width = BASE_WIDTH
+        self.height = BASE_HEIGHT
+        self.screen = self.game_context.screen
+        pygame.display.set_caption("Pattern")
+        self.clock = pygame.time.Clock()
 
+        self.running = True
+        self.clicked = False
+        self.active_grid = None
+        self.last_mouse_pos = None
+        self.send_message = ""
 
-def get_grid_at_pos(grids, pos):
-    for grid in grids:
-        if grid.contains_screen_pos(pos):
-            return grid
-    return None
+        self.smallfont = pygame.font.SysFont("Arial", 32)
 
+        self.grids = self.create_grids()
+        self.outputs = ["."] * len(self.grids)
 
-def draw_buttons(mouse):
-    text = smallfont.render("RESET", True, (0, 0, 0))
-    color = (200, 200, 200) if RESET_RECT.collidepoint(mouse) else (100, 100, 100)
-    pygame.draw.rect(screen, color, RESET_RECT)
-    screen.blit(text, (RESET_RECT.x + 10, RESET_RECT.y + 20))
+    def create_grids(self):
+        grids = []
+        for row in range(GRID_ROWS):
+            for col in range(GRID_COLS):
+                x = col * CELL_SIZE
+                y = row * CELL_SIZE
+                grids.append(Grid(CELL_SIZE, x, y, self.model))
+        return grids
 
-    text = smallfont.render("CHECK", True, (0, 0, 0))
-    color = (200, 200, 200) if CHECK_RECT.collidepoint(mouse) else (100, 100, 100)
-    pygame.draw.rect(screen, color, CHECK_RECT)
-    screen.blit(text, (CHECK_RECT.x + 10, CHECK_RECT.y + 20))
+    def get_grid_at_pos(self, pos):
+        for grid in self.grids:
+            if grid.contains_screen_pos(pos):
+                return grid
+        return None
 
+    def get_delta(self):
+        self.width, self.height = self.screen.get_size()
+        delta_x = self.width / BASE_WIDTH
+        delta_y = self.height / BASE_HEIGHT
+        return min(delta_x, delta_y)
 
-def redraw_all(grids, mouse):
-    screen.fill(background_colour)
+    def get_reset_rect(self, delta):
+        return pygame.Rect(
+            0,
+            int(550 * delta),
+            int(160 * delta),
+            int(80 * delta),
+        )
 
-    for grid in grids:
-        grid.render()
+    def get_decrypt_rect(self, delta):
+        return pygame.Rect(
+            int(176 * delta),
+            int(550 * delta),
+            int(160 * delta),
+            int(80 * delta),
+        )
 
-    draw_buttons(mouse)
-    pygame.display.update()
+    def get_send_rect(self, delta):
+        return pygame.Rect(
+            int(352 * delta),
+            int(550 * delta),
+            int(160 * delta),
+            int(80 * delta),
+        )
+        
+    def get_back_rect(self, delta):
+        return pygame.Rect(
+            int(176 * delta),
+            int(646 * delta),
+            int(160 * delta),
+            int(80 * delta),
+        )
 
+    def draw_button(self, rect, label, mouse, font):
+        color = (200, 200, 200) if rect.collidepoint(mouse) else (100, 100, 100)
+        pygame.draw.rect(self.screen, color, rect)
 
-grids = create_grids()
-running = True
-clicked = False
-active_grid = None
-last_mouse_pos = None
+        text = font.render(label, True, (0, 0, 0))
+        text_rect = text.get_rect(center=rect.center)
+        self.screen.blit(text, text_rect)
 
-redraw_all(grids, pygame.mouse.get_pos())
+    def draw_outputs(self, delta):
+        font = pygame.font.SysFont("Arial", max(12, int(32 * delta)))
 
-while running:
-    clock.tick(FPS)
-    mouse = pygame.mouse.get_pos()
+        for i, grid in enumerate(self.grids):
+            if i >= len(self.outputs):
+                continue
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+            text = font.render(str(self.outputs[i]), True, (0, 0, 0))
+            text_x = int((grid.screen_x + 5 * grid.size + 8) * delta)
+            text_y = int((grid.screen_y + grid.size // 2) * delta - text.get_height() // 2)
+            self.screen.blit(text, (text_x, text_y))
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            clicked = True
-            last_mouse_pos = mouse
+    def draw_buttons(self, mouse, delta):
+        font = pygame.font.SysFont("Arial", max(12, int(32 * delta)))
 
-            if RESET_RECT.collidepoint(mouse):
-                active_grid = None
-                for grid in grids:
-                    grid.reset()
-                redraw_all(grids, mouse)
+        reset_rect = self.get_reset_rect(delta)
+        decrypt_rect = self.get_decrypt_rect(delta)
+        send_rect = self.get_send_rect(delta)
+        back_rect = self.get_back_rect(delta)
 
-            elif CHECK_RECT.collidepoint(mouse):
-                active_grid = None
-                guesses = [grid.ask() for grid in grids]
-                print("Guess final de chaque grille :", guesses)
+        self.draw_button(reset_rect, "RESET", mouse, font)
+        self.draw_button(decrypt_rect, "DECRYPT", mouse, font)
+        self.draw_button(send_rect, "SEND", mouse, font)
+        self.draw_button(back_rect, "GO BACK", mouse, font)
 
+        if self.send_message:
+            result_text = font.render(self.send_message, True, (0, 0, 0))
+            self.screen.blit(result_text, (int(650 * delta), int(570 * delta)))
+
+    def redraw_all(self, mouse, delta):
+        self.screen.fill(background_colour)
+
+        for grid in self.grids:
+            grid.render(self.screen, delta)
+
+        self.draw_outputs(delta)
+        self.draw_buttons(mouse, delta)
+
+    def handle_mouse_down(self, mouse, base_mouse, delta):
+        self.clicked = True
+        self.last_mouse_pos = base_mouse
+
+        reset_rect = self.get_reset_rect(delta)
+        decrypt_rect = self.get_decrypt_rect(delta)
+        send_rect = self.get_send_rect(delta)
+        back_rect = self.get_back_rect(delta)
+
+        if reset_rect.collidepoint(mouse):
+            self.active_grid = None
+            for grid in self.grids:
+                grid.reset()
+            self.outputs = ["."] * len(self.grids)
+            self.send_message = ""
+
+        elif decrypt_rect.collidepoint(mouse):
+            self.active_grid = None
+            self.outputs = [grid.ask() for grid in self.grids]
+
+        elif send_rect.collidepoint(mouse):
+            if self.outputs == expected_outputs:
+                self.send_message = "PASSWORD: hope"
             else:
-                active_grid = get_grid_at_pos(grids, mouse)
-                if active_grid is not None:
-                    active_grid.draw_brush(*active_grid.screen_to_local(mouse))
+                self.send_message = "ACCESS DENIED"
+                
+        elif back_rect.collidepoint(mouse):
+            self.game_context.current_mini_game = "game"
+
+        else:
+            self.active_grid = self.get_grid_at_pos(base_mouse)
+            if self.active_grid is not None:
+                self.active_grid.draw_brush(*self.active_grid.screen_to_local(base_mouse))
+
+    def handle_mouse_up(self):
+        self.clicked = False
+        self.active_grid = None
+        self.last_mouse_pos = None
+
+    def handle_mouse_motion(self, base_mouse):
+        if self.clicked and self.active_grid is not None and self.last_mouse_pos is not None:
+            self.active_grid.draw_line_from_screen_pos(self.last_mouse_pos, base_mouse)
+        self.last_mouse_pos = base_mouse
+
+
+    def handle_left_click(self, event):
+        mouse = pygame.mouse.get_pos()
+        delta = self.game_context.delta
+        base_mouse = (mouse[0] / delta, mouse[1] / delta)
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.handle_mouse_down(mouse, base_mouse, delta)
 
         elif event.type == pygame.MOUSEBUTTONUP:
-            clicked = False
-            active_grid = None
-            last_mouse_pos = None
+            self.handle_mouse_up()
 
-        elif event.type == pygame.MOUSEMOTION and clicked:
-            if active_grid is not None and last_mouse_pos is not None:
-                active_grid.draw_line_from_screen_pos(last_mouse_pos, mouse)
-            last_mouse_pos = mouse
+        elif event.type == pygame.MOUSEMOTION:
+            self.handle_mouse_motion(base_mouse)
 
-    redraw_all(grids, mouse)
-
-pygame.quit()
+    def update(self):
+        mouse = pygame.mouse.get_pos()
+        self.redraw_all(mouse, self.game_context.delta)

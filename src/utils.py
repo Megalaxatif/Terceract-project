@@ -150,6 +150,7 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
     from objects.grid.key import Key
     from objects.grid.grid import Grid
     from objects.closet import Closet
+    from objects.borne import Borne
     from objects.plank import Plank
     from objects.screwdriver import Screwdriver
     from object import Game_object
@@ -215,7 +216,11 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
                       default_collision, default_wall)
         temp.displayed = False
         return temp
-
+    
+    elif obj_name == "borne":
+        return Borne(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id)
+        
     elif obj_name == "padlock":
         return Padlock(game_context, obj_name, img_path, rect,
                            collision_rects, current_collision_id)

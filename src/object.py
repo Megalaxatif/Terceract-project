@@ -48,7 +48,7 @@ class Game_object(pygame.sprite.Sprite):
         self.displayed = displayed
         self.movable = movable
         self.interactible = False
-        self.display_collision_rect_bool = True
+        self.display_collision_rect_bool = not ("obj_in_closet" in self.name)
         self.last_inventory_pos = -1, -1
 
 
@@ -146,4 +146,5 @@ class Game_object(pygame.sprite.Sprite):
 
 
     def handle_left_click(self, event):
-        self.game_context.drop_current_object(event)
+        if self != self.game_context.inventory.current_object:
+            self.game_context.drop_current_object(event)
