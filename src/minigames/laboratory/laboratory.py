@@ -220,7 +220,7 @@ class Grid: # one of the 16 grids
         offset_x = (side - crop_w) // 2 # the values needed to move x and y to fit in the square
         offset_y = (side - crop_h) // 2
 
-        for y in range(crop_h):
+        for y in range(crop_h): # center the image
             for x in range(crop_w):
                 square[offset_y + y][offset_x + x] = crop[y][x]
 

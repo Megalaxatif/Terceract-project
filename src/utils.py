@@ -152,6 +152,8 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
     from objects.closet import Closet
     from objects.borne import Borne
     from objects.plank import Plank
+    from objects.book import Book
+    from objects.library import Library
     from objects.screwdriver import Screwdriver
     from object import Game_object
 
@@ -228,9 +230,26 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
     elif obj_name == "padlock_door":
         return Padlock_door(game_context, obj_name, img_path, rect,
                            collision_rects, current_collision_id)
+        
     elif "plank" in obj_name:
         return Plank(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id)
+    
+    elif obj_name == "library":
+        return Library(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id)
+
+    elif obj_name == "book_closed":
+        return Book(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, True, False)
+
+    elif obj_name == "book_opened":
+        return Book(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, False, False)
+
+    elif "book_bait" in obj_name:
+        return Book(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, False, True)
 
     else:
         return Game_object(game_context, obj_name, img_path, rect,

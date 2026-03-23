@@ -9,7 +9,7 @@ from utils import *
 class Network_manager:
     def __init__(self, game_context):
         self.game_context = game_context
-        self.server_port = 50001
+        self.server_port = 50002
         self.is_host = True  # by default we play in solo
         self.is_connected = False
         self.running = True  # TODO: suppress this later on, only usefull to avoid nasty errors if we quit the game through the network thread in duo mode
