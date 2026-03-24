@@ -1,9 +1,10 @@
 import json
-import pygame
 from pathlib import Path
 
+import pygame
 
-#---------------------JSON-----------------------------------
+
+# ---------------------JSON-----------------------------------
 #
 def load_json_file(json_path: Path) -> dict:
     try:
@@ -11,7 +12,9 @@ def load_json_file(json_path: Path) -> dict:
             try:
                 return json.load(f)
             except json.JSONDecodeError:
-                print(f"load_json_file error: JSONDecodeError on {json_path.as_posix()}")
+                print(
+                    f"load_json_file error: JSONDecodeError on {json_path.as_posix()}"
+                )
                 return {}
     except Exception as e:
         print(f"load_json_file error: {e} on {json_path.as_posix}")
@@ -28,7 +31,7 @@ def clear_json(json_path):
         f.write("{}")
 
 
-#----------------------CONVERSION--------------------------
+# ----------------------CONVERSION--------------------------
 def convert_to_pygame_rect(rect) -> pygame.Rect | None:
     if rect:
         return pygame.Rect(rect)
@@ -39,7 +42,7 @@ def convert_to_pygame_rect(rect) -> pygame.Rect | None:
 def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
     pygame_rect_list = []
     for rect in rect_list:
-        #print(rect_list)
+        # print(rect_list)
         if rect:
             pygame_rect_list.append(pygame.Rect(rect))
     return pygame_rect_list
@@ -56,10 +59,13 @@ def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
     return tuple_rect_list
 
 
-#------------------------------------------------------------------
+# ------------------------------------------------------------------
 
-#returns the list of the paths of all the collision layers of an object
-def load_collision_layers_path(collision_layers_dir: Path, object_name: str) -> list[Path]:
+
+# returns the list of the paths of all the collision layers of an object
+def load_collision_layers_path(
+    collision_layers_dir: Path, object_name: str
+) -> list[Path]:
     collision_layers_path = list(collision_layers_dir.iterdir())
 
     valid_collision_layers_path = []
@@ -70,20 +76,25 @@ def load_collision_layers_path(collision_layers_dir: Path, object_name: str) -> 
         layer_path = Path(collision_layers_dir / layer_name)
         if layer_path in collision_layers_path:
             valid_collision_layers_path.append(layer_path)
-            layer_count +=1
+            layer_count += 1
         else:
             all_found = True
     return valid_collision_layers_path
 
 
-def get_collision_rects(collision_layers_dir : Path, object_name: str) -> list[tuple[int, int, int, int]]: # TODO: can we move this to utils ?
+def get_collision_rects(
+    collision_layers_dir: Path, object_name: str
+) -> list[tuple[int, int, int, int]]:  # TODO: can we move this to utils ?
     collision_rects = []
-    collision_layers_path = load_collision_layers_path(collision_layers_dir, object_name)
+    collision_layers_path = load_collision_layers_path(
+        collision_layers_dir, object_name
+    )
     for path in collision_layers_path:
         collision_layer = pygame.image.load(path).convert_alpha()
         rect = get_bounding_box(collision_layer)
         collision_rects.append(rect)
     return collision_rects
+
 
 # creates a cropped version of an image and return its dimentions
 def create_cropped_object(raw_image_path, save_path):
@@ -129,134 +140,334 @@ def get_bounding_box(surface: pygame.Surface) -> tuple[int, int, int, int] | Non
         return None
 
     x, y, w, h = min_x, min_y, max_x - min_x + 1, max_y - min_y + 1
-    #print(f"x={x}, y={y}, w={w}, h={h}") #debug
+    # print(f"x={x}, y={y}, w={w}, h={h}") #debug
     return (x, y, w, h)
 
 
-def create_sub_surface(
-     x, y, w, h, surface):
+def create_sub_surface(x, y, w, h, surface):
     return surface.subsurface(pygame.Rect(x, y, w, h)).copy()
 
 
-#---------------------CREATE OBJECT-------------------------------------
-def create_object(obj_name, game_context, img_path, rect, collision_rects,
-                  current_collision_id, default_collision, default_wall):
+# ---------------------CREATE OBJECT-------------------------------------
+def create_object(
+    obj_name,
+    game_context,
+    img_path,
+    rect,
+    collision_rects,
+    current_collision_id,
+    default_collision,
+    default_wall,
+):
     # local import to avoid circular import
+    from object import Game_object
+    from objects.book import Book
+    from objects.borne import Borne
+    from objects.closet import Closet
+    from objects.Connect4_Beta import Connect
+    from objects.digicode import Digicode
+    from objects.drawer import Drawer
+    from objects.grid.grid import Grid
+    from objects.grid.key import Key
+    from objects.grid.magnet import Magnet
+    from objects.library import Library
     from objects.padlock import Padlock
     from objects.padlock_door import Padlock_door
-    from objects.digicode import Digicode
-    from objects.Connect4_Beta import Connect
-    from objects.grid.magnet import Magnet
-    from objects.grid.key import Key
-    from objects.grid.grid import Grid
-    from objects.closet import Closet
-    from objects.borne import Borne
     from objects.plank import Plank
-    from objects.book import Book
-    from objects.library import Library
     from objects.screwdriver import Screwdriver
     from objects.axe import Axe
-    from object import Game_object
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
 
     elif obj_name in ["vase", "vase2"]:
-        return Game_object(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True, True,
-                      default_collision, default_wall)
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            True,
+            True,
+            default_collision,
+            default_wall,
+        )
 
     elif obj_name == "frame":
-        return Game_object(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id,
-                           default_collision, default_wall)
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False
+        )
 
     elif obj_name == "table":
-        return Game_object(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id, False, True,
-                           default_collision, default_wall)
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+            True,
+            default_collision,
+            default_wall,
+        )
 
     elif obj_name == "connect4":
-        return Connect(game_context, obj_name,img_path, rect, 0)
+        return Connect(game_context, obj_name, img_path, rect, 0)
 
     elif obj_name == "magnet":
-        return Magnet(game_context, obj_name, img_path, rect, collision_rects,
-                      current_collision_id)
+        return Magnet(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif obj_name == "key":
-        return Key(game_context, obj_name, img_path, rect, collision_rects,
-                   current_collision_id)
+        return Key(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif obj_name == "clock":
-        return Game_object(game_context, obj_name, img_path, rect, collision_rects,
-                           current_collision_id, True, True,
-                            default_collision, default_wall)
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            True,
+            True,
+            default_collision,
+            default_wall,
+        )
 
     elif obj_name == "grid_wall":
-        return Grid(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True)
+        return Grid(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            True,
+        )
 
     elif obj_name == "grid":
-        return Grid(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, False)
+        return Grid(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+        )
 
     elif obj_name == "closed_closet":
-        return Closet(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True)
+        return Closet(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            True,
+        )
 
     elif obj_name == "opened_closet":
-        return Closet(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, False)
+        return Closet(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+        )
 
     elif "obj_in_closet" in obj_name:
-
         if "screwdriver" in obj_name:
-            return Screwdriver(game_context, obj_name, img_path, rect,
-                        collision_rects, current_collision_id,
-                        default_collision, default_wall)
-        temp = Game_object(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True, True,
-                      default_collision, default_wall)
-        temp.displayed = False
-        return temp
+            return Screwdriver(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                current_collision_id,
+                default_collision,
+                default_wall,
+            )
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            True,
+            False,
+            default_collision,
+            default_wall,
+        )
+
+    elif "drawer" in obj_name:
+        if obj_name == "drawer":
+            return Drawer(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                current_collision_id,
+                True,
+            )
+
+        if "obj_in_drawer" in obj_name:
+            return Game_object(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                current_collision_id,
+                True,
+                False,
+                default_collision,
+                default_wall,
+            )
+
+        return Drawer(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+        )
 
     elif obj_name == "borne":
-        return Borne(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id)
+        return Borne(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif obj_name == "padlock":
-        return Padlock(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id)
+        return Padlock(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif obj_name == "padlock_door":
-        return Padlock_door(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id)
+        return Padlock_door(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif "plank" in obj_name:
-        return Plank(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id)
+        return Plank(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif obj_name == "library":
-        return Library(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id)
+        return Library(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+        )
 
     elif obj_name == "book_closed":
-        return Book(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, True, False)
+        return Book(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            True,
+            False,
+        )
 
     elif obj_name == "book_opened":
-        return Book(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, False, False)
+        return Book(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+            False,
+        )
 
     elif "book_bait" in obj_name:
-        return Book(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, False, True)
+        return Book(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+            True,
+        )
     elif obj_name == "axe":
-        return Axe(game_context, obj_name, img_path, rect,
-                      collision_rects, current_collision_id, default_collision, default_wall)
-
+        return Axe(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            default_collision,
+            default_wall
+        )
     else:
-        return Game_object(game_context, obj_name, img_path, rect,
-                           collision_rects, current_collision_id, False, True,
-                            default_collision, default_wall)
-        #print("create_object error: invalid object name")
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+            True,
+            default_collision,
+            default_wall,
+        )
+        # print("create_object error: invalid object name")
