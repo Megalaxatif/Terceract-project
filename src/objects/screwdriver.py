@@ -8,6 +8,7 @@ class Screwdriver(Game_object):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index, default_collision = default_collision, default_wall = default_wall)
     
         self.displayed = False
+        self.interactible = True
         
     def handle_left_click(self, event):
 

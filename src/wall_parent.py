@@ -86,10 +86,7 @@ class Wall:
                 self.collision_layers_dir, object_name
             )
 
-            if object_name not in ["key", "magnet", "grid"]:
-                default_collision = bbox
-            else:
-                default_collision = None
+            default_collision = bbox
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()

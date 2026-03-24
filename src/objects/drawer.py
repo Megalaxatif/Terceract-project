@@ -43,8 +43,9 @@ class Drawer(Game_object):
                     obj.display_collision_rect_bool = self.displayed
             for obj2 in wall:
                 if "obj_in_drawer" in obj2.name:
-                    obj2.displayed = self.displayed
-                    obj2.display_collision_rect_bool = self.displayed
+                    if not ("magnet" in obj2.name and obj2.in_grid):
+                        obj2.displayed = self.displayed
+                        obj2.display_collision_rect_bool = self.displayed
         for i in range(inv.rows):
             for j in range(inv.cols):
                 if inv.slots[i][j]:

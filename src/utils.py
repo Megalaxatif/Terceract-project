@@ -33,31 +33,50 @@ def clear_json(json_path):
 
 # ----------------------CONVERSION--------------------------
 def convert_to_pygame_rect(rect) -> pygame.Rect | None:
-    if rect:
-        return pygame.Rect(rect)
-    else:
+    if rect is None:
         return None
+    if isinstance(rect, pygame.Rect):
+        return rect
+    if isinstance(rect, (list, tuple)) and len(rect) == 4:
+        return pygame.Rect(rect)
+    raise TypeError(f"convert_to_pygame_rect: unsupported value {rect} of type {type(rect)}")
 
 
 def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
-    pygame_rect_list = []
+    if rect_list is None:
+        return []
+
+    # if one rect and not a list
+    if isinstance(rect_list, (list, tuple)) and len(rect_list) == 4 and all(isinstance(x, (int, float)) for x in rect_list):
+        return [pygame.Rect(rect_list)]
+
+    result = []
     for rect in rect_list:
-        # print(rect_list)
-        if rect:
-            pygame_rect_list.append(pygame.Rect(rect))
-    return pygame_rect_list
+        converted = convert_to_pygame_rect(rect)
+        if converted is not None:
+            result.append(converted)
+    return result
 
 
-def convert_to_tuple_rect(rect) -> tuple[int, ...]:
-    return tuple(rect)
+def convert_to_tuple_rect(rect) -> tuple[int, ...] | None:
+    if rect is None:
+        return None
+    if isinstance(rect, pygame.Rect):
+        return (rect.x, rect.y, rect.w, rect.h)
+    if isinstance(rect, (list, tuple)) and len(rect) == 4:
+        return tuple(rect)
+    raise TypeError(f"convert_to_tuple_rect: unsupported value {rect} of type {type(rect)}")
 
 
 def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
-    tuple_rect_list = []
-    for rect in rect_list:
-        tuple_rect_list.append(tuple(rect))
-    return tuple_rect_list
+    if rect_list is None:
+        return []
 
+    # if one rect and not a list
+    if isinstance(rect_list, (list, tuple)) and len(rect_list) == 4 and all(isinstance(x, (int, float)) for x in rect_list):
+        return [tuple(rect_list)]
+
+    return [convert_to_tuple_rect(rect) for rect in rect_list]
 
 # ------------------------------------------------------------------
 
@@ -222,7 +241,7 @@ def create_object(
     elif obj_name == "connect4":
         return Connect(game_context, obj_name, img_path, rect, 0)
 
-    elif obj_name == "magnet":
+    elif "magnet" in obj_name:
         return Magnet(
             game_context,
             obj_name,
@@ -231,7 +250,6 @@ def create_object(
             collision_rects,
             current_collision_id,
         )
-
     elif obj_name == "key":
         return Key(
             game_context,

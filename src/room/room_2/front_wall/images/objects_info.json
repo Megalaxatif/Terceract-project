@@ -9,8 +9,13 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": ""
+        "default_collision": [
+            696,
+            128,
+            529,
+            952
+        ],
+        "default_wall_id": "23"
     },
     "vase": {
         "image": "assets/cropped_images/cropped_vase.png",
@@ -76,7 +81,12 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": ""
+        "default_collision": [
+            628,
+            439,
+            657,
+            213
+        ],
+        "default_wall_id": "23"
     }
 }

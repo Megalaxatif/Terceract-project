@@ -20,14 +20,19 @@ class Grid(Game_object):
 
     def handle_left_click(self, event):
         wall = self.game_context.current_wall.objects
+        inv = self.game_context.inventory
         for obj in wall:
             if isinstance(obj, Grid) and not obj.on_wall:
                 obj.displayed = not obj.displayed
                 for obj2 in wall:
-                    if obj2.name == "magnet":
-                        obj2.grid_displayed = self.displayed
-                        obj2.displayed = obj2.grid_displayed and not obj2.key_given
+                    if "magnet" in obj2.name and obj2.in_grid:
+                        obj2.displayed = not obj2.key_given and obj.displayed
                     if obj2.name == "key":
-                        obj2.grid_displayed = self.displayed
-                        obj2.displayed = obj2.grid_displayed and obj2.key_given
+                        obj2.displayed = obj2.key_given and obj.displayed
+        for i in range(inv.rows):
+            for j in range(inv.cols):
+                if inv.slots[i][j]:
+                    if "magnet" in inv.slots[i][j].name:
+                        inv.slots[i][j].displayed = self.displayed
+                        inv.slots[i][j].display_collision_rect_bool = self.displayed
         self.game_context.drop_current_object(event)

@@ -1,41 +1,9 @@
 {
     "data": [
         [
-            {
-                "name": "obj_in_closet_plush2",
-                "image": "assets/cropped_images/cropped_obj_in_closet_plush2.png",
-                "rect": [
-                    1174,
-                    1111,
-                    117,
-                    128
-                ],
-                "default_collision": [
-                    900,
-                    545,
-                    117,
-                    128
-                ],
-                "default_wall_id": "14"
-            },
             null,
-            {
-                "name": "axe",
-                "image": "assets/cropped_images/cropped_axe.png",
-                "rect": [
-                    413,
-                    991,
-                    312,
-                    469
-                ],
-                "default_collision": [
-                    239,
-                    343,
-                    312,
-                    469
-                ],
-                "default_wall_id": "21"
-            },
+            null,
+            null,
             null,
             null,
             null,

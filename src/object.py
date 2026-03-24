@@ -77,7 +77,6 @@ class Game_object(pygame.sprite.Sprite):
                 else:
                     self.replace()
 
-
             return return_code
 
 

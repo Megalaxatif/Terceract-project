@@ -9,7 +9,12 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": ""
+        "default_collision": [
+            16,
+            16,
+            268,
+            268
+        ],
+        "default_wall_id": "32"
     }
 }

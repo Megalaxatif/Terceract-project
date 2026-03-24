@@ -27,8 +27,13 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": ""
+        "default_collision": [
+            151,
+            273,
+            274,
+            595
+        ],
+        "default_wall_id": "13"
     },
     "plank2": {
         "image": "assets/cropped_images/cropped_plank2.png",
@@ -40,8 +45,13 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": ""
+        "default_collision": [
+            690,
+            309,
+            565,
+            292
+        ],
+        "default_wall_id": "13"
     },
     "plank1": {
         "image": "assets/cropped_images/cropped_plank1.png",
@@ -53,7 +63,12 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": null,
-        "default_wall_id": ""
+        "default_collision": [
+            677,
+            635,
+            567,
+            273
+        ],
+        "default_wall_id": "13"
     }
 }
