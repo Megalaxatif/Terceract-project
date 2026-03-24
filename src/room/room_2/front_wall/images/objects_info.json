@@ -1,0 +1,82 @@
+{
+    "padlock_door": {
+        "image": "assets/cropped_images/cropped_padlock_door.png",
+        "rect": [
+            696,
+            128,
+            529,
+            952
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": ""
+    },
+    "vase": {
+        "image": "assets/cropped_images/cropped_vase.png",
+        "rect": [
+            1453,
+            737,
+            172,
+            343
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1453,
+            737,
+            172,
+            343
+        ],
+        "default_wall_id": "23"
+    },
+    "sainte_victoire": {
+        "image": "assets/cropped_images/cropped_sainte_victoire.png",
+        "rect": [
+            124,
+            165,
+            413,
+            401
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            124,
+            165,
+            413,
+            401
+        ],
+        "default_wall_id": "23"
+    },
+    "freedom_frame": {
+        "image": "assets/cropped_images/cropped_freedom_frame.png",
+        "rect": [
+            1343,
+            209,
+            347,
+            332
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1343,
+            209,
+            347,
+            332
+        ],
+        "default_wall_id": "23"
+    },
+    "padlock": {
+        "image": "assets/cropped_images/cropped_padlock.png",
+        "rect": [
+            628,
+            439,
+            657,
+            213
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": ""
+    }
+}

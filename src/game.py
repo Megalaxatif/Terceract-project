@@ -130,7 +130,7 @@ class Game:
             self, 40, 615, 1, 10, 100, True
         )  # Create inventory (it's a line here)
         self.laboratory_game = Laboratory(self)
-        
+
         self.dialogues = Dialogue(self)
 
     def save_game(self):  # save all the game data
@@ -487,13 +487,14 @@ class Game:
         for event in events:
             if event.type == pygame.QUIT:
                 self.game_running = False
+                self.network_manager.server.close()
                 pygame.quit()
                 sys.exit()
-                
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.current_mini_game = "menu"
-                    
+
             if event.type == pygame.WINDOWSIZECHANGED:
                 self.recalculate_deltas()
 
@@ -510,7 +511,7 @@ class Game:
         self.handle_all_events()
 
         self.screen.fill((0, 0, 0))  # clear the screen
-        
+
         # render the current mini-game
         if self.current_mini_game == "game":
             self.current_wall.display()
@@ -522,11 +523,11 @@ class Game:
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display
-        
+
         elif self.current_mini_game == "laboratory":
             self.laboratory_game.update()
-            
-    
+
+
         self.mouse_enabled = True
 
         pygame.display.flip()

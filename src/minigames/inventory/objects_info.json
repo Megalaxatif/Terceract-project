@@ -1,0 +1,33 @@
+{
+    "data": [
+        [
+            {
+                "name": "obj_in_closet_plush2",
+                "image": "assets/cropped_images/cropped_obj_in_closet_plush2.png",
+                "rect": [
+                    1174,
+                    1111,
+                    117,
+                    128
+                ],
+                "default_collision": [
+                    900,
+                    545,
+                    117,
+                    128
+                ],
+                "default_wall_id": "14"
+            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        []
+    ]
+}

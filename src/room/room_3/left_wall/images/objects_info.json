@@ -1,0 +1,15 @@
+{
+    "connect4": {
+        "image": "assets/cropped_images/cropped_connect4.png",
+        "rect": [
+            16,
+            16,
+            268,
+            268
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": ""
+    }
+}

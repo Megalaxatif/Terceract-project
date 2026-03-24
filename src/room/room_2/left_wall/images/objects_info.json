@@ -1,0 +1,45 @@
+{
+    "librairy": {
+        "image": "assets/cropped_images/cropped_librairy.png",
+        "rect": [
+            121,
+            22,
+            1676,
+            1058
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            121,
+            22,
+            1676,
+            1058
+        ],
+        "default_wall_id": "22"
+    },
+    "book": {
+        "image": "assets/cropped_images/cropped_book.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collisions": [
+            [
+                497,
+                845,
+                21,
+                58
+            ]
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "22"
+    }
+}
