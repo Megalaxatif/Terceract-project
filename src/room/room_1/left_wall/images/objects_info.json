@@ -35,6 +35,24 @@
         ],
         "default_wall_id": "12"
     },
+    "vase": {
+        "image": "assets/cropped_images/cropped_vase.png",
+        "rect": [
+            1607,
+            343,
+            127,
+            276
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1607,
+            343,
+            127,
+            276
+        ],
+        "default_wall_id": "12"
+    },
     "little_frame": {
         "image": "assets/cropped_images/cropped_little_frame.png",
         "rect": [
@@ -50,24 +68,6 @@
             432,
             164,
             183
-        ],
-        "default_wall_id": "12"
-    },
-    "vase": {
-        "image": "assets/cropped_images/cropped_vase.png",
-        "rect": [
-            1607,
-            343,
-            127,
-            276
-        ],
-        "collisions": [],
-        "collision_id": 0,
-        "default_collision": [
-            1607,
-            343,
-            127,
-            276
         ],
         "default_wall_id": "12"
     }

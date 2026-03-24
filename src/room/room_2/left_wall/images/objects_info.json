@@ -1,6 +1,6 @@
 {
-    "librairy": {
-        "image": "assets/cropped_images/cropped_librairy.png",
+    "library": {
+        "image": "assets/cropped_images/cropped_library.png",
         "rect": [
             121,
             22,
@@ -9,37 +9,46 @@
         ],
         "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            121,
-            22,
-            1676,
-            1058
-        ],
-        "default_wall_id": "22"
+        "default_collision": null,
+        "default_wall_id": ""
     },
-    "book": {
-        "image": "assets/cropped_images/cropped_book.png",
+    "book_closed": {
+        "image": "assets/cropped_images/cropped_book_closed.png",
+        "rect": [
+            497,
+            845,
+            20,
+            57
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": ""
+    },
+    "book_opened": {
+        "image": "assets/cropped_images/cropped_book_opened.png",
         "rect": [
             0,
             0,
             1920,
             1080
         ],
-        "collisions": [
-            [
-                497,
-                845,
-                21,
-                58
-            ]
-        ],
+        "collisions": [],
         "collision_id": -1,
-        "default_collision": [
-            0,
-            0,
-            1920,
-            1080
+        "default_collision": null,
+        "default_wall_id": ""
+    },
+    "book_bait1": {
+        "image": "assets/cropped_images/cropped_book_bait1.png",
+        "rect": [
+            192,
+            28,
+            1536,
+            1024
         ],
-        "default_wall_id": "22"
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": ""
     }
 }

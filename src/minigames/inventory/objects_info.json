@@ -19,7 +19,23 @@
                 "default_wall_id": "14"
             },
             null,
-            null,
+            {
+                "name": "axe",
+                "image": "assets/cropped_images/cropped_axe.png",
+                "rect": [
+                    413,
+                    991,
+                    312,
+                    469
+                ],
+                "default_collision": [
+                    239,
+                    343,
+                    312,
+                    469
+                ],
+                "default_wall_id": "21"
+            },
             null,
             null,
             null,

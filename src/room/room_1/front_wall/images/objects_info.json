@@ -17,6 +17,19 @@
         ],
         "default_wall_id": "13"
     },
+    "borne": {
+        "image": "assets/cropped_images/cropped_borne.png",
+        "rect": [
+            151,
+            273,
+            274,
+            595
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": null,
+        "default_wall_id": ""
+    },
     "plank2": {
         "image": "assets/cropped_images/cropped_plank2.png",
         "rect": [

@@ -155,6 +155,7 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
     from objects.book import Book
     from objects.library import Library
     from objects.screwdriver import Screwdriver
+    from objects.axe import Axe
     from object import Game_object
 
     if obj_name == "calculator":
@@ -218,11 +219,11 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
                       default_collision, default_wall)
         temp.displayed = False
         return temp
-    
+
     elif obj_name == "borne":
         return Borne(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id)
-        
+
     elif obj_name == "padlock":
         return Padlock(game_context, obj_name, img_path, rect,
                            collision_rects, current_collision_id)
@@ -230,11 +231,11 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
     elif obj_name == "padlock_door":
         return Padlock_door(game_context, obj_name, img_path, rect,
                            collision_rects, current_collision_id)
-        
+
     elif "plank" in obj_name:
         return Plank(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id)
-    
+
     elif obj_name == "library":
         return Library(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id)
@@ -250,6 +251,9 @@ def create_object(obj_name, game_context, img_path, rect, collision_rects,
     elif "book_bait" in obj_name:
         return Book(game_context, obj_name, img_path, rect,
                       collision_rects, current_collision_id, False, True)
+    elif obj_name == "axe":
+        return Axe(game_context, obj_name, img_path, rect,
+                      collision_rects, current_collision_id, default_collision, default_wall)
 
     else:
         return Game_object(game_context, obj_name, img_path, rect,

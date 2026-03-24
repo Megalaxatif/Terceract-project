@@ -164,6 +164,42 @@
         ],
         "default_wall_id": "14"
     },
+    "obj_in_closet_plush2": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_plush2.png",
+        "rect": [
+            900,
+            545,
+            117,
+            128
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            900,
+            545,
+            117,
+            128
+        ],
+        "default_wall_id": "14"
+    },
+    "obj_in_closet_plush": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_plush.png",
+        "rect": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "default_wall_id": "14"
+    },
     "obj_in_closet_lightbulb": {
         "image": "assets/cropped_images/cropped_obj_in_closet_lightbulb.png",
         "rect": [
@@ -212,6 +248,24 @@
         "collision_id": -1,
         "default_collision": [
             829,
+            377,
+            168,
+            152
+        ],
+        "default_wall_id": "14"
+    },
+    "obj_in_closet_clothes2": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_clothes2.png",
+        "rect": [
+            1058,
+            377,
+            168,
+            152
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1058,
             377,
             168,
             152
@@ -377,41 +431,5 @@
         "collision_id": -1,
         "default_collision": null,
         "default_wall_id": ""
-    },
-    "obj_in_closet_plush": {
-        "image": "assets/cropped_images/cropped_obj_in_closet_plush.png",
-        "rect": [
-            1049,
-            231,
-            111,
-            124
-        ],
-        "collisions": [],
-        "collision_id": 0,
-        "default_collision": [
-            1049,
-            231,
-            111,
-            124
-        ],
-        "default_wall_id": "14"
-    },
-    "obj_in_closet_clothes2": {
-        "image": "assets/cropped_images/cropped_obj_in_closet_clothes2.png",
-        "rect": [
-            1058,
-            377,
-            168,
-            152
-        ],
-        "collisions": [],
-        "collision_id": 0,
-        "default_collision": [
-            1058,
-            377,
-            168,
-            152
-        ],
-        "default_wall_id": "14"
     }
 }

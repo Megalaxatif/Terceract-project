@@ -17,6 +17,42 @@
         ],
         "default_wall_id": "21"
     },
+    "box": {
+        "image": "assets/cropped_images/cropped_box.png",
+        "rect": [
+            6,
+            219,
+            865,
+            684
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            6,
+            219,
+            865,
+            684
+        ],
+        "default_wall_id": "21"
+    },
+    "broken_box": {
+        "image": "assets/cropped_images/cropped_broken_box.png",
+        "rect": [
+            5,
+            220,
+            824,
+            683
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            5,
+            220,
+            824,
+            683
+        ],
+        "default_wall_id": "21"
+    },
     "green_vase": {
         "image": "assets/cropped_images/cropped_green_vase.png",
         "rect": [
@@ -32,24 +68,6 @@
             749,
             159,
             331
-        ],
-        "default_wall_id": "21"
-    },
-    "axe_box": {
-        "image": "assets/cropped_images/cropped_axe_box.png",
-        "rect": [
-            146,
-            321,
-            348,
-            383
-        ],
-        "collisions": [],
-        "collision_id": -1,
-        "default_collision": [
-            146,
-            321,
-            348,
-            383
         ],
         "default_wall_id": "21"
     }
