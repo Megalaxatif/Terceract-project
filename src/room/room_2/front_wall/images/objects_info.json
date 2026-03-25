@@ -15,7 +15,7 @@
             529,
             952
         ],
-        "default_wall_id": "23"
+        "default_wall_id": ""
     },
     "vase": {
         "image": "assets/cropped_images/cropped_vase.png",
@@ -87,6 +87,6 @@
             657,
             213
         ],
-        "default_wall_id": "23"
+        "default_wall_id": ""
     }
 }

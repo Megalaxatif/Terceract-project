@@ -139,34 +139,18 @@ class Wall:
 
     # -------------------------------SAVE---------------------------------
     def save_objects_data(self):
+        src_json = load_json_file(self.json_path)
         new_obj_data = {}
         for object in self.objects:
             print(f"saving {object.name} in json")
             formated_rect = convert_to_tuple_rect(object.raw_rect)
-
-            if object.default_collision:
-                formated_collision_rects = convert_to_tuple_rect_list(
-                    [
-                        row
-                        for row in object.raw_collision_rects
-                        if row != object.default_collision
-                    ]  # Erase object.default_collision
-                )
-                formated_default_collision = convert_to_tuple_rect(
-                    object.default_collision
-                )
-            else:
-                formated_collision_rects = convert_to_tuple_rect_list(
-                    object.raw_collision_rects
-                )
-                formated_default_collision = None
-
+            
             new_obj_data[object.name] = {}
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = formated_rect
-            new_obj_data[object.name]["collisions"] = formated_collision_rects
+            new_obj_data[object.name]["collisions"] = src_json[object.name]["collisions"]
             new_obj_data[object.name]["collision_id"] = object.collision_rect_id
-            new_obj_data[object.name]["default_collision"] = formated_default_collision
+            new_obj_data[object.name]["default_collision"] = src_json[object.name]["default_collision"]
             new_obj_data[object.name]["default_wall_id"] = object.default_wall
         save_data_in_json(new_obj_data, self.json_path)
 
