@@ -32,6 +32,12 @@ class Network_manager:
             self.clock.tick(self.FPS)
 
 
+    def quit(self):
+        self.running = False
+        self.client.close()
+        self.server.close()
+
+
     def setup_server(self):
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.setblocking(False) # TODO: I don't remember why I put this here, do we realy need the server socket to be non-blocking ?
@@ -70,9 +76,9 @@ class Network_manager:
                         case "inventory":
                             location = self.game_context.inventory
                         case "magnet":
-                            location = self.get_reference("magnet")
+                            location = self.game_context.get_reference("magnet")
                         case "key":
-                            location = self.get_reference("key")
+                            location = self.game_context.get_reference("key")
 
                         case _: # TODO
                             print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")
@@ -202,15 +208,6 @@ class Network_manager:
         temp = self.receive_buffer.split(b"\n")
         package_list, self.receive_buffer = temp[:-1], temp[-1]
         return package_list
-
-
-    def get_reference(self, name):
-        for room in self.game_context.room_list:
-            for wall in room:
-                for obj in wall.objects:
-                    if obj.name == name:
-                        return obj
-        return None
 
 
     def handle_disconnection(self):

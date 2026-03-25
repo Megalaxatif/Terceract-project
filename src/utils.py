@@ -467,6 +467,19 @@ def create_object(
             default_collision,
             default_wall,
         )
+    elif obj_name == "hole":
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+            False,
+            default_collision,
+            default_wall,
+        )
     else:
         return Game_object(
             game_context,

@@ -33,7 +33,7 @@
             274,
             595
         ],
-        "default_wall_id": ""
+        "default_wall_id": "13"
     },
     "plank2": {
         "image": "assets/cropped_images/cropped_plank2.png",
@@ -51,7 +51,7 @@
             565,
             292
         ],
-        "default_wall_id": ""
+        "default_wall_id": "13"
     },
     "plank1": {
         "image": "assets/cropped_images/cropped_plank1.png",
@@ -69,6 +69,6 @@
             567,
             273
         ],
-        "default_wall_id": ""
+        "default_wall_id": "13"
     }
 }

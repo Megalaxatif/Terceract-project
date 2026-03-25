@@ -39,12 +39,10 @@ class Game_object(pygame.sprite.Sprite):
         self.raw_default_collision = None
         self.default_wall = default_wall
         if self.default_collision:
-            self.collision_rects.append(pygame.Rect(self.default_collision))
+            self.collision_rects.insert(0,pygame.Rect(self.default_collision))
             self.raw_default_collision = self.default_collision.copy()
         self.raw_collision_rects = self.collision_rects.copy()
-        self.collision_rect_id = (
-            collision_index  # which collision rect the object is in
-        )
+        self.collision_rect_id = collision_index  # which collision rect the object is in
 
         self.rect = rect
         self.raw_rect = self.rect
@@ -55,7 +53,8 @@ class Game_object(pygame.sprite.Sprite):
         self.displayed = displayed
         self.movable = movable
         self.interactible = False
-        self.display_collision_rect_bool = not ("obj_in_closet" in self.name)
+        #TODO: this is not clean to put something exclusively related to closet in the parent class
+        self.display_collision_rect_bool = not ("obj_in_closet" in self.name) # TODO why this name ?
         self.last_inventory_pos = -1, -1
 
         self.in_grid = False
@@ -86,6 +85,7 @@ class Game_object(pygame.sprite.Sprite):
                 self.replace()
 
         return return_code
+
 
     def resize_image(self):
         delta = self.game_context.current_wall.delta
@@ -142,12 +142,21 @@ class Game_object(pygame.sprite.Sprite):
                 )
                 self.game_context.screen.blit(temp_surface, rect)
 
-    def draw(self):  # draw every entities and the non entities
+
+    def draw(self):
         self.game_context.screen.blit(self.image, self.rect)
 
-    def update(self, event):
+
+    def initialize(self):
         pass
+
 
     def handle_left_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
+
+
+    def update(self, event):
+        pass
+
+

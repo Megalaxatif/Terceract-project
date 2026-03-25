@@ -15,7 +15,7 @@
             271,
             271
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "drawer": {
         "image": "assets/cropped_images/cropped_drawer.png",
@@ -33,7 +33,7 @@
             761,
             551
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "closed_closet": {
         "image": "assets/cropped_images/cropped_closed_closet.png",
@@ -51,7 +51,7 @@
             671,
             996
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "big_frame": {
         "image": "assets/cropped_images/cropped_big_frame.png",
@@ -105,7 +105,7 @@
             1920,
             1080
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "opened_closet": {
         "image": "assets/cropped_images/cropped_opened_closet.png",
@@ -123,7 +123,7 @@
             1920,
             1080
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "grid": {
         "image": "assets/cropped_images/cropped_grid.png",
@@ -141,7 +141,7 @@
             1920,
             1080
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "drawer_up_view_withoutFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withoutFB.png",
@@ -159,7 +159,7 @@
             1497,
             960
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "obj_in_drawer_magnet": {
         "image": "assets/cropped_images/cropped_obj_in_drawer_magnet.png",
@@ -262,7 +262,7 @@
             62,
             62
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "obj_in_closet_vhs": {
         "image": "assets/cropped_images/cropped_obj_in_closet_vhs.png",
@@ -496,7 +496,7 @@
             93,
             76
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "drawer_up_view_withFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
@@ -514,7 +514,7 @@
             1497,
             960
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     },
     "obj_in_drawer_glue": {
         "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
@@ -557,6 +557,6 @@
             59,
             133
         ],
-        "default_wall_id": ""
+        "default_wall_id": "14"
     }
 }

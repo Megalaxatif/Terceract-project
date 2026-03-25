@@ -144,7 +144,7 @@ class Wall:
         for object in self.objects:
             print(f"saving {object.name} in json")
             formated_rect = convert_to_tuple_rect(object.raw_rect)
-            
+
             new_obj_data[object.name] = {}
             new_obj_data[object.name]["image"] = object.image_path.as_posix()
             new_obj_data[object.name]["rect"] = formated_rect

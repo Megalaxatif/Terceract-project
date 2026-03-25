@@ -133,6 +133,23 @@ class Game:
 
         self.dialogues = Dialogue(self)
 
+        self.initialize_all_objects() # NOTE: this line should always be at the end of __init__
+
+
+    def quit(self):
+        self.game_running = False
+        self.network_manager.quit()
+        pygame.quit()
+        sys.exit()
+
+
+    def initialize_all_objects(self): # this function finishes the initialization of the objects when all the variable they would need have been created (useful for the axe for examble)
+        for room in self.room_list:
+            for wall in room:
+                for obj in wall.objects:
+                    obj.initialize()
+
+
     def save_game(self):  # save all the game data
         if self.network_manager.is_host:
             print("save game")
@@ -158,7 +175,7 @@ class Game:
 
         else:
             print("invalid answer")
-            sys.exit(1)
+            self.quit()
 
         incoming_data_thread = threading.Thread(
             target=self.network_manager.network_manager, daemon=True
@@ -174,7 +191,7 @@ class Game:
             self.network_manager.client.connect((ip, port))
         except Exception as e:
             print("launch_duo: Error 1", e)
-            sys.exit(1)
+            self.quit()
         else:
             try:
                 # TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
@@ -186,14 +203,14 @@ class Game:
 
             except Exception as e:
                 print("launch_duo: Error 2", e)
-                sys.exit(1)
+                self.quit()
             else:
                 try:
                     self.game_data = json.loads(data)
 
                 except JSONDecodeError as e:
                     print("launch_duo Error 3: ", e)
-                    sys.exit(1)
+                    self.quit()
                 else:
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
@@ -371,31 +388,33 @@ class Game:
             )  # TODO: change to return the collision rect id
 
     # function useful for network
-    def drop_object(
-        self, obj_name, room_id, wall_id, collision_rect_id
-    ):  # move an object on a given wall in a given room to a given collision_rect
-        dest_wall = self.room_list[room_id][
-            wall_id
-        ]  # on which wall do we want to put it
+    def drop_object(self, obj_name, room_id, wall_id, collision_rect_id):  # move an object on a given wall in a given room to a given collision_rect
+        dest_wall = self.room_list[room_id][wall_id]  # on which wall do we want to put it
 
         object = None
         for obj in dest_wall.objects:
             if obj.name == obj_name:
                 object = obj
+
         if object is None:
             print(
                 f"drop_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}"
             )
             return 1
 
-        if (
-            collision_rect_id == -1
-        ):  # we tried to move the object at a wrong position when it was at its initial position
+        if (collision_rect_id == -1):  # we tried to move the object at a wrong position when it was at its initial position
             object.raw_rect.center = object.valid_rect.center
         else:
-            object.drop_in_collision_rect(
-                collision_rect_id
-            )  # set the new collision rect id of the object and put it inside
+            object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
+
+
+    def get_reference(self, name): # returns the reference to an object in the game
+        for room in self.room_list:
+            for wall in room:
+                for obj in wall.objects:
+                    if obj.name == name:
+                        return obj
+        return None
 
     def display_room_counter(self):  # for debug purposes
         text_surface = self.font.render(
@@ -486,10 +505,7 @@ class Game:
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                self.game_running = False
-                self.network_manager.server.close()
-                pygame.quit()
-                sys.exit()
+                self.quit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
