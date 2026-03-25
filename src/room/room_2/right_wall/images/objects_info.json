@@ -53,6 +53,42 @@
         ],
         "default_wall_id": "24"
     },
+    "paper": {
+        "image": "assets/cropped_images/cropped_paper.png",
+        "rect": [
+            510,
+            622,
+            99,
+            109
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            510,
+            622,
+            99,
+            109
+        ],
+        "default_wall_id": "24"
+    },
+    "fullscreen_paper": {
+        "image": "assets/cropped_images/cropped_fullscreen_paper.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "24"
+    },
     "clock": {
         "image": "assets/cropped_images/cropped_clock.png",
         "rect": [

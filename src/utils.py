@@ -176,6 +176,7 @@ def create_object(
     from objects.padlock_door import Padlock_door
     from objects.plank import Plank
     from objects.screwdriver import Screwdriver
+    from objects.paper import Paper
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
@@ -477,6 +478,17 @@ def create_object(
             current_collision_id,
             False,
             False,
+            default_collision,
+            default_wall,
+        )
+    elif obj_name == "paper":
+        return Paper(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
             default_collision,
             default_wall,
         )

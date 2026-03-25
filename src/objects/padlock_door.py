@@ -10,6 +10,7 @@ class Padlock_door(Game_object):
 
     def handle_left_click(self, event):
         wall = self.game_context.current_wall
+        # TODO: use get_reference
         if not self.padlock:
             for obj in wall.objects:
                 if obj.name == "padlock":

@@ -13,7 +13,7 @@ class Game_object(pygame.sprite.Sprite):
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
         collision_index: int = -1,
-        movable: bool = True,
+        movable: bool = False,
         displayed: bool = True,
         default_collision: pygame.Rect | None = None,
         default_wall: str = "",

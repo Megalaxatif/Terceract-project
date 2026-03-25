@@ -12,10 +12,10 @@ class Axe(Game_object):
             print(f"initialize of object named \"{self.name}\" error: no object with name \"hole\" found in the game, exiting")
             self.game_context.quit()
 
-        #self.paper_reference = self.game_context.get_reference("paper")# useful to change the visibility
-        #if self.paper_reference is None:
-         #   print(f"initialize of object named \"{self.name}\" error: no object with name \"paper\" found in the game, exiting")
-          #  self.game_context.quit()
+        self.paper_reference = self.game_context.get_reference("paper")# useful to change the visibility
+        if self.paper_reference is None:
+            print(f"initialize of object named \"{self.name}\" error: no object with name \"paper\" found in the game, exiting")
+            self.game_context.quit()
 
         self.clock_reference = self.game_context.get_reference("clock")# useful to check if the clock was moved
         if self.clock_reference is None:
@@ -25,10 +25,9 @@ class Axe(Game_object):
 
     def handle_left_click(self, event):
         # check if we clicked on the hole and if the clock has been moved from it's original position
-        point_rect = pygame.Rect(event.pos[0], event.pos[1], 1, 1)
-        if point_rect.colliderect(self.hole_reference.collision_rects[0]) and self.clock_reference.collision_rect_id > 0:
+        if self.hole_reference.collision_rects[0].collidepoint(event.pos) and self.clock_reference.collision_rect_id > 0:
             self.hole_reference.displayed = True
-            #self.paper_reference.displayed = True
+            self.paper_reference.displayed = True
 
         elif self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
