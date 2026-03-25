@@ -342,7 +342,7 @@ class Game:
 
     def drop_current_object(self, event):
         if event and self.current_object:
-            #self.current_object.handle_left_click(event)
+            # self.current_object.handle_left_click(event)
             self.current_object.drop_at_pos(
                 event.pos[0], event.pos[1]
             )  # TODO: change to return the collision rect id
@@ -526,7 +526,6 @@ class Game:
 
         elif self.current_mini_game == "laboratory":
             self.laboratory_game.update()
-
 
         self.mouse_enabled = True
 

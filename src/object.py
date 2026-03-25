@@ -1,21 +1,23 @@
-import pygame
 from pathlib import Path
-from utils import get_collision_rects, convert_to_pygame_rect_list
+
+import pygame
+from utils import convert_to_pygame_rect_list, get_collision_rects
+
 
 class Game_object(pygame.sprite.Sprite):
-
-    def __init__(self,
-                 game_context,
-                 object_name : str,
-                 image_path : str,
-                 rect : pygame.Rect,
-                 collisions : list[pygame.Rect],
-                 collision_index : int = -1,
-                 movable : bool = True,
-                 displayed : bool = True,
-                 default_collision : pygame.Rect | None = None,
-                 default_wall : str = ""
-                 ):
+    def __init__(
+        self,
+        game_context,
+        object_name: str,
+        image_path: str,
+        rect: pygame.Rect,
+        collisions: list[pygame.Rect],
+        collision_index: int = -1,
+        movable: bool = True,
+        displayed: bool = True,
+        default_collision: pygame.Rect | None = None,
+        default_wall: str = "",
+    ):
         super().__init__()
 
         self.name = object_name
@@ -23,7 +25,9 @@ class Game_object(pygame.sprite.Sprite):
         self.screen = self.game_context.screen
 
         self.image_path = Path(image_path)
-        self.image = pygame.image.load(Path(self.game_context.root_dir / self.image_path)).convert_alpha()
+        self.image = pygame.image.load(
+            Path(self.game_context.root_dir / self.image_path)
+        ).convert_alpha()
         self.raw_image = self.image
 
         parts = self.image_path.parts
@@ -32,16 +36,19 @@ class Game_object(pygame.sprite.Sprite):
 
         self.collision_rects = collisions
         self.default_collision = default_collision
+        self.raw_default_collision = None
         self.default_wall = default_wall
         if self.default_collision:
             self.collision_rects.append(pygame.Rect(self.default_collision))
+            self.raw_default_collision = self.default_collision.copy()
         self.raw_collision_rects = self.collision_rects.copy()
-        self.collision_rect_id = collision_index # which collision rect the object is in
-
+        self.collision_rect_id = (
+            collision_index  # which collision rect the object is in
+        )
 
         self.rect = rect
         self.raw_rect = self.rect
-        if self.collision_rect_id != -1 :
+        if self.collision_rect_id != -1:
             self.valid_rect = self.collision_rects[self.collision_rect_id]
         else:
             self.valid_rect = self.rect.copy()
@@ -51,34 +58,34 @@ class Game_object(pygame.sprite.Sprite):
         self.display_collision_rect_bool = not ("obj_in_closet" in self.name)
         self.last_inventory_pos = -1, -1
 
+        self.in_grid = False
 
     def replace(self):
         self.raw_rect.center = self.valid_rect.center
-
 
     def drop_in_collision_rect(self, collision_index):
         self.raw_rect.center = self.raw_collision_rects[collision_index].center
         self.valid_rect = self.raw_collision_rects[collision_index]
         self.collision_rect_id = collision_index
-        #print(f"Dropped {self.name} in collision rect {collision_index}")
+        # print(f"Dropped {self.name} in collision rect {collision_index}")
 
+    def drop_at_pos(
+        self, x, y
+    ) -> bool:  # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
+        # print(f"Trying to drop {self.name} at ({x}, {y})")
+        return_code = False
+        point_rect = pygame.Rect(int(x), int(y), 1, 1)
+        collision_index = point_rect.collidelist(self.collision_rects)
+        if self.display_collision_rect_bool:
+            if collision_index != -1:
+                self.drop_in_collision_rect(collision_index)
+                return_code = True
+            elif self.game_context.inventory.current_object:
+                return False
+            else:
+                self.replace()
 
-    def drop_at_pos(self, x, y) -> bool: # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
-            #print(f"Trying to drop {self.name} at ({x}, {y})")
-            return_code = False
-            point_rect = pygame.Rect(int(x), int(y), 1, 1)
-            collision_index = point_rect.collidelist(self.collision_rects)
-            if self.display_collision_rect_bool:
-                if collision_index != -1:
-                    self.drop_in_collision_rect(collision_index)
-                    return_code = True
-                elif self.game_context.inventory.current_object:
-                    return False
-                else:
-                    self.replace()
-
-            return return_code
-
+        return return_code
 
     def resize_image(self):
         delta = self.game_context.current_wall.delta
@@ -86,63 +93,60 @@ class Game_object(pygame.sprite.Sprite):
         new_y = int(delta * self.raw_rect.y)
         new_width = int(delta * self.raw_rect.w)
         new_height = int(delta * self.raw_rect.h)
-        if (new_width != self.rect.w) or (new_height != self.rect.h) or (new_x != self.rect.x) or (new_y != self.rect.y):
-            self.image = pygame.transform.scale(self.raw_image,
-                (new_width, new_height)
-            )
-            self.rect = pygame.Rect(new_x,
-                                    new_y,
-                                    new_width,
-                                    new_height)
-
+        if (
+            (new_width != self.rect.w)
+            or (new_height != self.rect.h)
+            or (new_x != self.rect.x)
+            or (new_y != self.rect.y)
+        ):
+            self.image = pygame.transform.scale(self.raw_image, (new_width, new_height))
+            self.rect = pygame.Rect(new_x, new_y, new_width, new_height)
 
     def resize_collision_rects(self):
         delta = self.game_context.current_wall.delta
         ll = len(self.collision_rects)
         for i in range(ll):
-            
             raw_collision_rect = self.raw_collision_rects[i]
             new_x = int(delta * raw_collision_rect.x)
             new_y = int(delta * raw_collision_rect.y)
             new_w = int(delta * raw_collision_rect.w)
             new_h = int(delta * raw_collision_rect.h)
-            
+
             collision_rect = self.collision_rects[i]
-            
-            if ((new_x != collision_rect.x) or
-                (new_y != collision_rect.y) or
-                (new_w != collision_rect.w) or
-                (new_h != collision_rect.h)):
 
-                self.collision_rects[i] = pygame.Rect(
-                    new_x, new_y, new_w, new_h
-                    )
-
+            if (
+                (new_x != collision_rect.x)
+                or (new_y != collision_rect.y)
+                or (new_w != collision_rect.w)
+                or (new_h != collision_rect.h)
+            ):
+                self.collision_rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
 
     def change_collision_rects(self, collision_layers_dir, wall_id_str):
         new_collision_rects = get_collision_rects(collision_layers_dir, self.name)
         if self.default_wall == wall_id_str:
-            new_collision_rects.append(self.default_collision)
+            if self.default_collision:
+                new_collision_rects.append(self.default_collision)
         converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
         self.collision_rects = converted_collision_rects
         self.raw_collision_rects = converted_collision_rects.copy()
 
-
     def display_collision_rect(self):
         if self.display_collision_rect_bool:
             for rect in self.collision_rects:
-                temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-                pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
+                temp_surface = pygame.Surface(
+                    (rect.width, rect.height), pygame.SRCALPHA
+                )
+                pygame.draw.rect(
+                    temp_surface, (255, 0, 0, 128), temp_surface.get_rect()
+                )
                 self.game_context.screen.blit(temp_surface, rect)
 
-
-    def draw(self): # draw every entities and the non entities
+    def draw(self):  # draw every entities and the non entities
         self.game_context.screen.blit(self.image, self.rect)
-
 
     def update(self, event):
         pass
-
 
     def handle_left_click(self, event):
         if self != self.game_context.inventory.current_object:

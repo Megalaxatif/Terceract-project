@@ -33,50 +33,31 @@ def clear_json(json_path):
 
 # ----------------------CONVERSION--------------------------
 def convert_to_pygame_rect(rect) -> pygame.Rect | None:
-    if rect is None:
-        return None
-    if isinstance(rect, pygame.Rect):
-        return rect
-    if isinstance(rect, (list, tuple)) and len(rect) == 4:
+    if rect:
         return pygame.Rect(rect)
-    raise TypeError(f"convert_to_pygame_rect: unsupported value {rect} of type {type(rect)}")
+    else:
+        return None
 
 
 def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
-    if rect_list is None:
-        return []
-
-    # if one rect and not a list
-    if isinstance(rect_list, (list, tuple)) and len(rect_list) == 4 and all(isinstance(x, (int, float)) for x in rect_list):
-        return [pygame.Rect(rect_list)]
-
-    result = []
+    pygame_rect_list = []
     for rect in rect_list:
-        converted = convert_to_pygame_rect(rect)
-        if converted is not None:
-            result.append(converted)
-    return result
+        # print(rect_list)
+        if rect:
+            pygame_rect_list.append(pygame.Rect(rect))
+    return pygame_rect_list
 
 
-def convert_to_tuple_rect(rect) -> tuple[int, ...] | None:
-    if rect is None:
-        return None
-    if isinstance(rect, pygame.Rect):
-        return (rect.x, rect.y, rect.w, rect.h)
-    if isinstance(rect, (list, tuple)) and len(rect) == 4:
-        return tuple(rect)
-    raise TypeError(f"convert_to_tuple_rect: unsupported value {rect} of type {type(rect)}")
+def convert_to_tuple_rect(rect) -> tuple[int, ...]:
+    return tuple(rect)
 
 
 def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
-    if rect_list is None:
-        return []
+    tuple_rect_list = []
+    for rect in rect_list:
+        tuple_rect_list.append(tuple(rect))
+    return tuple_rect_list
 
-    # if one rect and not a list
-    if isinstance(rect_list, (list, tuple)) and len(rect_list) == 4 and all(isinstance(x, (int, float)) for x in rect_list):
-        return [tuple(rect_list)]
-
-    return [convert_to_tuple_rect(rect) for rect in rect_list]
 
 # ------------------------------------------------------------------
 
@@ -180,6 +161,7 @@ def create_object(
 ):
     # local import to avoid circular import
     from object import Game_object
+    from objects.axe import Axe
     from objects.book import Book
     from objects.borne import Borne
     from objects.closet import Closet
@@ -194,7 +176,6 @@ def create_object(
     from objects.padlock_door import Padlock_door
     from objects.plank import Plank
     from objects.screwdriver import Screwdriver
-    from objects.axe import Axe
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
@@ -221,7 +202,7 @@ def create_object(
             rect,
             collision_rects,
             current_collision_id,
-            False
+            False,
         )
 
     elif obj_name == "table":
@@ -250,6 +231,7 @@ def create_object(
             collision_rects,
             current_collision_id,
         )
+
     elif obj_name == "key":
         return Key(
             game_context,
@@ -356,6 +338,16 @@ def create_object(
             )
 
         if "obj_in_drawer" in obj_name:
+            if "magnet" in obj_name:
+                return Magnet(
+                    game_context,
+                    obj_name,
+                    img_path,
+                    rect,
+                    collision_rects,
+                    current_collision_id,
+                )
+
             return Game_object(
                 game_context,
                 obj_name,
@@ -473,7 +465,7 @@ def create_object(
             collision_rects,
             current_collision_id,
             default_collision,
-            default_wall
+            default_wall,
         )
     else:
         return Game_object(
