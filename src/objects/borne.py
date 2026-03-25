@@ -14,6 +14,6 @@ class Borne(Game_object):
         pass
 
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         self.game_context.current_mini_game = "laboratory"
         

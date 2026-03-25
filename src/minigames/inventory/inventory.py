@@ -161,7 +161,7 @@ class Inventory:
             self.draw_current_object()
             # self.display_collision_rects()
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         if self.displayed:
             self.mouse_x, self.mouse_y = event.pos
 
@@ -189,7 +189,7 @@ class Inventory:
                 return True
 
             elif self.current_object is not None:
-                self.current_object.handle_left_click(event)
+                self.current_object.handle_click(event)
                 self.drop_current_object(event)
         elif self.current_object is not None:
             self.drop_current_object(event)
@@ -226,7 +226,7 @@ class Inventory:
             print("drop_current_object error: current_object is None")
             return -1
         if obj.interactible:
-            obj.handle_left_click(event)
+            obj.handle_click_selection(event)
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = event.pos[0], event.pos[1]
         if obj.drop_at_pos(mx, my):

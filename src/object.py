@@ -145,9 +145,13 @@ class Game_object(pygame.sprite.Sprite):
     def draw(self):  # draw every entities and the non entities
         self.game_context.screen.blit(self.image, self.rect)
 
+    def handle_click_selection(self, event): 
+        if self != self.game_context.inventory.current_object:
+            self.game_context.drop_current_object(event)
+    
     def update(self, event):
         pass
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)

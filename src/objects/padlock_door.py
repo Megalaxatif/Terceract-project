@@ -8,7 +8,7 @@ class Padlock_door(Game_object):
         self.interactible = True
         self.padlock = None
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         wall = self.game_context.current_wall
         if not self.padlock:
             for obj in wall.objects:

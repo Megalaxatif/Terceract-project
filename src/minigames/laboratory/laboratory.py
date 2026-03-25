@@ -447,7 +447,7 @@ class Laboratory:
         self.last_mouse_pos = base_mouse
 
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         mouse = pygame.mouse.get_pos()
         delta = self.game_context.delta
         base_mouse = (mouse[0] / delta, mouse[1] / delta)

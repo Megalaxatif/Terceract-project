@@ -16,7 +16,7 @@ class Book(Game_object):
     def update(self, event):
         pass
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         if "book_bait" in self.name:
             self.displayed = not self.displayed
             return

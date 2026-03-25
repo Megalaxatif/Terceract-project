@@ -9,7 +9,7 @@ class Library(Game_object):
         
         self.interactible = True
     
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         wall = self.game_context.current_wall.objects
         for obj in wall:
             if isinstance(obj, Book) and obj.bait:

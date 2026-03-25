@@ -102,7 +102,7 @@ class Magnet(Game_object):
                     self.initial_pos
                 )  # ca remet magnet à sa place de départ
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         pos = (
             event.pos[0],
             event.pos[1],
