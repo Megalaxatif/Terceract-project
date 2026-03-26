@@ -7,4 +7,3 @@ class Plank(Game_object):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)
 
         self.movable = False
-        self.interactable = True
