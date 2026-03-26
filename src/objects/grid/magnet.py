@@ -17,9 +17,8 @@ class Magnet(Game_object):
         collision_index: int = -1,
     ):
         super().__init__(
-            game_context, object_name, image_path, rect, collisions, collision_index
+            game_context, object_name, image_path, rect, collisions, collision_index, True, False
         )
-        self.displayed = False
         self.initial_pos = self.rect.x, self.rect.y
         self.grid_displayed = False
         # self.interactible = True
