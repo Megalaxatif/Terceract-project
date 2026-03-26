@@ -176,6 +176,7 @@ def create_object(
     from objects.screwdriver import Screwdriver
     from objects.paper import Paper
     from objects.fullscreen_paper import Fullscreen_paper
+    from objects.table import Table
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
@@ -203,20 +204,6 @@ def create_object(
             collision_rects,
             current_collision_id,
             False,
-        )
-
-    elif obj_name == "table":
-        return Game_object(
-            game_context,
-            obj_name,
-            img_path,
-            rect,
-            collision_rects,
-            current_collision_id,
-            False,
-            True,
-            default_collision,
-            default_wall,
         )
 
     elif obj_name == "connect4":
@@ -287,6 +274,7 @@ def create_object(
             collision_rects,
             current_collision_id,
             True,
+            True
         )
 
     elif obj_name == "opened_closet":
@@ -298,6 +286,7 @@ def create_object(
             collision_rects,
             current_collision_id,
             False,
+            False
         )
 
     elif "obj_in_closet" in obj_name:
@@ -362,6 +351,42 @@ def create_object(
             )
 
         return Drawer(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id,
+            False,
+        )
+
+    elif "table" in obj_name:
+        if obj_name == "table":
+            return Table(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                current_collision_id,
+                True,
+            )
+
+        if "obj_in_table" in obj_name:
+            return Game_object(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                current_collision_id,
+                True,
+                False,
+                default_collision,
+                default_wall,
+            )
+
+        return Table(
             game_context,
             obj_name,
             img_path,

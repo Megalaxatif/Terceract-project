@@ -12,6 +12,7 @@ class Closet(Game_object):
         collisions: list[pygame.Rect],
         collision_index: int,
         displayed,
+        lock
     ):
         super().__init__(
             game_context, object_name, image_path, rect, collisions, collision_index
@@ -20,28 +21,33 @@ class Closet(Game_object):
         self.interactible = True
         self.displayed = displayed
         self.open = not self.displayed
+        self.lock = lock
 
     def initialize(self):
         self.list_reference = self.game_context.get_reference_large("obj_in_closet") # useful to change the visibility
         if self.list_reference == []:
             print(f"initialize of object named \"{self.name}\" error: no object with \"obj_in_closet\" in its name found in the game, exiting")
             self.game_context.quit()
+        
+        self.opened_closet_reference = self.game_context.get_reference("opened_closet") # useful to change the visibility
+        if self.opened_closet_reference is None:
+            print(f"initialize of object named \"{self.name}\" error: no object with name \"opened_closet\" found in the game, exiting")
+            self.game_context.quit()
 
     def handle_click_selection(self, event):
-        wall = self.game_context.current_wall.objects
-        inv = self.game_context.inventory
-        
-        for obj in wall:
-            if isinstance(obj, Closet) and obj.open:
-                obj.displayed = not obj.displayed
-                for obj2 in self.list_reference:
-                    obj2.displayed = self.displayed
-                    obj2.display_collision_rect_bool = self.displayed
-        
-        for i in range(inv.rows):
-            for j in range(inv.cols):
-                if inv.slots[i][j]:
-                    if "obj_in_closet" in inv.slots[i][j].name:
-                        inv.slots[i][j].displayed = self.displayed
-                        inv.slots[i][j].display_collision_rect_bool = self.displayed
-        self.game_context.drop_current_object(event)
+        if not self.lock:
+            inv = self.game_context.inventory
+            
+            if self.opened_closet_reference.open:
+                    self.opened_closet_reference.displayed = not self.opened_closet_reference.displayed
+                    for obj in self.list_reference:
+                        obj.displayed = self.displayed
+                        obj.display_collision_rect_bool = self.displayed
+            
+            for i in range(inv.rows):
+                for j in range(inv.cols):
+                    if inv.slots[i][j]:
+                        if "obj_in_closet" in inv.slots[i][j].name:
+                            inv.slots[i][j].displayed = self.displayed
+                            inv.slots[i][j].display_collision_rect_bool = self.displayed
+            self.game_context.drop_current_object(event)

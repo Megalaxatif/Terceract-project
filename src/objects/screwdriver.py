@@ -27,7 +27,6 @@ class Screwdriver(Game_object):
         )
 
         self.displayed = False
-        self.initial_pos = self.rect.x, self.rect.y
 
     def initialize(self):
         self.removable_planks_reference = self.game_context.get_reference_large("removable_plank") # useful to change the visibility
@@ -43,6 +42,9 @@ class Screwdriver(Game_object):
             for obj in self.removable_planks_reference:
                 if obj.displayed and obj.rect.collidepoint(event.pos):
                     obj.displayed = False
+                    if not any([v.displayed for v in self.removable_planks_reference]):
+                        self.game_context.unlock_room(self.game_context.current_room_id)
                     return True
+                
 
         self.game_context.drop_current_object(event)

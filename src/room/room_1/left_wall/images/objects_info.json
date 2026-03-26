@@ -17,42 +17,6 @@
         ],
         "default_wall_id": "12"
     },
-    "big_frame": {
-        "image": "assets/cropped_images/cropped_big_frame.png",
-        "rect": [
-            265,
-            56,
-            347,
-            500
-        ],
-        "collisions": [],
-        "collision_id": -1,
-        "default_collision": [
-            265,
-            56,
-            347,
-            500
-        ],
-        "default_wall_id": "12"
-    },
-    "vase": {
-        "image": "assets/cropped_images/cropped_vase.png",
-        "rect": [
-            1607,
-            343,
-            127,
-            276
-        ],
-        "collisions": [],
-        "collision_id": -1,
-        "default_collision": [
-            1607,
-            343,
-            127,
-            276
-        ],
-        "default_wall_id": "12"
-    },
     "little_frame": {
         "image": "assets/cropped_images/cropped_little_frame.png",
         "rect": [
@@ -68,6 +32,114 @@
             432,
             164,
             183
+        ],
+        "default_wall_id": "12"
+    },
+    "big_frame2": {
+        "image": "assets/cropped_images/cropped_big_frame2.png",
+        "rect": [
+            980,
+            77,
+            275,
+            318
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            980,
+            77,
+            275,
+            318
+        ],
+        "default_wall_id": "12"
+    },
+    "big_frame1": {
+        "image": "assets/cropped_images/cropped_big_frame1.png",
+        "rect": [
+            265,
+            56,
+            347,
+            500
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            265,
+            56,
+            347,
+            500
+        ],
+        "default_wall_id": "12"
+    },
+    "gray_bg_table": {
+        "image": "assets/cropped_images/cropped_gray_bg_table.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "12"
+    },
+    "opened_table": {
+        "image": "assets/cropped_images/cropped_opened_table.png",
+        "rect": [
+            212,
+            58,
+            1497,
+            960
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            212,
+            58,
+            1497,
+            960
+        ],
+        "default_wall_id": "12"
+    },
+    "obj_in_table_plush": {
+        "image": "assets/cropped_images/cropped_obj_in_table_plush.png",
+        "rect": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "default_wall_id": "12"
+    },
+    "obj_in_table_lightbulb": {
+        "image": "assets/cropped_images/cropped_obj_in_table_lightbulb.png",
+        "rect": [
+            680,
+            611,
+            94,
+            56
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            680,
+            611,
+            94,
+            56
         ],
         "default_wall_id": "12"
     }

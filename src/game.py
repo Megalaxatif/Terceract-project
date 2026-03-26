@@ -113,7 +113,7 @@ class Game:
 
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
 
-        self.room_1_unlocked = True
+        self.room_1_unlocked = False
         self.room_2_unlocked = False
         self.room_3_unlocked = False
         self.room_4_unlocked = False
@@ -543,6 +543,7 @@ class Game:
             self.display_current_object_name()
             self.display_fps()
             self.dialogues.display()
+            self.dialogues.update()
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display

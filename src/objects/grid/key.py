@@ -10,4 +10,24 @@ class Key(Game_object):
         
         self.key_given = False
         self.displayed = False
-        self.grid_displayed = False
+        
+        
+    def initialize(self):
+        self.closed_closet_reference = self.game_context.get_reference("closed_closet")# useful to change the visibility
+        if self.closed_closet_reference is None:
+            print(f"initialize of object named \"{self.name}\" error: no object with name \"closed_closet\" found in the game, exiting")
+            self.game_context.quit()
+            
+    def handle_click_selection(self, event):
+        pass
+
+    def handle_click(self, event):
+        if self.closed_closet_reference.rect.collidepoint(event.pos):
+            self.displayed = False
+            self.gone = True
+            self.closed_closet_reference.lock = False
+            self.game_context.inventory.remove_current_object(event)
+            print("unlocked")
+            return True
+
+        self.game_context.drop_current_object(event)
