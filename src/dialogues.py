@@ -145,7 +145,8 @@ class Dialogue:
     def handle_event(self, event):
         if not self.visible:
             return
-
+        # TODO: I got this error at a random start : AttributeError: 'NoneType' object has no attribute 'collidepoint'
+        #                                                         -----------
         if event.type == pygame.MOUSEBUTTONDOWN and self.box_rect.collidepoint((pygame.mouse.get_pos())):
             if self.c >= len(self.liste_dialogues[self.current_dialogue]):
                 self.visible = False

@@ -8,7 +8,6 @@ class Book(Game_object):
                  collision_index : int, displayed, bait):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)
         self.movable = False
-        self.interactible = True
         self.displayed = displayed
         self.open = self.displayed
         self.bait = bait
@@ -16,7 +15,7 @@ class Book(Game_object):
     def update(self, event):
         pass
 
-    def handle_left_click(self, event):
+    def handle_click_selection(self, event):
         if "book_bait" in self.name:
             self.displayed = not self.displayed
             return

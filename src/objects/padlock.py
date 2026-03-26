@@ -11,18 +11,22 @@ class Padlock(Game_object):
     def try_code(self):
         if self.text == self.code:
             self.game_context.unlock_room(self.game_context.current_room_id)
-            #self.game_context.network_manager.send_package("variable", )
+            #self.game_context.network_manager.send_package("variable", ) # TODO: network
             print("code valid")
 
 
     def draw_text(self):
-        font = pygame.font.Font(None, 35) # TODO: make the size of the font dynamic
+        font = pygame.font.Font(None, 35)   # TODO: make the size of the font dynamic
         text_surface = font.render(
             self.text,
-            True,           # anti-aliasing
+            True,   # anti-aliasing
             (0,0,0)
         )
-        self.game_context.screen.blit(text_surface, (self.rect.x + self.rect.x / 8, self.rect.y + self.rect.h / 2))
+        self.game_context.screen.blit(text_surface, (self.rect.w/3 + self.rect.w/30, self.rect.h/3 + self.rect.h/6))
+
+
+    def handle_click_selection(self, event):
+        self.displayed = False
 
 
     def update(self, event):

@@ -26,7 +26,7 @@ class Drawer(Game_object):
     def update(self, event):
         pass
 
-    def handle_left_click(self, event):
+    def handle_click_selection(self, event):
         wall = self.game_context.current_wall.objects
         inv = self.game_context.inventory
         if "trigger" in self.name:

@@ -74,18 +74,18 @@
     "padlock": {
         "image": "assets/cropped_images/cropped_padlock.png",
         "rect": [
-            628,
-            439,
-            657,
-            213
+            0,
+            0,
+            1920,
+            1080
         ],
         "collisions": [],
         "collision_id": -1,
         "default_collision": [
-            628,
-            439,
-            657,
-            213
+            0,
+            0,
+            1920,
+            1080
         ],
         "default_wall_id": "23"
     }

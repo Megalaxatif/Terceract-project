@@ -29,10 +29,12 @@ class Screwdriver(Game_object):
         )
 
         self.displayed = False
-        self.interactible = True
         self.initial_pos = self.rect.x, self.rect.y
 
-    def handle_left_click(self, event):
+    def handle_click_selection(self, event):
+        pass
+
+    def handle_click(self, event):
 
         wall = self.game_context.current_wall
         if wall.wall_id_str == "13":
@@ -43,4 +45,4 @@ class Screwdriver(Game_object):
                     if isinstance(obj, Plank):
                         obj.displayed = not obj.displayed
 
-        # self.game_context.drop_current_object(event)
+        self.game_context.drop_current_object(event)

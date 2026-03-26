@@ -7,13 +7,7 @@ class Borne(Game_object):
                  collision_index : int):
         super().__init__(game_context, object_name, image_path, rect, collisions, collision_index)
         self.movable = False
-        self.interactible = True
 
 
-    def update(self, event):
-        pass
-
-
-    def handle_left_click(self, event):
+    def handle_click_selection(self, event):
         self.game_context.current_mini_game = "laboratory"
-        

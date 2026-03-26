@@ -160,8 +160,8 @@ class Game:
             self.inventory.save_images()
 
     def start(self):
-        # gamemode = "s"
-        gamemode = input("wanna play solo (s) or duo (d) ? ")
+        gamemode = "s"
+        #gamemode = input("wanna play solo (s) or duo (d) ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -353,13 +353,12 @@ class Game:
                         self.network_manager.send_package(
                             "variable", "game", "other_player_object_name", obj.name
                         )
-                if obj.interactible:
-                    obj.handle_left_click(event)
+                obj.handle_click_selection(event)
                 return
 
     def drop_current_object(self, event):
         if event and self.current_object:
-            # self.current_object.handle_left_click(event)
+            # self.current_object.handle_click(event)
             self.current_object.drop_at_pos(
                 event.pos[0], event.pos[1]
             )  # TODO: change to return the collision rect id
@@ -481,7 +480,7 @@ class Game:
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             temp_inv_obj = self.inventory.current_object
-            in_inventory = self.inventory.handle_left_click(event)
+            in_inventory = self.inventory.handle_click(event)
 
             if (
                 not in_inventory
@@ -496,7 +495,7 @@ class Game:
                 and not temp_inv_obj
                 and self.current_object is not None
             ):
-                self.current_object.handle_left_click(event)
+                self.current_object.handle_click(event)
 
         elif event.type == pygame.MOUSEMOTION:
             self.center_current_object()
@@ -515,13 +514,12 @@ class Game:
                 self.recalculate_deltas()
 
             elif self.current_mini_game == "game":
-                self.handle_basic_game_events(event)
-                # self.current_wall.update(event)
                 self.update_walls(event)
+                self.handle_basic_game_events(event)
                 self.dialogues.handle_event(event)
 
             elif self.current_mini_game == "laboratory":  # TODO
-                self.laboratory_game.handle_left_click(event)
+                self.laboratory_game.handle_click(event)
 
     def update_all(self):
         self.handle_all_events()

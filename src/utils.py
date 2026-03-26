@@ -1,8 +1,6 @@
 import json
 from pathlib import Path
-
 import pygame
-
 
 # ---------------------JSON-----------------------------------
 #
@@ -177,6 +175,7 @@ def create_object(
     from objects.plank import Plank
     from objects.screwdriver import Screwdriver
     from objects.paper import Paper
+    from objects.fullscreen_paper import Fullscreen_paper
 
     if obj_name == "calculator":
         return Digicode(game_context, obj_name, img_path, rect, "1234")
@@ -488,10 +487,19 @@ def create_object(
             img_path,
             rect,
             collision_rects,
-            current_collision_id,
-            default_collision,
-            default_wall,
+            current_collision_id
         )
+
+    elif obj_name == "fullscreen_paper":
+        return Fullscreen_paper(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            current_collision_id
+        )
+
     else:
         return Game_object(
             game_context,
@@ -505,4 +513,3 @@ def create_object(
             default_collision,
             default_wall,
         )
-        # print("create_object error: invalid object name")

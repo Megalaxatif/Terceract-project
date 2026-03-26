@@ -23,7 +23,7 @@ class Axe(Game_object):
             self.game_context.quit()
 
 
-    def handle_left_click(self, event):
+    def handle_click(self, event):
         # check if we clicked on the hole and if the clock has been moved from it's original position
         if self.hole_reference.collision_rects[0].collidepoint(event.pos) and self.clock_reference.collision_rect_id > 0:
             self.hole_reference.displayed = True
