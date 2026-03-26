@@ -2,8 +2,6 @@ from pathlib import Path
 
 import pygame
 from object import Game_object
-from objects.plank import Plank
-
 
 class Screwdriver(Game_object):
     def __init__(
@@ -31,18 +29,20 @@ class Screwdriver(Game_object):
         self.displayed = False
         self.initial_pos = self.rect.x, self.rect.y
 
+    def initialize(self):
+        self.removable_planks_reference = self.game_context.get_reference_large("removable_plank") # useful to change the visibility
+        if self.removable_planks_reference == []:
+            print(f"initialize of object named \"{self.name}\" error: no object with \"removable_plank\" in its name found in the game, exiting")
+            self.game_context.quit()
+            
     def handle_click_selection(self, event):
         pass
 
     def handle_click(self, event):
-
-        wall = self.game_context.current_wall
-        if wall.wall_id_str == "13":
-            for obj in reversed(
-                wall.objects.sprites()
-            ):  # reversed so we click the top object first
+        if self.game_context.current_wall.wall_id_str == "13":
+            for obj in self.removable_planks_reference:
                 if obj.displayed and obj.rect.collidepoint(event.pos):
-                    if isinstance(obj, Plank):
-                        obj.displayed = not obj.displayed
+                    obj.displayed = False
+                    return True
 
         self.game_context.drop_current_object(event)

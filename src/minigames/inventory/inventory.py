@@ -189,8 +189,9 @@ class Inventory:
                 return True
 
             elif self.current_object is not None:
-                self.current_object.handle_click(event)
-                self.drop_current_object(event)
+                interaction_made = self.current_object.handle_click(event) # True if made
+                if not interaction_made:
+                    self.drop_current_object(event)
         elif self.current_object is not None:
             self.drop_current_object(event)
         return False

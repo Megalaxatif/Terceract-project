@@ -35,8 +35,8 @@
         ],
         "default_wall_id": "13"
     },
-    "plank2": {
-        "image": "assets/cropped_images/cropped_plank2.png",
+    "removable_plank2": {
+        "image": "assets/cropped_images/cropped_removable_plank2.png",
         "rect": [
             690,
             309,
@@ -53,8 +53,8 @@
         ],
         "default_wall_id": "13"
     },
-    "plank1": {
-        "image": "assets/cropped_images/cropped_plank1.png",
+    "removable_plank1": {
+        "image": "assets/cropped_images/cropped_removable_plank1.png",
         "rect": [
             677,
             635,

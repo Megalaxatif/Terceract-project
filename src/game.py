@@ -414,6 +414,15 @@ class Game:
                     if obj.name == name:
                         return obj
         return None
+    
+    def get_reference_large(self, name): # returns the reference to an object in the game
+        res = []
+        for room in self.room_list:
+            for wall in room:
+                for obj in wall.objects:
+                    if name in obj.name:
+                        res.append(obj)
+        return res
 
     def display_room_counter(self):  # for debug purposes
         text_surface = self.font.render(
