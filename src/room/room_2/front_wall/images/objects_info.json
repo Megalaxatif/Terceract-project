@@ -16,23 +16,6 @@
         ],
         "default_wall_id": "23"
     },
-    "vase": {
-        "image": "assets/cropped_images/cropped_vase.png",
-        "rect": [
-            1453,
-            737,
-            172,
-            343
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1453,
-            737,
-            172,
-            343
-        ],
-        "default_wall_id": "23"
-    },
     "sainte_victoire": {
         "image": "assets/cropped_images/cropped_sainte_victoire.png",
         "rect": [

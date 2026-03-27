@@ -4,11 +4,43 @@
             null,
             null,
             null,
+            {
+                "name": "axe",
+                "image": "assets/cropped_images/cropped_axe.png",
+                "rect": [
+                    574,
+                    957,
+                    312,
+                    469
+                ],
+                "default_collision": [
+                    239,
+                    343,
+                    312,
+                    469
+                ],
+                "default_wall_id": "21"
+            },
             null,
             null,
             null,
-            null,
-            null,
+            {
+                "name": "vase",
+                "image": "assets/cropped_images/cropped_vase.png",
+                "rect": [
+                    1275,
+                    954,
+                    172,
+                    343
+                ],
+                "default_collision": [
+                    1453,
+                    737,
+                    172,
+                    343
+                ],
+                "default_wall_id": "23"
+            },
             null,
             null
         ],

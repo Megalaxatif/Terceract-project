@@ -6,8 +6,30 @@ from pathlib import Path
 
 
 class Connect(Game_object):
-    def __init__(self, game_context, object_name, image_path: Path, rect: pygame.Rect, nb_def: int):
-        super().__init__(game_context, object_name, image_path, rect, [])
+    def __init__(
+        self,
+        game_context,
+        object_name,
+        image_path: str,
+        rect: pygame.Rect,
+        collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
+        collision_index: int,
+        nb_def: int
+    ):
+        super().__init__(
+            game_context,
+            object_name,
+            image_path,
+            rect,
+            collisions,
+            default_collision,
+            default_wall,
+            collision_index,
+            movable=False,
+            displayed=False,
+        )
         self.nb_def = nb_def
         self.coeff_lose = 1 * (3/4)**nb_def
         self.grid = [['_', '_', '_', '_', '_', '_', '_'],

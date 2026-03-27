@@ -12,11 +12,11 @@ class Game_object(pygame.sprite.Sprite):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
         collision_index: int = -1,
         movable: bool = True,
         displayed: bool = True,
-        default_collision: pygame.Rect | None = None,
-        default_wall: str = "",
     ):
         super().__init__()
 
@@ -37,7 +37,7 @@ class Game_object(pygame.sprite.Sprite):
         self.raw_default_collision = None
         self.default_wall = default_wall
         if self.default_collision:
-            self.collision_rects.insert(0,pygame.Rect(self.default_collision))
+            self.collision_rects.insert(0,self.default_collision)
             self.raw_default_collision = self.default_collision.copy()
         self.raw_collision_rects = self.collision_rects.copy()
         self.collision_rect_id = collision_index  # which collision rect the object is in
@@ -127,8 +127,8 @@ class Game_object(pygame.sprite.Sprite):
         collisions_data = load_json_file(json_collision_path) # load the json file containing all the collision rects for all the objects on the wall
         new_collision_rects = []
         for obj in collisions_data:
-            if obj.name == self.name:
-                for rect in collisions_data[obj.name]:
+            if obj == self.name:
+                for rect in collisions_data[obj]:
                     new_collision_rects.append(rect)
 
         if self.default_wall == wall_id_str:

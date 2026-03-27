@@ -1,21 +1,44 @@
 import pygame
 from object import Game_object
 
+
 class Digicode(Game_object):
-    def __init__(self, game_context, object_name, image_path, rect, secret_code="1234"):
-        super().__init__(game_context, object_name, image_path, rect, [], -1, False)
-        self.pos = rect[0], rect[1]
+    def __init__(
+        self,
+        game_context,
+        object_name,
+        image_path,
+        rect: pygame.Rect,
+        collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
+        collision_index: int,
+        secret_code="1234",
+    ):
+        super().__init__(
+            game_context,
+            object_name,
+            image_path,
+            rect,
+            collisions,
+            default_collision,
+            default_wall,
+            collision_index,
+            movable=False,
+            displayed=True,
+        )
+        self.pos = (rect.x, rect.y)
         self.x, self.y = self.pos
         self.delta = 1
 
-        # Digicode
         self.secret_code = secret_code
         self.entered_code = ""
         self.message = ""
-        self.displayed = True # True = image visible, False = digicode ouvert
+        self.displayed = True
+
 
         # Police et couleurs
-        self.font = pygame.font.SysFont(None, 40)
+        self.font = pygame.font.Font(None, 40)
         self.WHITE = (255, 255, 255)
         self.GRAY = (200, 200, 200)
         self.DARK = (50, 50, 50)

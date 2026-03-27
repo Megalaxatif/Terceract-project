@@ -1,33 +1,54 @@
 import pygame
 from object import Game_object
 
+
 class Padlock(Game_object):
-    def __init__(self, game_context, object_name, image_path : str, rect : pygame.Rect, collisions : list[pygame.Rect], collision_index : int):
-        super().__init__(game_context, object_name, image_path, rect, collisions, collision_index, False, False)
+    def __init__(
+        self,
+        game_context,
+        object_name,
+        image_path: str,
+        rect: pygame.Rect,
+        collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
+        collision_index: int,
+    ):
+        super().__init__(
+            game_context,
+            object_name,
+            image_path,
+            rect,
+            collisions,
+            default_collision,
+            default_wall,
+            collision_index,
+            movable=False,
+            displayed=False,
+        )
         self.code = "hope"
         self.text = ""
-
 
     def try_code(self):
         if self.text == self.code:
             self.game_context.unlock_room(self.game_context.current_room_id)
-            #self.game_context.network_manager.send_package("variable", ) # TODO: network
+            # self.game_context.network_manager.send_package(...) # TODO: network
             print("code valid")
 
-
     def draw_text(self):
-        font = pygame.font.Font(None, 35)   # TODO: make the size of the font dynamic
+        font = pygame.font.Font(None, 35)  # TODO: make the size of the font dynamic
         text_surface = font.render(
             self.text,
-            True,   # anti-aliasing
-            (0,0,0)
+            True,  # anti-aliasing
+            (0, 0, 0),
         )
-        self.game_context.screen.blit(text_surface, (self.rect.w/3 + self.rect.w/30, self.rect.h/3 + self.rect.h/6))
-
+        self.game_context.screen.blit(
+            text_surface,
+            (self.rect.w / 3 + self.rect.w / 30, self.rect.h / 3 + self.rect.h / 6),
+        )
 
     def handle_click_selection(self, event):
         self.displayed = False
-
 
     def update(self, event):
         if self.displayed:
@@ -39,12 +60,7 @@ class Padlock(Game_object):
                 else:
                     self.text += event.unicode
 
-
-    def draw(self): # draw every entities and the non entities
+    def draw(self):  # draw every entities and the non entities
         if self.displayed:
             self.game_context.screen.blit(self.image, self.rect)
             self.draw_text()
-
-
-
-
