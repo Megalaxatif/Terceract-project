@@ -53,6 +53,24 @@
         ],
         "default_wall_id": "11"
     },
+    "big_frame3": {
+        "image": "assets/cropped_images/cropped_big_frame3.png",
+        "rect": [
+            26,
+            210,
+            566,
+            377
+        ],
+        "collisions": [],
+        "collision_id": -1,
+        "default_collision": [
+            26,
+            210,
+            566,
+            377
+        ],
+        "default_wall_id": "11"
+    },
     "plank2": {
         "image": "assets/cropped_images/cropped_plank2.png",
         "rect": [

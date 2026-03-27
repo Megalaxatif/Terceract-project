@@ -24,7 +24,7 @@ class Wall:
 
         self.json_path = Path(self.root_dir / "images/objects_info.json")
 
-        clear_json(self.json_path)  # TODO: to remove also
+        #clear_json(self.json_path)  # TODO: to remove also
 
         self.background = self.create_background()
         self.background_w = self.background.get_width()
