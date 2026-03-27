@@ -10,7 +10,11 @@ class Padlock(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
         collision_index: int,
+        movable: bool = True,
+        displayed: bool = True,
     ):
         super().__init__(
             game_context,
@@ -18,14 +22,17 @@ class Padlock(Game_object):
             image_path,
             rect,
             collisions,
+            default_collision,
+            default_wall,
             collision_index,
-            False,
-            False,
+            movable,
+            displayed,
         )
         self.code = "hope"
         self.text = ""
         self.last_delta = None
-        self.font = None
+        self.font = pygame.font.Font(None, int(35 * self.game_context.delta))
+
 
     def try_code(self):
         if self.text == self.code:

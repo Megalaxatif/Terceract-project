@@ -7,7 +7,6 @@
             271,
             271
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             846,
@@ -25,7 +24,6 @@
             761,
             551
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             85,
@@ -43,7 +41,6 @@
             671,
             996
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             1148,
@@ -61,7 +58,6 @@
             353,
             338
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             152,
@@ -79,7 +75,6 @@
             76,
             226
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             691,
@@ -97,7 +92,6 @@
             1920,
             1080
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             0,
@@ -115,7 +109,6 @@
             1920,
             1080
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             0,
@@ -133,7 +126,6 @@
             1920,
             1080
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             0,
@@ -151,7 +143,6 @@
             1497,
             960
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             212,
@@ -168,92 +159,6 @@
             202,
             62,
             62
-        ],
-        "collisions": [
-            [
-                531,
-                486,
-                166,
-                421
-            ],
-            [
-                448,
-                33,
-                249,
-                156
-            ],
-            [
-                697,
-                33,
-                273,
-                67
-            ],
-            [
-                961,
-                81,
-                438,
-                193
-            ],
-            [
-                789,
-                194,
-                78,
-                595
-            ],
-            [
-                449,
-                173,
-                160,
-                143
-            ],
-            [
-                541,
-                278,
-                268,
-                256
-            ],
-            [
-                801,
-                365,
-                498,
-                256
-            ],
-            [
-                1390,
-                258,
-                53,
-                538
-            ],
-            [
-                1133,
-                712,
-                271,
-                266
-            ],
-            [
-                858,
-                603,
-                181,
-                186
-            ],
-            [
-                641,
-                880,
-                503,
-                116
-            ],
-            [
-                711,
-                550,
-                62,
-                60
-            ],
-            [
-                629,
-                203,
-                57,
-                62
-            ]
         ],
         "collision_id": -1,
         "default_collision": [
@@ -272,7 +177,6 @@
             130,
             87
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             1121,
@@ -290,7 +194,6 @@
             528,
             113
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             679,
@@ -308,7 +211,6 @@
             161,
             151
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             664,
@@ -326,7 +228,6 @@
             180,
             31
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             1077,
@@ -344,7 +245,6 @@
             117,
             128
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             900,
@@ -362,7 +262,6 @@
             111,
             124
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             1049,
@@ -380,7 +279,6 @@
             94,
             56
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             680,
@@ -398,7 +296,6 @@
             134,
             48
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             734,
@@ -416,7 +313,6 @@
             168,
             152
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             829,
@@ -434,7 +330,6 @@
             168,
             152
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             1058,
@@ -452,7 +347,6 @@
             147,
             135
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             659,
@@ -470,7 +364,6 @@
             153,
             155
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             866,
@@ -488,7 +381,6 @@
             93,
             76
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             700,
@@ -506,7 +398,6 @@
             1497,
             960
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             212,
@@ -524,7 +415,6 @@
             320,
             138
         ],
-        "collisions": [],
         "collision_id": -1,
         "default_collision": [
             846,
@@ -541,14 +431,6 @@
             360,
             59,
             133
-        ],
-        "collisions": [
-            [
-                317,
-                364,
-                57,
-                126
-            ]
         ],
         "collision_id": -1,
         "default_collision": [

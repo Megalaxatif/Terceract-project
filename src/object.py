@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pygame
-from utils import convert_to_pygame_rect_list, get_collision_rects
+from utils import convert_to_pygame_rect_list, get_collision_rects, load_json_file
 
 
 class Game_object(pygame.sprite.Sprite):
@@ -12,11 +12,11 @@ class Game_object(pygame.sprite.Sprite):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
         collision_index: int = -1,
         movable: bool = True,
         displayed: bool = True,
-        default_collision: pygame.Rect | None = None,
-        default_wall: str = "",
     ):
         super().__init__()
 
@@ -25,9 +25,7 @@ class Game_object(pygame.sprite.Sprite):
         self.screen = self.game_context.screen
 
         self.image_path = Path(image_path)
-        self.image = pygame.image.load(
-            Path(self.game_context.root_dir / self.image_path)
-        ).convert_alpha()
+        self.image = pygame.image.load(Path(self.game_context.root_dir / self.image_path)).convert_alpha()
         self.raw_image = self.image
 
         parts = self.image_path.parts
@@ -39,7 +37,7 @@ class Game_object(pygame.sprite.Sprite):
         self.raw_default_collision = None
         self.default_wall = default_wall
         if self.default_collision:
-            self.collision_rects.insert(0, pygame.Rect(self.default_collision))
+            self.collision_rects.insert(0,self.default_collision)
             self.raw_default_collision = self.default_collision.copy()
         self.raw_collision_rects = self.collision_rects.copy()
         self.collision_rect_id = (
@@ -61,7 +59,7 @@ class Game_object(pygame.sprite.Sprite):
         )  # TODO why this name ?
         self.last_inventory_pos = -1, -1
 
-        self.in_grid = False
+        self.in_grid = False # TODO: don't put this in the parent class wtf
 
     def replace(self):
         self.raw_rect.center = self.valid_rect.center
@@ -72,9 +70,8 @@ class Game_object(pygame.sprite.Sprite):
         self.collision_rect_id = collision_index
         # print(f"Dropped {self.name} in collision rect {collision_index}")
 
-    def drop_at_pos(
-        self, x, y
-    ) -> bool:  # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
+    # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
+    def drop_at_pos(self, x, y) -> bool:
         # print(f"Trying to drop {self.name} at ({x}, {y})")
         return_code = False
         point_rect = pygame.Rect(int(x), int(y), 1, 1)
@@ -125,11 +122,20 @@ class Game_object(pygame.sprite.Sprite):
             ):
                 self.collision_rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
 
-    def change_collision_rects(self, collision_layers_dir, wall_id_str):
-        new_collision_rects = get_collision_rects(collision_layers_dir, self.name)
+
+    def change_collision_rects(self, json_collisions_path, wall_id_str):
+        collisions_data = load_json_file(json_collisions_path) # load the json file containing all the collision rects for all the objects on the wall
+        new_collision_rects = []
+        for obj in collisions_data:
+            if obj == self.name:
+                for rect in collisions_data[obj]:
+                    new_collision_rects.append(rect)
+
         if self.default_wall == wall_id_str:
             if self.default_collision:
                 new_collision_rects.append(self.default_collision)
+
+
         converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
         self.collision_rects = converted_collision_rects
         self.raw_collision_rects = converted_collision_rects.copy()
@@ -160,6 +166,8 @@ class Game_object(pygame.sprite.Sprite):
     def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
+            return False
+        return True
 
     def swap_display(self):
         pass

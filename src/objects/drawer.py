@@ -10,12 +10,25 @@ class Drawer(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
         collision_index: int,
         displayed,
     ):
+
         super().__init__(
-            game_context, object_name, image_path, rect, collisions, collision_index
+            game_context,
+            object_name,
+            image_path,
+            rect,
+            collisions,
+            default_collision,
+            default_wall,
+            collision_index,
+            movable=False,
+            displayed=displayed,
         )
+
         self.movable = False
         self.interactible = "trigger" in self.name or "drawer" == self.name
         self.displayed = displayed

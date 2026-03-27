@@ -11,9 +11,9 @@ class Screwdriver(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
         collision_index: int,
-        default_collision,
-        default_wall,
     ):
         super().__init__(
             game_context,
@@ -21,9 +21,11 @@ class Screwdriver(Game_object):
             image_path,
             rect,
             collisions,
+            default_collision,
+            default_wall,
             collision_index,
-            default_collision=default_collision,
-            default_wall=default_wall,
+            movable=True,
+            displayed=False,
         )
 
         self.displayed = False
@@ -33,7 +35,7 @@ class Screwdriver(Game_object):
         if self.removable_planks_reference == []:
             print(f"initialize of object named \"{self.name}\" error: no object with \"removable_plank\" in its name found in the game, exiting")
             self.game_context.quit()
-            
+
     def handle_click_selection(self, event):
         pass
 
@@ -45,6 +47,6 @@ class Screwdriver(Game_object):
                     if not any([v.displayed for v in self.removable_planks_reference]):
                         self.game_context.unlock_room(self.game_context.current_room_id)
                     return True
-                
 
         self.game_context.drop_current_object(event)
+        return False

@@ -172,14 +172,24 @@ def create_object(
     from objects.library import Library
     from objects.padlock import Padlock
     from objects.padlock_door import Padlock_door
-    from objects.plank import Plank
     from objects.screwdriver import Screwdriver
     from objects.paper import Paper
     from objects.fullscreen_paper import Fullscreen_paper
     from objects.table import Table
+    from objects.plank import Plank
 
     if obj_name == "calculator":
-        return Digicode(game_context, obj_name, img_path, rect, "1234")
+        return Digicode(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            "1234",
+        )
 
     elif obj_name in ["vase", "vase2"]:
         return Game_object(
@@ -188,11 +198,11 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             True,
             True,
-            default_collision,
-            default_wall,
         )
 
     elif obj_name == "frame":
@@ -202,12 +212,25 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
-            False,
+            True,
+            True,
         )
 
     elif obj_name == "connect4":
-        return Connect(game_context, obj_name, img_path, rect, 0)
+        return Connect(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            0
+        )
 
     elif "magnet" in obj_name:
         return Magnet(
@@ -216,6 +239,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
         )
 
@@ -226,6 +251,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
         )
 
@@ -236,11 +263,11 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             True,
             True,
-            default_collision,
-            default_wall,
         )
 
     elif obj_name == "grid_wall":
@@ -250,6 +277,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             True,
         )
@@ -261,6 +290,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
         )
@@ -272,6 +303,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             True,
             True
@@ -284,6 +317,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
             False
@@ -297,9 +332,9 @@ def create_object(
                 img_path,
                 rect,
                 collision_rects,
-                current_collision_id,
                 default_collision,
                 default_wall,
+                current_collision_id
             )
         return Game_object(
             game_context,
@@ -307,11 +342,11 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             True,
             False,
-            default_collision,
-            default_wall,
         )
 
     elif "drawer" in obj_name:
@@ -322,6 +357,8 @@ def create_object(
                 img_path,
                 rect,
                 collision_rects,
+                default_collision,
+                default_wall,
                 current_collision_id,
                 True,
             )
@@ -334,6 +371,8 @@ def create_object(
                     img_path,
                     rect,
                     collision_rects,
+                    default_collision,
+                    default_wall,
                     current_collision_id,
                 )
 
@@ -343,11 +382,11 @@ def create_object(
                 img_path,
                 rect,
                 collision_rects,
+                default_collision,
+                default_wall,
                 current_collision_id,
                 True,
                 False,
-                default_collision,
-                default_wall,
             )
 
         return Drawer(
@@ -356,6 +395,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
         )
@@ -368,7 +409,10 @@ def create_object(
                 img_path,
                 rect,
                 collision_rects,
+                default_collision,
+                default_wall,
                 current_collision_id,
+                False,
                 True,
             )
 
@@ -379,11 +423,11 @@ def create_object(
                 img_path,
                 rect,
                 collision_rects,
+                default_collision,
+                default_wall,
                 current_collision_id,
                 True,
                 False,
-                default_collision,
-                default_wall,
             )
 
         return Table(
@@ -392,7 +436,10 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
+            False,
             False,
         )
 
@@ -403,6 +450,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
         )
 
@@ -413,6 +462,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
         )
 
@@ -423,6 +474,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
         )
 
@@ -433,7 +486,11 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
+            False,
+            True
         )
 
     elif obj_name == "library":
@@ -443,7 +500,11 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
+            False,
+            True
         )
 
     elif obj_name == "book_closed":
@@ -453,6 +514,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             True,
             False,
@@ -465,6 +528,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
             False,
@@ -477,6 +542,8 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
             True,
@@ -488,9 +555,9 @@ def create_object(
             img_path,
             rect,
             collision_rects,
-            current_collision_id,
             default_collision,
             default_wall,
+            current_collision_id,
         )
     elif obj_name == "hole":
         return Game_object(
@@ -499,11 +566,11 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
             False,
-            default_collision,
-            default_wall,
         )
     elif obj_name == "paper":
         return Paper(
@@ -512,7 +579,9 @@ def create_object(
             img_path,
             rect,
             collision_rects,
-            current_collision_id
+            default_collision,
+            default_wall,
+            current_collision_id,
         )
 
     elif obj_name == "fullscreen_paper":
@@ -522,7 +591,9 @@ def create_object(
             img_path,
             rect,
             collision_rects,
-            current_collision_id
+            default_collision,
+            default_wall,
+            current_collision_id,
         )
 
     else:
@@ -532,9 +603,9 @@ def create_object(
             img_path,
             rect,
             collision_rects,
+            default_collision,
+            default_wall,
             current_collision_id,
             False,
             True,
-            default_collision,
-            default_wall,
         )

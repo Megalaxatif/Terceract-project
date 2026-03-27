@@ -10,13 +10,24 @@ class Table(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
+        default_collision: pygame.Rect,
+        default_wall: str,
         collision_index: int,
-        displayed,
+        movable: bool = True,
+        displayed: bool = True,
     ):
         super().__init__(
-            game_context, object_name, image_path, rect, collisions, collision_index
+            game_context,
+            object_name,
+            image_path,
+            rect,
+            collisions,
+            default_collision,
+            default_wall,
+            collision_index,
+            movable,
+            displayed,
         )
-        self.movable = False
         self.interactible = "table" == self.name
         self.displayed = displayed
         self.open = not self.displayed
@@ -24,31 +35,19 @@ class Table(Game_object):
         self.gone = False
 
     def initialize(self):
-        self.list_reference = self.game_context.get_reference_large(
-            "obj_in_table"
-        )  # useful to change the visibility
+        self.list_reference = self.game_context.get_reference_large("obj_in_table")  # useful to change the visibility
         if self.list_reference == []:
-            print(
-                f'initialize of object named "{self.name}" error: no object with "obj_in_table" in its name found in the game, exiting'
-            )
+            print(f'initialize of object named "{self.name}" error: no object with "obj_in_table" in its name found in the game, exiting')
             self.game_context.quit()
 
-        self.opened_table_reference = self.game_context.get_reference(
-            "opened_table"
-        )  # useful to change the visibility
+        self.opened_table_reference = self.game_context.get_reference("opened_table")  # useful to change the visibility
         if self.opened_table_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "opened_table" found in the game, exiting'
-            )
+            print(f'initialize of object named "{self.name}" error: no object with name "opened_table" found in the game, exiting')
             self.game_context.quit()
 
-        self.bg_reference = self.game_context.get_reference(
-            "gray_bg_table"
-        )  # useful to change the visibility
+        self.bg_reference = self.game_context.get_reference("gray_bg_table")  # useful to change the visibility
         if self.bg_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "gray_bg_table" found in the game, exiting'
-            )
+            print(f'initialize of object named "{self.name}" error: no object with name "gray_bg_table" found in the game, exiting')
             self.game_context.quit()
 
         self.list_reference.append(self.bg_reference)

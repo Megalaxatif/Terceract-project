@@ -167,8 +167,8 @@ class Game:
             self.inventory.save_images()
 
     def start(self):
-        gamemode = "s"
-        # gamemode = input("wanna play solo (s) or duo (d) ? ")
+        #gamemode = "s"
+        gamemode = input("wanna play solo (s) or duo (d) ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -228,25 +228,26 @@ class Game:
         self.other_player_inventory_object_name = ""
         self.network_manager.reset_client()
 
-    def change_room(self):  # change the room we are in
+    def change_room(self, direction):  # change the room we are in
         # create a custom event
         mouse_x, mouse_y = pygame.mouse.get_pos()
         custom_event = pygame.event.Event(
             CUSTOM_DROP_EVENT, {"pos": (mouse_x, mouse_y)}
         )
 
-        if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5:
+        if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5 and direction == 1:
             if self.is_room_unlocked(self.current_room_id):
-                self.current_room_id += 1
+                self.current_room_id += direction
                 self.drop_current_object(custom_event)
                 self.change_current_wall()
             else:
                 self.sound_manager.play_sound("locked_door")
 
-        elif self.current_wall_id == BACK_WALL and self.current_room_id > 0:
-            self.current_room_id -= 1
+        elif self.current_wall_id == BACK_WALL and self.current_room_id > 0 and direction == 1:
+            self.current_room_id -= direction
             self.drop_current_object(custom_event)
             self.change_current_wall()
+
 
         else:
             print("change_room : Error, impossible to go in that direction")
@@ -514,7 +515,9 @@ class Game:
             elif event.key == pygame.K_RIGHT:
                 self.change_wall("right")
             elif event.key == pygame.K_UP:
-                self.change_room()
+                self.change_room(1)
+            elif event.key == pygame.K_DOWN:
+                self.change_room(-1)
             elif event.key == pygame.K_i:
                 self.inventory.displayed = not self.inventory.displayed
 
