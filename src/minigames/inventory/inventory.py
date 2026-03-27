@@ -122,13 +122,15 @@ class Inventory:
                     obj.resize_image()
                     obj.resize_collision_rects()
 
+
     def update_object_collision_rects(self):
-        json_collision_path = self.game_context.current_wall.json_objects_path
+        json_collisions_path = self.game_context.current_wall.json_collisions_path
         wall_id_str = self.game_context.current_wall.wall_id_str
         for i in range(len(self.slots)):
             for obj in self.slots[i]:
                 if obj:
-                    obj.change_collision_rects(json_collision_path, wall_id_str)
+                    obj.change_collision_rects(json_collisions_path, wall_id_str)
+
 
     def display(self):
         if (

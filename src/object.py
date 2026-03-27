@@ -122,9 +122,8 @@ class Game_object(pygame.sprite.Sprite):
                 self.collision_rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
 
 
-    def change_collision_rects(self, json_collision_path, wall_id_str):
-        #new_collision_rects = get_collision_rects(..., self.name)
-        collisions_data = load_json_file(json_collision_path) # load the json file containing all the collision rects for all the objects on the wall
+    def change_collision_rects(self, json_collisions_path, wall_id_str):
+        collisions_data = load_json_file(json_collisions_path) # load the json file containing all the collision rects for all the objects on the wall
         new_collision_rects = []
         for obj in collisions_data:
             if obj == self.name:
@@ -134,6 +133,7 @@ class Game_object(pygame.sprite.Sprite):
         if self.default_wall == wall_id_str:
             if self.default_collision:
                 new_collision_rects.append(self.default_collision)
+
 
         converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
         self.collision_rects = converted_collision_rects

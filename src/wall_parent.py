@@ -97,10 +97,10 @@ class Wall:
 
     def create_wall_objects(self):
         objects_data = {}
-        collisions_data = {}
+        collisions_data = load_json_file(self.json_collisions_path) # always in local
+
         if self.game_context.network_manager.is_host:
             objects_data = load_json_file(self.json_objects_path)  # load or init the JSON file
-            collisions_data = load_json_file(self.json_collisions_path)
             # case where we launched the game for the first time or we previously reset the progression
 
             if not objects_data or not collisions_data:
@@ -109,7 +109,6 @@ class Wall:
         else:
             # TODO: change the name to objects_data
             objects_data = self.game_context.game_data["wall_data"][self.room_id][self.wall_id] # the data from the other player
-            collisions_data = self.game_context.game_data["collisions_data"][self.room_id][self.wall_id] # the data from the other player
 
         for key in objects_data:
             img_path = objects_data[key]["image"]  # load the relative path

@@ -152,7 +152,7 @@ class Network_manager:
         for i in range(len(self.game_context.room_list)):
             data["wall_data"].append([])
             for wall in self.game_context.room_list[i]:
-                wall_data = load_json_file(wall.json_path)
+                wall_data = load_json_file(wall.json_objects_path)
                 data["wall_data"][i].append(wall_data)
         inventory_data = load_json_file(self.game_context.inventory.json_path)
         data["inv_data"] = inventory_data
