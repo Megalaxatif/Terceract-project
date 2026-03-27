@@ -12,6 +12,7 @@ from dialogues import Dialogue
 from minigames import *
 from network import Network_manager
 from room import *
+from sound import SoundManager
 
 ROOM_1 = 0
 ROOM_2 = 1
@@ -49,6 +50,13 @@ class Game:
 
         self.mouse_enabled = True
         self.network_manager = Network_manager(self)
+        self.sound_manager = SoundManager(self)
+        self.mouse_hover_image = pygame.image.load(
+            "../assets/images/mouse_hover.png"
+        ).convert_alpha()
+        self.mouse_hover_image = pygame.transform.scale(
+            self.mouse_hover_image, (40, 40)
+        )
         self.start()
 
         self.back_wall_R1 = Back_wall_R1(self, 0, 0)
@@ -113,7 +121,7 @@ class Game:
 
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
 
-        self.room_1_unlocked = False
+        self.room_1_unlocked = True
         self.room_2_unlocked = False
         self.room_3_unlocked = False
         self.room_4_unlocked = False
@@ -133,8 +141,7 @@ class Game:
 
         self.dialogues = Dialogue(self)
 
-        self.initialize_all_objects() # NOTE: this line should always be at the end of __init__
-
+        self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
 
     def quit(self):
         self.game_running = False
@@ -142,13 +149,13 @@ class Game:
         pygame.quit()
         sys.exit()
 
-
-    def initialize_all_objects(self): # this function finishes the initialization of the objects when all the variable they would need have been created (useful for the axe for examble)
+    def initialize_all_objects(
+        self,
+    ):  # this function finishes the initialization of the objects when all the variable they would need have been created (useful for the axe for examble)
         for room in self.room_list:
             for wall in room:
                 for obj in wall.objects:
                     obj.initialize()
-
 
     def save_game(self):  # save all the game data
         if self.network_manager.is_host:
@@ -161,7 +168,7 @@ class Game:
 
     def start(self):
         gamemode = "s"
-        #gamemode = input("wanna play solo (s) or duo (d) ? ")
+        # gamemode = input("wanna play solo (s) or duo (d) ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -233,6 +240,8 @@ class Game:
                 self.current_room_id += 1
                 self.drop_current_object(custom_event)
                 self.change_current_wall()
+            else:
+                self.sound_manager.play_sound("locked_door")
 
         elif self.current_wall_id == BACK_WALL and self.current_room_id > 0:
             self.current_room_id -= 1
@@ -271,6 +280,10 @@ class Game:
 
         # change the collision rects of the objects in the inventory
         self.inventory.update_object_collision_rects()
+        wall = self.current_wall.objects
+        for obj in wall:
+            if obj.displayed and "gray_bg" in obj.name:
+                obj.swap_display()
 
     def update_walls(self, event):  # update all walls
         for room in self.room_list:
@@ -387,8 +400,12 @@ class Game:
             )  # TODO: change to return the collision rect id
 
     # function useful for network
-    def drop_object(self, obj_name, room_id, wall_id, collision_rect_id):  # move an object on a given wall in a given room to a given collision_rect
-        dest_wall = self.room_list[room_id][wall_id]  # on which wall do we want to put it
+    def drop_object(
+        self, obj_name, room_id, wall_id, collision_rect_id
+    ):  # move an object on a given wall in a given room to a given collision_rect
+        dest_wall = self.room_list[room_id][
+            wall_id
+        ]  # on which wall do we want to put it
 
         object = None
         for obj in dest_wall.objects:
@@ -401,21 +418,26 @@ class Game:
             )
             return 1
 
-        if (collision_rect_id == -1):  # we tried to move the object at a wrong position when it was at its initial position
+        if (
+            collision_rect_id == -1
+        ):  # we tried to move the object at a wrong position when it was at its initial position
             object.raw_rect.center = object.valid_rect.center
         else:
-            object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
+            object.drop_in_collision_rect(
+                collision_rect_id
+            )  # set the new collision rect id of the object and put it inside
 
-
-    def get_reference(self, name): # returns the reference to an object in the game
+    def get_reference(self, name):  # returns the reference to an object in the game
         for room in self.room_list:
             for wall in room:
                 for obj in wall.objects:
                     if obj.name == name:
                         return obj
         return None
-    
-    def get_reference_large(self, name): # returns the reference to an object in the game
+
+    def get_reference_large(
+        self, name
+    ):  # returns the reference to an object in the game
         res = []
         for room in self.room_list:
             for wall in room:
@@ -460,6 +482,15 @@ class Game:
         x = self.screen.get_width() - text_surface.get_width() - 40
         y = 3
         self.screen.blit(text_surface, (x, y))
+
+    def display_mouse_hover(self):
+        pos = pygame.mouse.get_pos()
+        wall = list(self.current_wall.objects)
+        for obj in reversed(wall):
+            if obj.displayed and obj.rect.collidepoint(pos):
+                if obj.interactible:
+                    self.screen.blit(self.mouse_hover_image, pos)  # draw the cursor
+                return
 
     def recalculate_deltas(
         self,
@@ -517,7 +548,20 @@ class Game:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.current_mini_game = "menu"
+                    swap_mini_game = True
+                    if self.current_mini_game == "menu":
+                        self.current_mini_game = "game"
+
+                    else:
+                        if self.current_mini_game == "game":
+                            wall = self.current_wall.objects
+                            for obj in wall:
+                                if obj.displayed and "gray_bg" in obj.name:
+                                    obj.swap_display()
+                                    swap_mini_game = False
+
+                        if swap_mini_game:
+                            self.current_mini_game = "menu"
 
             if event.type == pygame.WINDOWSIZECHANGED:
                 self.recalculate_deltas()
@@ -544,6 +588,7 @@ class Game:
             self.display_fps()
             self.dialogues.display()
             self.dialogues.update()
+            self.display_mouse_hover()
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display
