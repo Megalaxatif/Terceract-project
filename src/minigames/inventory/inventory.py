@@ -197,8 +197,14 @@ class Inventory:
                 interaction_made = self.current_object.handle_click(event) # True if made
                 if not interaction_made:
                     self.drop_current_object(event, event.pos[0], event.pos[1])
+                    
         elif self.current_object is not None:
-            self.drop_current_object(event, event.pos[0], event.pos[1])
+                if self.game_context.stash_rect.collidepoint(event.pos):
+                    self.current_object.stash(event)
+                    return False
+                interaction_made = self.current_object.handle_click(event) # True if made
+                if not interaction_made:
+                    self.drop_current_object(event, event.pos[0], event.pos[1])
         return False
 
     def store_current_object(self, row, col):

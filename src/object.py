@@ -98,10 +98,8 @@ class Game_object(pygame.sprite.Sprite):
                 
                 return_code = True
             elif self.game_context.inventory.current_object:
-                print("here1")
                 return False
             else:
-                print("here2")
                 self.replace()
                     
         return return_code
@@ -172,13 +170,15 @@ class Game_object(pygame.sprite.Sprite):
 
     def stash(self, event):
         save_wall = self.game_context.current_wall
-        delta = save_wall.delta
         
         self.game_context.current_wall = self.game_context.room_list[int(self.default_wall[0])-1][int(self.default_wall[1])-1]
-        self.game_context.inventory.drop_current_object(event,
-                                                        int(self.default_collision[0] + 10),
-                                                        int(self.default_collision[1] + 10),
-                                                        True)
+        self.game_context.inventory.drop_current_object(
+            event,
+            int(self.default_collision[0] + 5),
+            int(self.default_collision[1] + 5),
+            True
+        )
+        
         self.game_context.current_wall = save_wall
         
     def draw(self):
