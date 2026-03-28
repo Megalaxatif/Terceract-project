@@ -172,8 +172,8 @@ class Game:
             self.inventory.save_images()
 
     def start(self):
-        gamemode = "s"
-        #gamemode = input("wanna play solo (s) or duo (d) ? ")
+        #gamemode = "s"
+        gamemode = input("wanna play solo (s) or duo (d) ? ")
 
         if gamemode == "s":
             print("launching solo...")

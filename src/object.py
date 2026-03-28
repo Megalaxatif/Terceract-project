@@ -94,7 +94,7 @@ class Game_object(pygame.sprite.Sprite):
                                     self.game_context.current_wall.wall_id_str
                 )
                 self.drop_in_collision_rect(collision_index)
-                self.displayed = self.original_displayed
+                self.displayed = self.original_displayed or self.displayed
                 
                 return_code = True
             elif self.game_context.inventory.current_object:
@@ -170,8 +170,15 @@ class Game_object(pygame.sprite.Sprite):
 
     def stash(self, event):
         save_wall = self.game_context.current_wall
+        save_room_id = self.game_context.current_room_id
+        save_wall_id = self.game_context.current_wall_id
         
         self.game_context.current_wall = self.game_context.room_list[int(self.default_wall[0])-1][int(self.default_wall[1])-1]
+        self.game_context.current_room_id = int(self.default_wall[0])-1
+        self.game_context.current_wall_id = int(self.default_wall[1])-1
+        
+        print(self.game_context.current_wall_id)
+        
         self.game_context.inventory.drop_current_object(
             event,
             int(self.default_collision[0] + 5),
@@ -180,6 +187,8 @@ class Game_object(pygame.sprite.Sprite):
         )
         
         self.game_context.current_wall = save_wall
+        self.game_context.current_room_id = save_room_id
+        self.game_context.current_wall_id = save_wall_id
         
     def draw(self):
         self.game_context.screen.blit(self.image, self.rect)

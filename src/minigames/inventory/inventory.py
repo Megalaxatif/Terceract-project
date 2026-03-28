@@ -248,7 +248,7 @@ class Inventory:
                     obj.name,
                     self.game_context.current_room_id,
                     self.game_context.current_wall_id,
-                    obj.collision_rect_id,
+                    obj.collision_rect_id
                 )
             self.game_context.current_wall.objects.add(obj)
             self.current_object = None
@@ -355,6 +355,7 @@ class Inventory:
                 )  # this case should never happen
                 return 2
 
+        print(self.game_context.current_wall_id)
         self.slots[row][col] = object  # put the object in inventory
         dest_wall_id = f"{self.game_context.current_room_id + 1}{self.game_context.current_wall_id + 1}"
         object.change_collision_rects(
@@ -389,12 +390,8 @@ class Inventory:
         ]  # on which wall do we want to put it
         dest_wall.objects.add(obj)  # add the object on the wall
         dest_wall_id_str = f"{dest_room_id + 1}{dest_wall_id + 1}"
-        obj.change_collision_rects(
-            dest_wall.collision_layers_dir, dest_wall_id_str
-        )  # update its collision rects
-        obj.drop_in_collision_rect(
-            collision_rect_id
-        )  # put it in the right collision rect                                               # remove it from inventory
+        obj.change_collision_rects(dest_wall.json_collisions_path, dest_wall_id_str)  # update its collision rects
+        obj.drop_in_collision_rect(collision_rect_id)  # put it in the right collision rect                                               # remove it from inventory
         self.slots[row][col] = None
         self.game_context.other_player_inventory_object = None
 

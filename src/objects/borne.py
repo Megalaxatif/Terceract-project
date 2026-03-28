@@ -28,5 +28,7 @@ class Borne(Game_object):
             displayed=True,
         )
 
+        self.interactible = True
+    
     def handle_click_selection(self, event):
         self.game_context.current_mini_game = "laboratory"
