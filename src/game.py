@@ -34,6 +34,7 @@ class Game:
         self.delta_h = 1
         self.delta_w = 1
         self.delta = 1
+        self.last_delta = 1
         self.height = self.screen.get_height()
         self.width = self.screen.get_width()
         self.fullscreen = True
@@ -41,10 +42,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.game_running = True
         self.root_dir = Path(__file__).resolve().parent.parent
+        self.raw_stash = pygame.image.load(Path(f"{self.root_dir}/assets/images/stash.png")).convert_alpha()
+        self.stash = self.raw_stash
+        self.stash_raw_rect = self.raw_stash.get_rect()
+        self.stash_rect = self.stash_raw_rect
         self.game_data = {}  # for network
         self.game_data_path = f"{self.root_dir}/data/game_data.json"
         self.event = None
-        self.font = pygame.font.Font(None, 50)
+        self.font = pygame.font.Font(None, 30)
         self.name = "game"
         self.current_mini_game = "game"
 
@@ -167,8 +172,8 @@ class Game:
             self.inventory.save_images()
 
     def start(self):
-        #gamemode = "s"
-        gamemode = input("wanna play solo (s) or duo (d) ? ")
+        gamemode = "s"
+        #gamemode = input("wanna play solo (s) or duo (d) ? ")
 
         if gamemode == "s":
             print("launching solo...")
@@ -396,9 +401,7 @@ class Game:
                 self.network_manager.send_package(
                     "variable", "game", "other_player_inventory_object_name", ""
                 )
-            self.inventory.drop_current_object(
-                event
-            )  # TODO: change to return the collision rect id
+            self.inventory.drop_current_object(event, event.pos[0], event.pos[1])  # TODO: change to return the collision rect id
 
     # function useful for network
     def drop_object(
@@ -447,14 +450,29 @@ class Game:
                         res.append(obj)
         return res
 
+    def update_gui(self):
+        if self.last_delta != self.delta:
+            delta = self.delta
+            self.last_delta = delta
+            
+            new_x = int(delta * self.stash_raw_rect.x)
+            new_y = int(delta * self.stash_raw_rect.y)
+            new_width = int(self.raw_stash.get_width() * delta)
+            new_height = int(self.raw_stash.get_height() * delta)
+            
+            self.stash = pygame.transform.scale(self.raw_stash, (new_width, new_height))
+            self.stash_rect = pygame.Rect(new_x, new_y, new_width, new_height)
+            
+            self.font = pygame.font.Font(None, int(30 * delta))
+
     def display_room_counter(self):  # for debug purposes
         text_surface = self.font.render(
             f"room number {self.current_room_id + 1}",
             True,  # anti-aliasing
             (0, 0, 0),
         )
-        x = 40
-        y = 3
+        x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
+        y = 25 * self.delta
         self.screen.blit(text_surface, (x, y))
 
     def display_fps(self):  # for debug purposes
@@ -463,8 +481,8 @@ class Game:
             True,  # anti-aliasing
             (0, 0, 0),
         )
-        x = 40
-        y = 50
+        x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
+        y = 45 * self.delta
         self.screen.blit(text_surface, (x, y))
 
     def display_current_object_name(self):
@@ -480,18 +498,29 @@ class Game:
             True,  # anti-aliasing
             (0, 0, 0),
         )
-        x = self.screen.get_width() - text_surface.get_width() - 40
-        y = 3
+        x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
+        y = 5 * self.delta
         self.screen.blit(text_surface, (x, y))
 
     def display_mouse_hover(self):
         pos = pygame.mouse.get_pos()
-        wall = list(self.current_wall.objects)
-        for obj in reversed(wall):
-            if obj.displayed and obj.rect.collidepoint(pos):
-                if obj.interactible:
-                    self.screen.blit(self.mouse_hover_image, pos)  # draw the cursor
-                return
+        if self.stash_rect.collidepoint(pos):
+            self.screen.blit(self.mouse_hover_image, pos)
+        else:
+            wall = list(self.current_wall.objects)
+            for obj in reversed(wall):
+                if obj.displayed and obj.rect.collidepoint(pos):
+                    if obj.interactible:
+                        self.screen.blit(self.mouse_hover_image, pos)  # draw the cursor
+                    return
+
+    def display_gui(self):
+            self.update_gui()
+            self.display_room_counter()
+            self.display_current_object_name()
+            self.display_fps()
+            self.screen.blit(self.stash, (0,0))
+            self.display_mouse_hover()
 
     def recalculate_deltas(
         self,
@@ -586,12 +615,10 @@ class Game:
         if self.current_mini_game == "game":
             self.current_wall.display()
             self.inventory.display()
-            self.display_room_counter()
-            self.display_current_object_name()
-            self.display_fps()
             self.dialogues.display()
             self.dialogues.update()
-            self.display_mouse_hover()
+            self.display_gui()
+            self.inventory.draw_current_object()
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display

@@ -13,8 +13,8 @@ class Padlock(Game_object):
         default_collision: pygame.Rect,
         default_wall: str,
         collision_index: int,
-        movable: bool = True,
-        displayed: bool = True,
+        movable: bool = False,
+        displayed: bool = False,
     ):
         super().__init__(
             game_context,

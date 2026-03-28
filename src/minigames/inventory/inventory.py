@@ -191,11 +191,14 @@ class Inventory:
                 return True
 
             elif self.current_object is not None:
+                if self.game_context.stash_rect.collidepoint(event.pos):
+                    self.current_object.stash(event)
+                    return False
                 interaction_made = self.current_object.handle_click(event) # True if made
                 if not interaction_made:
-                    self.drop_current_object(event)
+                    self.drop_current_object(event, event.pos[0], event.pos[1])
         elif self.current_object is not None:
-            self.drop_current_object(event)
+            self.drop_current_object(event, event.pos[0], event.pos[1])
         return False
 
     def store_current_object(self, row, col):
@@ -223,15 +226,13 @@ class Inventory:
                 )
             self.current_object = None
 
-    def drop_current_object(self, event):
+    def drop_current_object(self, event, mx, my, force=False):
         obj = self.current_object
         if obj is None:
             print("drop_current_object error: current_object is None")
             return -1
         obj.handle_click_selection(event)
-        # Mettre à jour la position de l'objet à la position actuelle de la souris
-        mx, my = event.pos[0], event.pos[1]
-        if obj.drop_at_pos(mx, my):
+        if obj.drop_at_pos(mx, my, force):
             if self.game_context.network_manager.is_connected:
                 # send the information to the other player
                 self.game_context.network_manager.send_package(

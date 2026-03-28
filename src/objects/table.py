@@ -29,6 +29,7 @@ class Table(Game_object):
             displayed,
         )
         self.interactible = "table" == self.name
+        self.original_displayed = displayed
         self.displayed = displayed
         self.open = not self.displayed
         self.background = "gray_bg" in self.name
@@ -60,7 +61,6 @@ class Table(Game_object):
                 not self.opened_table_reference.displayed
             )
             for obj in self.list_reference:
-                print(obj.name)
                 obj.displayed = not obj.displayed
                 obj.display_collision_rect_bool = self.displayed
 

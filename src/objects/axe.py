@@ -56,10 +56,10 @@ class Axe(Game_object):
         # check if we clicked on the hole and if the clock has been moved from it's original position
         if self.hole_reference.collision_rects[0].collidepoint(event.pos) and self.clock_reference.collision_rect_id > 0:
             if self.hole_reference.displayed:
-                return False
+                return True
             self.hole_reference.displayed = True
             self.paper_reference.displayed = True
-            return True
+            return False
 
         elif self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)

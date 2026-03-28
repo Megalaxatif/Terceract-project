@@ -31,6 +31,7 @@ class Drawer(Game_object):
 
         self.movable = False
         self.interactible = "trigger" in self.name or "drawer" == self.name
+        self.original_displayed = displayed
         self.displayed = displayed
         self.open = not self.displayed
         self.background = "gray_bg" in self.name

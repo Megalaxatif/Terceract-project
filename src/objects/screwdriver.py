@@ -28,7 +28,7 @@ class Screwdriver(Game_object):
             displayed=False,
         )
 
-        self.displayed = False
+        self.original_displayed = False
 
     def initialize(self):
         self.removable_planks_reference = self.game_context.get_reference_large("removable_plank") # useful to change the visibility

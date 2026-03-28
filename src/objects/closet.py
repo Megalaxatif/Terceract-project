@@ -28,7 +28,9 @@ class Closet(Game_object):
             movable=False,
             displayed=displayed,
         )
+        
         self.interactible = True
+        self.original_displayed = displayed
         self.open = not self.displayed
         self.lock = lock
 

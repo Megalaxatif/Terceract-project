@@ -50,6 +50,7 @@ class Game_object(pygame.sprite.Sprite):
             self.valid_rect = self.collision_rects[self.collision_rect_id]
         else:
             self.valid_rect = self.rect.copy()
+        self.original_displayed = displayed 
         self.displayed = displayed
         self.movable = movable
         self.interactible = movable
@@ -71,12 +72,12 @@ class Game_object(pygame.sprite.Sprite):
         # print(f"Dropped {self.name} in collision rect {collision_index}")
 
     # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
-    def drop_at_pos(self, x, y) -> bool:
+    def drop_at_pos(self, x, y, force=False) -> bool:
         # print(f"Trying to drop {self.name} at ({x}, {y})")
         return_code = False
         point_rect = pygame.Rect(int(x), int(y), 1, 1)
         collision_index = point_rect.collidelist(self.collision_rects)
-        if self.display_collision_rect_bool:
+        if self.display_collision_rect_bool and not force:
             if collision_index != -1:
                 self.drop_in_collision_rect(collision_index)
                 return_code = True
@@ -84,7 +85,25 @@ class Game_object(pygame.sprite.Sprite):
                 return False
             else:
                 self.replace()
-
+        
+        if force:
+            collision_index = point_rect.collidelist([self.default_collision])
+            if collision_index != -1:
+                self.change_collision_rects(
+                                    self.game_context.current_wall.json_collisions_path,
+                                    self.game_context.current_wall.wall_id_str
+                )
+                self.drop_in_collision_rect(collision_index)
+                self.displayed = self.original_displayed
+                
+                return_code = True
+            elif self.game_context.inventory.current_object:
+                print("here1")
+                return False
+            else:
+                print("here2")
+                self.replace()
+                    
         return return_code
 
     def resize_image(self):
@@ -151,6 +170,17 @@ class Game_object(pygame.sprite.Sprite):
                 )
                 self.game_context.screen.blit(temp_surface, rect)
 
+    def stash(self, event):
+        save_wall = self.game_context.current_wall
+        delta = save_wall.delta
+        
+        self.game_context.current_wall = self.game_context.room_list[int(self.default_wall[0])-1][int(self.default_wall[1])-1]
+        self.game_context.inventory.drop_current_object(event,
+                                                        int(self.default_collision[0] + 10),
+                                                        int(self.default_collision[1] + 10),
+                                                        True)
+        self.game_context.current_wall = save_wall
+        
     def draw(self):
         self.game_context.screen.blit(self.image, self.rect)
 
@@ -166,8 +196,8 @@ class Game_object(pygame.sprite.Sprite):
     def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
-            return False
-        return True
+            return True
+        return False
 
     def swap_display(self):
         pass
