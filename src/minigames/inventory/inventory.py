@@ -120,7 +120,7 @@ class Inventory:
             for obj in self.slots[i]:
                 if obj is not None:
                     obj.resize_image()
-                    obj.resize_collision_rects()
+                    obj.resize_collision_rects(obj.collision_rects, obj.raw_collision_rects)
 
 
     def update_object_collision_rects(self):
@@ -294,11 +294,11 @@ class Inventory:
         if obj is None:
             print("remove_current_object error: current_object is None")
             return -1
-        
+
         row, col = obj.last_inventory_pos
-        
+
         self.slots[row][col] = None
-        
+
         if self.game_context.network_manager.is_connected:
             # send the information to the other player
             self.game_context.network_manager.send_package(
@@ -426,7 +426,7 @@ class Inventory:
                 f"inventory_drop_object error: impossible to find the object {obj_name} in the inventory"
             )
             return -1 # remove it from inventory
-        
+
         self.slots[row][col] = None
         self.game_context.other_player_inventory_object = None
     # -------------------------------------------------------------------

@@ -102,25 +102,24 @@ class Game_object(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.raw_image, (new_width, new_height))
             self.rect = pygame.Rect(new_x, new_y, new_width, new_height)
 
-    def resize_collision_rects(self):
+    def resize_collision_rects(self, collision_rects, raw_collision_rects):
         delta = self.game_context.current_wall.delta
-        ll = len(self.collision_rects)
+        ll = len(collision_rects)
         for i in range(ll):
-            raw_collision_rect = self.raw_collision_rects[i]
+            raw_collision_rect = raw_collision_rects[i]
             new_x = int(delta * raw_collision_rect.x)
             new_y = int(delta * raw_collision_rect.y)
             new_w = int(delta * raw_collision_rect.w)
             new_h = int(delta * raw_collision_rect.h)
 
-            collision_rect = self.collision_rects[i]
-
+            collision_rect = collision_rects[i]
             if (
                 (new_x != collision_rect.x)
                 or (new_y != collision_rect.y)
                 or (new_w != collision_rect.w)
                 or (new_h != collision_rect.h)
             ):
-                self.collision_rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
+                collision_rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
 
 
     def change_collision_rects(self, json_collisions_path, wall_id_str):
@@ -166,6 +165,8 @@ class Game_object(pygame.sprite.Sprite):
     def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
+
+        # TODO: why these return values ?
             return False
         return True
 
