@@ -159,7 +159,7 @@ class Wall:
         self.resize_background()
         for obj in self.objects:
             obj.resize_image()
-            obj.resize_collision_rects(obj.collision_rects, obj.raw_collision_rects)
+            obj.resize_collision_rects()
 
     def resize_background(self):
         new_w = int(self.original_background_w * self.delta)

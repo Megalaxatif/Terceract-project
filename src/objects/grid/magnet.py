@@ -3,7 +3,7 @@ from __future__ import annotations
 import pygame
 
 from object import Game_object
-
+from utils import *
 
 class Magnet(Game_object):
     def __init__(
@@ -34,15 +34,17 @@ class Magnet(Game_object):
         self.end_rect = self.collision_rects[-2]
 
         self.grid_collisions = self.collision_rects[:-2]
+        self.raw_grid_collisions = self.grid_collisions.copy()
+
         self.collision_rects = [self.start_rect, self.end_rect]
+        self.raw_collision_rects = self.collision_rects.copy()
 
         self.key_given = False
 
 
-    def resize_collision_rects(self, collision_rects, raw_collision_rects):
-        super().resize_collision_rects(collision_rects, raw_collision_rects) # resize self.collision_rects
-        #for rect in self.grid_collisions:
-
+    def resize_collision_rects(self):
+        resize_rects(self.collision_rects, self.raw_collision_rects, self.game_context.current_wall.delta)
+        resize_rects(self.grid_collisions, self.raw_grid_collisions, self.game_context.current_wall.delta)
 
 
     def initialize(self):

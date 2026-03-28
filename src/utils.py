@@ -58,7 +58,18 @@ def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
 
 
 # ------------------------------------------------------------------
+def resize_rects(rects, raw_rects, delta): # resize a given list of rectangles using their raw dimensions and a delta
+    ll = len(rects)
+    for i in range(ll):
+        raw_rect = raw_rects[i]
+        new_x = int(delta * raw_rect.x)
+        new_y = int(delta * raw_rect.y)
+        new_w = int(delta * raw_rect.w)
+        new_h = int(delta * raw_rect.h)
 
+        rect = rects[i]
+        if ((new_x != rect.x) or (new_y != rect.y) or (new_w != rect.w) or (new_h != rect.h)):
+            rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
 
 # returns the list of the paths of all the collision layers of an object
 def load_collision_layers_path(

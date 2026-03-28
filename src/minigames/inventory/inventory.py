@@ -120,7 +120,7 @@ class Inventory:
             for obj in self.slots[i]:
                 if obj is not None:
                     obj.resize_image()
-                    obj.resize_collision_rects(obj.collision_rects, obj.raw_collision_rects)
+                    obj.resize_collision_rects()
 
 
     def update_object_collision_rects(self):
