@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pygame
-from utils import convert_to_pygame_rect_list, get_collision_rects, load_json_file, resize_rects
+from utils import *
 
 
 class Game_object(pygame.sprite.Sprite):
@@ -54,9 +54,7 @@ class Game_object(pygame.sprite.Sprite):
         self.movable = movable
         self.interactible = movable
         # TODO: this is not clean to put something exclusively related to closet in the parent class
-        self.display_collision_rect_bool = not (
-            "obj_in_closet" in self.name
-        )  # TODO why this name ?
+        self.display_collision_rect_bool = not ("obj_in_closet" in self.name)  # TODO why this name ?
         self.last_inventory_pos = -1, -1
 
         self.in_grid = False # TODO: don't put this in the parent class wtf
@@ -65,6 +63,7 @@ class Game_object(pygame.sprite.Sprite):
         self.raw_rect.center = self.valid_rect.center
 
     def drop_in_collision_rect(self, collision_index):
+        print("test")
         self.raw_rect.center = self.raw_collision_rects[collision_index].center
         self.valid_rect = self.raw_collision_rects[collision_index]
         self.collision_rect_id = collision_index
@@ -72,11 +71,11 @@ class Game_object(pygame.sprite.Sprite):
 
     # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
     def drop_at_pos(self, x, y) -> bool:
-        # print(f"Trying to drop {self.name} at ({x}, {y})")
+        #print(f"Trying to drop {self.name} at ({x}, {y})")
         return_code = False
         point_rect = pygame.Rect(int(x), int(y), 1, 1)
         collision_index = point_rect.collidelist(self.collision_rects)
-        if self.display_collision_rect_bool:
+        if self.display_collision_rect_bool: # why ?
             if collision_index != -1:
                 self.drop_in_collision_rect(collision_index)
                 return_code = True
@@ -126,14 +125,7 @@ class Game_object(pygame.sprite.Sprite):
 
     def display_collision_rect(self):
         if self.display_collision_rect_bool:
-            for rect in self.collision_rects:
-                temp_surface = pygame.Surface(
-                    (rect.width, rect.height), pygame.SRCALPHA
-                )
-                pygame.draw.rect(
-                    temp_surface, (255, 0, 0, 128), temp_surface.get_rect()
-                )
-                self.game_context.screen.blit(temp_surface, rect)
+            display_debug_rects(self.collision_rects, self.game_context.screen)
 
     def draw(self):
         self.game_context.screen.blit(self.image, self.rect)

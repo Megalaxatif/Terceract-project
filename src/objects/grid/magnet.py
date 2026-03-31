@@ -30,21 +30,30 @@ class Magnet(Game_object):
             displayed=False,
         )
 
-        self.start_rect = self.collision_rects[-1]
-        self.end_rect = self.collision_rects[-2]
-
-        self.grid_collisions = self.collision_rects[:-2]
+        self.display_collision_rect_bool = True
+        self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
         self.raw_grid_collisions = self.grid_collisions.copy()
 
-        self.collision_rects = [self.start_rect, self.end_rect]
+        start_rect = self.collision_rects[-1]
+        end_rect = self.collision_rects[-2]
+
+        self.collision_rects = [start_rect, end_rect]
         self.raw_collision_rects = self.collision_rects.copy()
 
         self.key_given = False
+        self.in_grid = False
+        self.in_drawer = True
 
 
     def resize_collision_rects(self):
         resize_rects(self.collision_rects, self.raw_collision_rects, self.game_context.current_wall.delta)
         resize_rects(self.grid_collisions, self.raw_grid_collisions, self.game_context.current_wall.delta)
+
+
+    def display_collision_rect(self):
+        if self.display_collision_rect_bool:
+            display_debug_rects([self.collision_rects[0]], self.game_context.screen)
+            display_debug_rects(self.grid_collisions, self.game_context.screen)
 
 
     def initialize(self):
@@ -58,18 +67,26 @@ class Magnet(Game_object):
             print(f'initialize of object named "{self.name}" error: no object with name "key" found in the game, exiting')
             self.game_context.quit()
 
+        self.drawer_reference = self.game_context.get_reference("drawer")  # useful to check if drawer was moved
+        if self.drawer_reference is None:
+            print(f'initialize of object named "{self.name}" error: no object with name "drawer" found in the game, exiting')
+            self.game_context.quit()
 
-    def handle_click(self, event):
-        if self != self.game_context.inventory.current_object:
-            self.game_context.drop_current_object(event)
-            if self.collision_rect_id == self.end_rect_id:
-                self.key_reference.displayed = True
+
+    #def handle_click(self, event):
+        # if self != self.game_context.inventory.current_object:
+        #     self.game_context.drop_current_object(event)
+        #     if self.collision_rect_id == 0 and self.grid_reference.displayed:
+        #         self.in_grid = True
+        #         print("in grid: ",self.in_grid)
+        #     elif self.collision_rect_id == 0 and self.drawer_reference.displayed:
+        #         print("in drawer: ",self.in_drawer)
 
 
     def handle_dragging(self, event):
         point_rect = pygame.Rect(self.rect.center[0], self.rect.center[1], 1, 1)
-        if point_rect.collidelist(list(self.collision_rects[:-2])):
-            print("collision")
+        col_id = point_rect.collidelist(self.grid_collisions)
+        if col_id != -1:
             self.game_context.drop_current_object(event)
 
 

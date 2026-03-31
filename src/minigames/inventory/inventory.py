@@ -254,9 +254,7 @@ class Inventory:
         else:
             row, col = self.current_object.last_inventory_pos
             if (row == -1) or (col == -1):
-                print(
-                    "drop_current_object (inventory) error: (row == -1) or (col == -1)"
-                )
+                print("drop_current_object (inventory) error: (row == -1) or (col == -1)")
                 return -1
             self.swap_object(row, col)
 

@@ -493,9 +493,7 @@ class Game:
                     self.screen.blit(self.mouse_hover_image, pos)  # draw the cursor
                 return
 
-    def recalculate_deltas(
-        self,
-    ):  # recalculate the delta values when the window is resized
+    def recalculate_deltas(self):  # recalculate the delta values when the window is resized
         self.height = self.screen.get_height()
         self.width = self.screen.get_width()
         self.delta_w = self.width / 1080
@@ -504,9 +502,7 @@ class Game:
 
         self.current_wall.delta_w = self.delta_w * (1080 / 1920)
         self.current_wall.delta_h = self.delta_h * (720 / 1080)
-        self.current_wall.delta = min(
-            self.current_wall.delta_w, self.current_wall.delta_h
-        )
+        self.current_wall.delta = min(self.current_wall.delta_w, self.current_wall.delta_h)
 
     def handle_basic_game_events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -592,6 +588,7 @@ class Game:
             self.dialogues.display()
             self.dialogues.update()
             self.display_mouse_hover()
+
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display
