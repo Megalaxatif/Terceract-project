@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pygame
 
 from object import Game_object
@@ -30,7 +28,6 @@ class Magnet(Game_object):
             displayed=False,
         )
 
-        self.display_collision_rect_bool = True
         self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
         self.raw_grid_collisions = self.grid_collisions.copy()
 
@@ -58,19 +55,8 @@ class Magnet(Game_object):
 
     def initialize(self):
         self.grid_reference = self.game_context.get_reference("grid")  # useful to check if grid was moved
-        if self.grid_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "grid" found in the game, exiting')
-            self.game_context.quit()
-
         self.key_reference = self.game_context.get_reference("key")  # useful to check if key was moved
-        if self.key_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "key" found in the game, exiting')
-            self.game_context.quit()
-
         self.drawer_reference = self.game_context.get_reference("drawer")  # useful to check if drawer was moved
-        if self.drawer_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "drawer" found in the game, exiting')
-            self.game_context.quit()
 
 
     #def handle_click(self, event):
@@ -91,6 +77,7 @@ class Magnet(Game_object):
 
 
     def update(self, event):
+        self.display_collision_rect_bool = True
         if self.game_context.current_object == self and event.type == pygame.MOUSEMOTION:
             if self.grid_reference.displayed:
                 self.handle_dragging(event)

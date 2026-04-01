@@ -434,7 +434,8 @@ class Game:
                 for obj in wall.objects:
                     if obj.name == name:
                         return obj
-        return None
+        print(f'get_reference error: no object with name {name} found in the game, exiting')
+        self.quit()
 
     def get_reference_large(
         self, name

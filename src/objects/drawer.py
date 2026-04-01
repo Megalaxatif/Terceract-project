@@ -37,41 +37,10 @@ class Drawer(Game_object):
         self.gone = False
 
     def initialize(self):
-        self.magnet_reference = self.game_context.get_reference(
-            "obj_in_drawer_magnet"
-        )  # useful to change the visibility
-        if self.magnet_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "obj_in_drawer_magnet" found in the game, exiting'
-            )
-            self.game_context.quit()
-
-        self.glue_reference = self.game_context.get_reference(
-            "obj_in_drawer_glue"
-        )  # useful to change the visibility
-        if self.magnet_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "obj_in_drawer_glue" found in the game, exiting'
-            )
-            self.game_context.quit()
-
-        self.trigger_reference = self.game_context.get_reference(
-            "drawer_up_view_withFB_trigger"
-        )  # useful to change the visibility
-        if self.magnet_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "drawer_up_view_withFB_trigger" found in the game, exiting'
-            )
-            self.game_context.quit()
-
-        self.withFB_list_reference = self.game_context.get_reference_large(
-            "withFB"
-        )  # useful to change the visibility
-        if self.magnet_reference == []:
-            print(
-                f'initialize of object named "{self.name}" error: no object with "withFB" in its name found in the game, exiting'
-            )
-            self.game_context.quit()
+        self.magnet_reference = self.game_context.get_reference("magnet")  # useful to change the visibility
+        self.glue_reference = self.game_context.get_reference("obj_in_drawer_glue")  # useful to change the visibility
+        self.trigger_reference = self.game_context.get_reference("drawer_up_view_withFB_trigger")  # useful to change the visibility
+        self.withFB_list_reference = self.game_context.get_reference_large("withFB")  # useful to change the visibility
 
     def swap_display(self):
         wall = self.game_context.current_wall.objects

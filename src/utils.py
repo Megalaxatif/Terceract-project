@@ -375,18 +375,19 @@ def create_object(
                 True,
             )
 
+        if obj_name == "magnet":
+            return Magnet(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                default_collision,
+                default_wall,
+                current_collision_id,
+            )
+
         if "obj_in_drawer" in obj_name:
-            if "magnet" in obj_name:
-                return Magnet(
-                    game_context,
-                    obj_name,
-                    img_path,
-                    rect,
-                    collision_rects,
-                    default_collision,
-                    default_wall,
-                    current_collision_id,
-                )
 
             return Game_object(
                 game_context,

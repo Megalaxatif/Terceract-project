@@ -152,23 +152,6 @@
         ],
         "default_wall_id": "14"
     },
-    "obj_in_drawer_magnet": {
-        "image": "assets/cropped_images/cropped_obj_in_drawer_magnet.png",
-        "rect": [
-            626,
-            202,
-            62,
-            62
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            626,
-            202,
-            62,
-            62
-        ],
-        "default_wall_id": "14"
-    },
     "obj_in_closet_vhs": {
         "image": "assets/cropped_images/cropped_obj_in_closet_vhs.png",
         "rect": [
@@ -370,6 +353,23 @@
             862,
             153,
             155
+        ],
+        "default_wall_id": "14"
+    },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            626,
+            202,
+            62,
+            62
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            626,
+            202,
+            62,
+            62
         ],
         "default_wall_id": "14"
     },

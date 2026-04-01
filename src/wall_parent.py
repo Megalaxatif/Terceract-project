@@ -202,5 +202,5 @@ class Wall:
     # NOTE: can be redefined in child classes
     def update(self, event):
         for obj in self.objects:
-            if obj.displayed:
-                obj.update(event)  # interactions relative to each object
+            #if obj.displayed:
+            obj.update(event)  # interactions relative to each object

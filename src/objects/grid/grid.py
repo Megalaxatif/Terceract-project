@@ -38,15 +38,8 @@ class Grid(Game_object):
         pass
 
     def initialize(self):
-        self.magnet_reference = self.game_context.get_reference("obj_in_drawer_magnet")  # useful to check if magnet was moved
-        if self.magnet_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "magnet" found in the game, exiting')
-            self.game_context.quit()
-
+        self.magnet_reference = self.game_context.get_reference("magnet")  # useful to check if magnet was moved
         self.grid_reference = self.game_context.get_reference("grid")  # useful to check if grid was moved
-        if self.grid_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "grid" found in the game, exiting')
-            self.game_context.quit()
 
     def handle_click_selection(self, event):
         self.grid_reference.displayed = True

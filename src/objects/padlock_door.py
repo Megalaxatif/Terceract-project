@@ -31,9 +31,6 @@ class Padlock_door(Game_object):
 
     def initialize(self):
         self.padlock_reference = self.game_context.get_reference("padlock")  # useful to change the visibility
-        if self.padlock_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "padlock" found in the game, exiting')
-            self.game_context.quit()
 
     def handle_click_selection(self, event):
         self.padlock_reference.displayed = True

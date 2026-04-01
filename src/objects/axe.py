@@ -32,25 +32,9 @@ class Axe(Game_object):
 
     def initialize(self):
         self.hole_reference = self.game_context.get_reference("hole")  # useful to change the visibility
-        if self.hole_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "hole" found in the game, exiting'
-            )
-            self.game_context.quit()
-
         self.paper_reference = self.game_context.get_reference("paper")  # useful to change the visibility
-        if self.paper_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "paper" found in the game, exiting'
-            )
-            self.game_context.quit()
-
         self.clock_reference = self.game_context.get_reference("clock")  # useful to check if the clock was moved
-        if self.clock_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "clock" found in the game, exiting'
-            )
-            self.game_context.quit()
+
 
     def handle_click(self, event):
         # check if we clicked on the hole and if the clock has been moved from it's original position
