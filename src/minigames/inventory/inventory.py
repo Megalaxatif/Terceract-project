@@ -375,9 +375,7 @@ class Inventory:
             )
             return -1
 
-        dest_wall = self.game_context.room_list[dest_room_id][
-            dest_wall_id
-        ]  # on which wall do we want to put it
+        dest_wall = self.game_context.room_list[dest_room_id][dest_wall_id]  # on which wall do we want to put it
         dest_wall.objects.add(obj)  # add the object on the wall
         dest_wall_id_str = f"{dest_room_id + 1}{dest_wall_id + 1}"
         obj.change_collision_rects(
