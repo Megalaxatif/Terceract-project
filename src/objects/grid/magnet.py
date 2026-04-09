@@ -28,32 +28,36 @@ class Magnet(Game_object):
             displayed=False,
         )
 
-        self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
-        self.raw_grid_collisions = self.grid_collisions.copy()
+    def change_collision_rects(self, json_collisions_path, wall_id_str):
+        super().change_collision_rects(json_collisions_path, wall_id_str)
+        # if we are on the right wall of room 1 where the grid minigame is located
+        if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+            self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
+            self.raw_grid_collisions = self.grid_collisions.copy()
 
-        grid_start_rect = self.collision_rects[-1]
-        end_rect = self.collision_rects[-2]
+            grid_start_rect = self.collision_rects[-1]
+            end_rect = self.collision_rects[-2]
 
-        self.collision_rects = [grid_start_rect, end_rect]
-        self.raw_collision_rects = self.collision_rects.copy()
-
-        self.key_given = False
-        self.in_grid = False
-        self.in_drawer = True
-
-        self.i = 0
+            self.collision_rects = [grid_start_rect, end_rect]
+            self.raw_collision_rects = self.collision_rects.copy()
 
 
     def resize_collision_rects(self):
-        resize_rects(self.collision_rects, self.raw_collision_rects, self.game_context.current_wall.delta)
-        resize_rects(self.grid_collisions, self.raw_grid_collisions, self.game_context.current_wall.delta)
+        if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+            resize_rects(self.collision_rects, self.raw_collision_rects, self.game_context.current_wall.delta)
+            resize_rects(self.grid_collisions, self.raw_grid_collisions, self.game_context.current_wall.delta)
+        else:
+            super().resize_collision_rects()
 
 
     def display_collision_rect(self):
         if self.display_collision_rect_bool:
-            display_debug_rects([self.collision_rects[0]], self.game_context.screen)
-            display_debug_rects([self.collision_rects[1]], self.game_context.screen)
-            display_debug_rects(self.grid_collisions, self.game_context.screen)
+            if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+                display_debug_rects([self.collision_rects[0]], self.game_context.screen)
+                display_debug_rects([self.collision_rects[1]], self.game_context.screen)
+                display_debug_rects(self.grid_collisions, self.game_context.screen)
+            else:
+                super().display_collision_rect()
 
 
     def initialize(self):
@@ -65,12 +69,6 @@ class Magnet(Game_object):
     def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
-            if self.collision_rect_id == 0 and self.grid_reference.displayed:
-                self.in_grid = True
-                self.in_drawer = False
-            elif self.collision_rect_id == 0 and self.drawer_background_reference.displayed:
-                self.in_drawer = True
-                self.in_grid = False
 
     # def draw(self):
     #     if (self.in_grid and self.grid_reference.displayed) or (self.in_drawer and self.drawer_background_reference.displayed):
@@ -85,12 +83,7 @@ class Magnet(Game_object):
 
 
     def update(self, event):
-        # TODO: awful, put this logic in drawer
-        if (self.in_grid and self.grid_reference.displayed) or (self.in_drawer and self.drawer_background_reference.displayed):
-            self.displayed = True
-        else:
-            self.displayed = False
-
         if self.game_context.current_object == self and event.type == pygame.MOUSEMOTION:
-            if self.grid_reference.displayed:
-                self.handle_dragging(event)
+            if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+                if self.grid_reference.displayed:
+                    self.handle_dragging(event)

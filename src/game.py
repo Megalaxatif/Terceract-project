@@ -19,7 +19,6 @@ ROOM_2 = 1
 ROOM_3 = 2
 ROOM_4 = 3
 ROOM_5 = 4
-
 BACK_WALL = 0
 LEFT_WALL = 1
 FRONT_WALL = 2
@@ -373,13 +372,9 @@ class Game:
     def drop_current_object(self, event):
         if event and self.current_object:
             # self.current_object.handle_click(event)
-            self.current_object.drop_at_pos(
-                event.pos[0], event.pos[1]
-            )  # TODO: change to return the collision rect id
+            self.current_object.drop_at_pos(event.pos[0], event.pos[1])  # TODO: change to return the collision rect id
             if self.network_manager.is_connected:
-                self.network_manager.send_package(
-                    "variable", "game", "other_player_object_name", ""
-                )
+                self.network_manager.send_package("variable", "game", "other_player_object_name", "")
                 self.network_manager.send_package(
                     "function",
                     "game",
@@ -393,20 +388,12 @@ class Game:
 
         elif event and self.inventory.current_object:
             if self.network_manager.is_connected:
-                self.network_manager.send_package(
-                    "variable", "game", "other_player_inventory_object_name", ""
-                )
-            self.inventory.drop_current_object(
-                event
-            )  # TODO: change to return the collision rect id
+                self.network_manager.send_package("variable", "game", "other_player_inventory_object_name", "")
+            self.inventory.drop_current_object(event)  # TODO: change to return the collision rect id
 
     # function useful for network
-    def drop_object(
-        self, obj_name, room_id, wall_id, collision_rect_id
-    ):  # move an object on a given wall in a given room to a given collision_rect
-        dest_wall = self.room_list[room_id][
-            wall_id
-        ]  # on which wall do we want to put it
+    def drop_object(self, obj_name, room_id, wall_id, collision_rect_id):  # move an object on a given wall in a given room to a given collision_rect
+        dest_wall = self.room_list[room_id][wall_id]  # on which wall do we want to put it
 
         object = None
         for obj in dest_wall.objects:
@@ -414,19 +401,13 @@ class Game:
                 object = obj
 
         if object is None:
-            print(
-                f"drop_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}"
-            )
+            print(f"drop_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
-        if (
-            collision_rect_id == -1
-        ):  # we tried to move the object at a wrong position when it was at its initial position
+        if (collision_rect_id == -1):  # we tried to move the object at a wrong position when it was at its initial position
             object.raw_rect.center = object.valid_rect.center
         else:
-            object.drop_in_collision_rect(
-                collision_rect_id
-            )  # set the new collision rect id of the object and put it inside
+            object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
     def get_reference(self, name):  # returns the reference to an object in the game
         for room in self.room_list:
@@ -437,9 +418,7 @@ class Game:
         print(f'get_reference error: no object with name {name} found in the game, exiting')
         self.quit()
 
-    def get_reference_large(
-        self, name
-    ):  # returns the reference to an object in the game
+    def get_reference_large(self, name):  # returns the reference to an object in the game
         res = []
         for room in self.room_list:
             for wall in room:

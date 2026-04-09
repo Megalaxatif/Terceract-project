@@ -1,13 +1,9 @@
 {
     "grid_wall": [],
-    "drawer": [],
     "closed_closet": [],
     "big_frame": [],
-    "bottle": [],
-    "gray_bg_drawer": [],
     "opened_closet": [],
     "grid": [],
-    "drawer_up_view_withoutFB": [],
     "obj_in_closet_vhs": [],
     "obj_in_closet_umbrella": [],
     "obj_in_closet_shoes": [],
@@ -20,101 +16,5 @@
     "obj_in_closet_clothes2": [],
     "obj_in_closet_clothes": [],
     "obj_in_closet_ball": [],
-    "magnet": [
-        [
-            531,
-            486,
-            166,
-            421
-        ],
-        [
-            448,
-            33,
-            249,
-            156
-        ],
-        [
-            697,
-            33,
-            273,
-            67
-        ],
-        [
-            961,
-            81,
-            438,
-            193
-        ],
-        [
-            789,
-            194,
-            78,
-            595
-        ],
-        [
-            449,
-            173,
-            160,
-            143
-        ],
-        [
-            541,
-            278,
-            268,
-            256
-        ],
-        [
-            801,
-            365,
-            498,
-            256
-        ],
-        [
-            1390,
-            258,
-            53,
-            538
-        ],
-        [
-            1133,
-            712,
-            271,
-            266
-        ],
-        [
-            858,
-            603,
-            181,
-            186
-        ],
-        [
-            641,
-            880,
-            503,
-            116
-        ],
-        [
-            711,
-            550,
-            62,
-            60
-        ],
-        [
-            629,
-            203,
-            57,
-            62
-        ]
-    ],
-    "key": [],
-    "drawer_up_view_withFB": [],
-    "obj_in_drawer_glue": [],
-    "drawer_up_view_withFB_trigger": [
-        [
-            317,
-            364,
-            57,
-            126
-        ]
-    ]
+    "key": []
 }

@@ -49,10 +49,8 @@ class Drawer(Game_object):
                 obj.displayed = not obj.displayed
                 obj.display_collision_rect_bool = self.displayed
 
-        #if not self.magnet_reference.in_grid:
-        #    self.magnet_reference.displayed = self.displayed
-        #    self.magnet_reference.display_collision_rect_bool = self.displayed
-        #if self.magnet_reference.
+        self.magnet_reference.displayed = self.displayed
+        self.magnet_reference.display_collision_rect_bool = self.displayed # will follow the opening and the closing of the drawer automaticaly
 
         self.glue_reference.displayed = self.displayed
         self.glue_reference.display_collision_rect_bool = self.displayed

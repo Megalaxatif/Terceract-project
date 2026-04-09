@@ -1,10 +1,18 @@
 {
     "table": [],
     "little_frame": [],
+    "drawer": [],
     "big_frame2": [],
     "big_frame1": [],
+    "bottle": [],
     "gray_bg_table": [],
+    "gray_bg_drawer": [],
     "opened_table": [],
+    "drawer_up_view_withoutFB": [],
     "obj_in_table_plush": [],
-    "obj_in_table_lightbulb": []
+    "obj_in_table_lightbulb": [],
+    "magnet": [],
+    "drawer_up_view_withFB": [],
+    "obj_in_drawer_glue": [],
+    "drawer_up_view_withFB_trigger": []
 }
