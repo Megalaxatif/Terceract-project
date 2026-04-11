@@ -63,7 +63,6 @@ class Game_object(pygame.sprite.Sprite):
         self.raw_rect.center = self.valid_rect.center
 
     def drop_in_collision_rect(self, collision_index):
-        print("test")
         self.raw_rect.center = self.raw_collision_rects[collision_index].center
         self.valid_rect = self.raw_collision_rects[collision_index]
         self.collision_rect_id = collision_index

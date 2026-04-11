@@ -321,5 +321,22 @@
             76
         ],
         "default_wall_id": "14"
+    },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            626,
+            203,
+            62,
+            62
+        ],
+        "collision_id": 0,
+        "default_collision": [
+            626,
+            202,
+            62,
+            62
+        ],
+        "default_wall_id": "12"
     }
 }

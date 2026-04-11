@@ -220,7 +220,7 @@ class Inventory:
     def drop_current_object(self, event):
         obj = self.current_object
         if obj is None:
-            print("drop_current_object error: current_object is None")
+            print("inventory.drop_current_object error: current_object is None")
             return False
         obj.handle_click_selection(event)
         # Mettre à jour la position de l'objet à la position actuelle de la souris

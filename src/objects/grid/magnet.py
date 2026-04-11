@@ -28,7 +28,7 @@ class Magnet(Game_object):
             displayed=False,
         )
         self.i = 0
-        self.in_grid = False
+        self.in_grid = False # TODO: change so that it works when saving the game
 
     def change_collision_rects(self, json_collisions_path, wall_id_str):
         super().change_collision_rects(json_collisions_path, wall_id_str)
@@ -36,7 +36,6 @@ class Magnet(Game_object):
         if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
             self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
             self.raw_grid_collisions = self.grid_collisions.copy()
-
             grid_start_rect = self.collision_rects[-1]
             end_rect = self.collision_rects[-2]
 
@@ -68,15 +67,15 @@ class Magnet(Game_object):
 
 
     def handle_click(self, event):
-        if self != self.game_context.inventory.current_object:
-            dropped = self.game_context.drop_current_object(event)
-            if dropped and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
-                self.in_grid = True
+        #if self != self.game_context.inventory.current_object:
+        dropped = self.game_context.drop_current_object(event)
+        if dropped and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+            self.in_grid = True
+        return True # avoid error
 
 
     def handle_click_selection(self, event):
         if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
-            print("on grid")
             self.displayed = self.grid_reference.displayed
             self.display_collision_rect_bool = self.grid_reference.displayed
 
