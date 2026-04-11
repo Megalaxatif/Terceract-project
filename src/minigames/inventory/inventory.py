@@ -92,15 +92,9 @@ class Inventory:
                             converted_rect = convert_to_pygame_rect(rect)
                             converted_default_collision = None
                             if default_collision:
-                                converted_default_collision = convert_to_pygame_rect(
-                                    default_collision
-                                )
-                            collision_rects = get_collision_rects(
-                                collision_layers_dir, name
-                            )
-                            converted_collision_rects = convert_to_pygame_rect_list(
-                                collision_rects
-                            )
+                                converted_default_collision = convert_to_pygame_rect(default_collision)
+                            collision_rects = get_collision_rects(collision_layers_dir, name)
+                            converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
                             object = create_object(
                                 name,
                                 self.game_context,
@@ -227,11 +221,12 @@ class Inventory:
         obj = self.current_object
         if obj is None:
             print("drop_current_object error: current_object is None")
-            return -1
+            return False
         obj.handle_click_selection(event)
         # Mettre à jour la position de l'objet à la position actuelle de la souris
         mx, my = event.pos[0], event.pos[1]
-        if obj.drop_at_pos(mx, my):
+        return_code = obj.drop_at_pos(mx, my)
+        if return_code:
             if self.game_context.network_manager.is_connected:
                 # send the information to the other player
                 self.game_context.network_manager.send_package(
@@ -246,17 +241,17 @@ class Inventory:
             self.game_context.current_wall.objects.add(obj)
             self.current_object = None
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package(
-                    "variable", "game", "other_player_object_name", ""
-                )
+                self.game_context.network_manager.send_package("variable", "game", "other_player_object_name", "")
             self.current_object = None
 
         else:
             row, col = self.current_object.last_inventory_pos
             if (row == -1) or (col == -1):
                 print("drop_current_object (inventory) error: (row == -1) or (col == -1)")
-                return -1
+                return False
             self.swap_object(row, col)
+        return return_code
+
 
     def swap_object(self, row, col):
         obj_name = ""

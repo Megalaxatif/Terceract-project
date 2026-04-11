@@ -48,12 +48,8 @@ class Wall:
     # ---------------------------INIT---------------------------------------
     def create_background(self) -> pygame.Surface:
         background_dir = Path(self.root_dir / "images/background")
-        background_path = list(
-            background_dir.iterdir()
-        )  # NOTE: we should only have one png file for the background
-        background_exist = (
-            background_path is not None
-        )  # NOTE: iterdir lists the content of the folder
+        background_path = list(background_dir.iterdir())  # NOTE: we should only have one png file for the background
+        background_exist = (background_path is not None)  # NOTE: iterdir lists the content of the folder
         background = (
             pygame.image.load(background_path[0]).convert()
             if background_exist
@@ -63,9 +59,28 @@ class Wall:
             background.fill((255, 0, 0))
         return background
 
+
+    def get_collision_data(self):
+        collision_data = {}
+        collision_layers =  [f for f in sorted(Path(self.collision_layers_dir).iterdir())]
+        for collision_layer in collision_layers:
+            #collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
+            object_name = collision_layer.name.split("_pos")[0]
+            if not collision_data.get(object_name):
+                collision_data[object_name] = []
+
+            collision_image = pygame.image.load(collision_layer).convert_alpha()
+            collision_rect = get_bounding_box(collision_image)
+            collision_data[object_name].append(collision_rect)
+
+        save_data_in_json(collision_data, self.json_collisions_path) # save collisions
+
+        return collision_data
+
+
     def get_objects_data(self):
+        collisions_data = self.get_collision_data()
         objects_data = {}
-        collisions_data = {}
         object_layers_path = [f for f in sorted(Path(self.object_layers_dir).iterdir())]
         for object_path in reversed(object_layers_path):  # reversed so we draw the object with the lowest layer id first
             if object_path.parent == self.object_layers_dir:
@@ -86,11 +101,7 @@ class Wall:
             objects_data[object_name]["default_collision"] = default_collision
             objects_data[object_name]["default_wall_id"] = self.wall_id_str
 
-            collision_rects = get_collision_rects(self.collision_layers_dir, object_name)
-            collisions_data[object_name] = collision_rects
-
         save_data_in_json(objects_data, self.json_objects_path) # save data
-        save_data_in_json(collisions_data, self.json_collisions_path) # save collisions
 
         return objects_data, collisions_data
 
@@ -103,11 +114,10 @@ class Wall:
             objects_data = load_json_file(self.json_objects_path)  # load or init the JSON file
             # case where we launched the game for the first time or we previously reset the progression
 
-            if not objects_data or not collisions_data:
+            if not objects_data:
                 objects_data, collisions_data = self.get_objects_data()
 
         else:
-            # TODO: change the name to objects_data
             objects_data = self.game_context.game_data["wall_data"][self.room_id][self.wall_id] # the data from the other player
 
         for key in objects_data:
@@ -117,7 +127,7 @@ class Wall:
             default_collision = objects_data[key].get("default_collision")
             default_wall = objects_data[key].get("default_wall_id", "")
 
-            collision_rects = collisions_data[key] # get the collisions
+            collision_rects = collisions_data.get(key, []) # get the collisions
 
             converted_rect = convert_to_pygame_rect(rect)
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)

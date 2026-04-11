@@ -40,9 +40,17 @@ class Grid(Game_object):
     def initialize(self):
         self.magnet_reference = self.game_context.get_reference("magnet")  # useful to check if magnet was moved
         self.grid_reference = self.game_context.get_reference("grid")  # useful to check if grid was moved
+        self.grid_background_reference = self.game_context.get_reference("grid_background")
+        self.key_reference = self.game_context.get_reference("key")
 
     def handle_click_selection(self, event):
         self.grid_reference.displayed = True
+        self.grid_background_reference.displayed = True
+        if self.magnet_reference.in_grid:
+            self.magnet_reference.display_collision_rect_bool = True
+            self.magnet_reference.displayed = True
+        if self.key_reference.found:
+            self.key_reference.displayed = True
 
     # def handle_click_selection(self, event):
     #     wall = self.game_context.current_wall.objects

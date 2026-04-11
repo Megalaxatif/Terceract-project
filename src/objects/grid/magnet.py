@@ -27,6 +27,8 @@ class Magnet(Game_object):
             movable=True,
             displayed=False,
         )
+        self.i = 0
+        self.in_grid = False
 
     def change_collision_rects(self, json_collisions_path, wall_id_str):
         super().change_collision_rects(json_collisions_path, wall_id_str)
@@ -51,28 +53,32 @@ class Magnet(Game_object):
 
 
     def display_collision_rect(self):
-        if self.display_collision_rect_bool:
-            if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
-                display_debug_rects([self.collision_rects[0]], self.game_context.screen)
-                display_debug_rects([self.collision_rects[1]], self.game_context.screen)
-                display_debug_rects(self.grid_collisions, self.game_context.screen)
-            else:
-                super().display_collision_rect()
+        if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3 and self.grid_reference.displayed:
+            display_debug_rects([self.collision_rects[0]], self.game_context.screen)
+            display_debug_rects([self.collision_rects[1]], self.game_context.screen)
+            #display_debug_rects(self.grid_collisions, self.game_context.screen)
+        else:
+            super().display_collision_rect()
 
 
     def initialize(self):
-        self.grid_reference = self.game_context.get_reference("grid")  # useful to check if grid was moved
-        self.key_reference = self.game_context.get_reference("key")  # useful to check if key was moved
-        self.drawer_background_reference = self.game_context.get_reference("gray_bg_drawer")  # useful to check if drawer was moved
+        self.grid_reference = self.game_context.get_reference("grid")
+        self.key_reference = self.game_context.get_reference("key")
+        self.drawer_background_reference = self.game_context.get_reference("gray_bg_drawer")
 
 
     def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
-            self.game_context.drop_current_object(event)
+            dropped = self.game_context.drop_current_object(event)
+            if dropped and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+                self.in_grid = True
 
-    # def draw(self):
-    #     if (self.in_grid and self.grid_reference.displayed) or (self.in_drawer and self.drawer_background_reference.displayed):
-    #         self.game_context.screen.blit(self.image, self.rect)
+
+    def handle_click_selection(self, event):
+        if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+            print("on grid")
+            self.displayed = self.grid_reference.displayed
+            self.display_collision_rect_bool = self.grid_reference.displayed
 
 
     def handle_dragging(self, event):

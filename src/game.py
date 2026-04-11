@@ -349,9 +349,7 @@ class Game:
             self.room_4_unlocked = True
 
     def select_current_object(self, event):
-        for obj in reversed(
-            self.current_wall.objects.sprites()
-        ):  # reversed so we click the top object first
+        for obj in reversed(self.current_wall.objects.sprites()):  # reversed so we click the top object first
             if obj.displayed and obj.rect.collidepoint(event.pos):
                 if obj.movable:
                     if (
@@ -369,10 +367,12 @@ class Game:
                 obj.handle_click_selection(event)
                 return
 
+
     def drop_current_object(self, event):
+        return_code = False
         if event and self.current_object:
             # self.current_object.handle_click(event)
-            self.current_object.drop_at_pos(event.pos[0], event.pos[1])  # TODO: change to return the collision rect id
+            return_code = self.current_object.drop_at_pos(event.pos[0], event.pos[1])  # TODO: change to return the collision rect id
             if self.network_manager.is_connected:
                 self.network_manager.send_package("variable", "game", "other_player_object_name", "")
                 self.network_manager.send_package(
@@ -389,7 +389,10 @@ class Game:
         elif event and self.inventory.current_object:
             if self.network_manager.is_connected:
                 self.network_manager.send_package("variable", "game", "other_player_inventory_object_name", "")
-            self.inventory.drop_current_object(event)  # TODO: change to return the collision rect id
+            return_code = self.inventory.drop_current_object(event)  # TODO: change to return the collision rect id
+
+        return return_code
+
 
     # function useful for network
     def drop_object(self, obj_name, room_id, wall_id, collision_rect_id):  # move an object on a given wall in a given room to a given collision_rect

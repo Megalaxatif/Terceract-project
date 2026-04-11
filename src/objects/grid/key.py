@@ -27,18 +27,12 @@ class Key(Game_object):
             displayed=False,
         )
 
-        self.key_given = False
-        self.displayed = False
-        
-        
+        self.found = False
+
+
     def initialize(self):
         self.closed_closet_reference = self.game_context.get_reference("closed_closet")# useful to change the visibility
-        if self.closed_closet_reference is None:
-            print(f"initialize of object named \"{self.name}\" error: no object with name \"closed_closet\" found in the game, exiting")
-            self.game_context.quit()
-            
-    def handle_click_selection(self, event):
-        pass
+
 
     def handle_click(self, event):
         if self.closed_closet_reference.rect.collidepoint(event.pos):

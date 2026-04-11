@@ -1,20 +1,88 @@
 {
-    "grid_wall": [],
-    "closed_closet": [],
-    "big_frame": [],
-    "opened_closet": [],
-    "grid": [],
-    "obj_in_closet_vhs": [],
-    "obj_in_closet_umbrella": [],
-    "obj_in_closet_shoes": [],
-    "obj_in_closet_screwdriver": [],
-    "obj_in_closet_plush2": [],
-    "obj_in_closet_plush": [],
-    "obj_in_closet_lightbulb": [],
-    "obj_in_closet_glasses": [],
-    "obj_in_closet_clothes3": [],
-    "obj_in_closet_clothes2": [],
-    "obj_in_closet_clothes": [],
-    "obj_in_closet_ball": [],
-    "key": []
+    "magnet": [
+        [
+            531,
+            486,
+            166,
+            421
+        ],
+        [
+            448,
+            33,
+            249,
+            156
+        ],
+        [
+            858,
+            603,
+            181,
+            186
+        ],
+        [
+            641,
+            880,
+            503,
+            116
+        ],
+        [
+            711,
+            550,
+            62,
+            60
+        ],
+        [
+            629,
+            203,
+            57,
+            62
+        ],
+        [
+            697,
+            33,
+            273,
+            67
+        ],
+        [
+            961,
+            81,
+            438,
+            193
+        ],
+        [
+            789,
+            194,
+            78,
+            595
+        ],
+        [
+            449,
+            173,
+            160,
+            143
+        ],
+        [
+            541,
+            278,
+            268,
+            256
+        ],
+        [
+            801,
+            365,
+            498,
+            256
+        ],
+        [
+            1390,
+            258,
+            53,
+            538
+        ],
+        [
+            1133,
+            712,
+            271,
+            266
+        ]
+    ]
 }

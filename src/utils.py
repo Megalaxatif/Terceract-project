@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import pygame
 
+
 # ---------------------JSON-----------------------------------
 #
 def load_json_file(json_path: Path) -> dict:
@@ -97,7 +98,7 @@ def load_collision_layers_path(collision_layers_dir: Path, object_name: str) -> 
 
 def get_collision_rects(
     collision_layers_dir: Path, object_name: str
-) -> list[tuple[int, int, int, int]]:  # TODO: can we move this to utils ?
+) -> list[tuple[int, int, int, int]]:
     collision_rects = []
     collision_layers_path = load_collision_layers_path(collision_layers_dir, object_name)
     for path in collision_layers_path:
@@ -187,7 +188,8 @@ def create_object(
     from objects.padlock_door import Padlock_door
     from objects.screwdriver import Screwdriver
     from objects.paper import Paper
-    from objects.fullscreen_object import Fullscreen_object
+    from objects.fullscreen_paper import Fullscreen_paper
+    from objects.grid_background import Grid_background
     from objects.table import Table
     from objects.plank import Plank
 
@@ -297,7 +299,21 @@ def create_object(
         )
 
     elif obj_name == "grid":
-        return Fullscreen_object(
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            False
+        )
+
+    elif obj_name == "grid_background":
+        return Grid_background(
             game_context,
             obj_name,
             img_path,
@@ -600,7 +616,7 @@ def create_object(
         )
 
     elif obj_name == "fullscreen_paper":
-        return Fullscreen_object(
+        return Fullscreen_paper(
             game_context,
             obj_name,
             img_path,

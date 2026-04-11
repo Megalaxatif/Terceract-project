@@ -1,8 +1,4 @@
 {
-    "mirror": [],
-    "bathtub": [],
-    "hole": [],
-    "paper": [],
     "clock": [
         [
             88,
@@ -10,6 +6,5 @@
             292,
             1061
         ]
-    ],
-    "fullscreen_paper": []
+    ]
 }

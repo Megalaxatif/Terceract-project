@@ -2,7 +2,7 @@ import pygame
 from object import Game_object
 
 
-class Fullscreen_object(Game_object):
+class Fullscreen_paper(Game_object):
     def __init__(
         self,
         game_context,

@@ -50,6 +50,23 @@
         ],
         "default_wall_id": "14"
     },
+    "grid_background": {
+        "image": "assets/cropped_images/cropped_grid_background.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "14"
+    },
     "opened_closet": {
         "image": "assets/cropped_images/cropped_opened_closet.png",
         "rect": [
@@ -70,17 +87,17 @@
     "grid": {
         "image": "assets/cropped_images/cropped_grid.png",
         "rect": [
-            0,
-            0,
-            1920,
-            1080
+            448,
+            28,
+            1024,
+            1024
         ],
         "collision_id": -1,
         "default_collision": [
-            0,
-            0,
-            1920,
-            1080
+            448,
+            28,
+            1024,
+            1024
         ],
         "default_wall_id": "14"
     },
