@@ -73,7 +73,7 @@ class Magnet(Game_object):
         if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3 and self.grid_reference.displayed:
             display_debug_rects([self.collision_rects[0]], self.game_context.screen)
             display_debug_rects([self.collision_rects[1]], self.game_context.screen)
-            #display_debug_rects(self.grid_collisions, self.game_context.screen)
+            display_debug_rects(self.grid_collisions, self.game_context.screen)
         else:
             super().display_collision_rect()
 
@@ -83,6 +83,8 @@ class Magnet(Game_object):
         dropped = self.game_context.drop_current_object(event)
         if dropped and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
             self.in_grid = True
+            if self.game_context.network_manager.connected:
+                self.game_context.network_manager.send_package("variable", "magnet", "in_grid", "True")
         return True # avoid error
 
 
