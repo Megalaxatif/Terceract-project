@@ -57,8 +57,6 @@ class Game_object(pygame.sprite.Sprite):
         self.display_collision_rect_bool = not ("obj_in_closet" in self.name)  # TODO why this name ?
         self.last_inventory_pos = -1, -1
 
-        self.in_grid = False # TODO: don't put this in the parent class wtf
-
     def replace(self):
         self.raw_rect.center = self.valid_rect.center
 

@@ -28,19 +28,37 @@ class Magnet(Game_object):
             displayed=False,
         )
         self.i = 0
-        self.in_grid = False # TODO: change so that it works when saving the game
+
+
+    def initialize(self):
+
+        grid_wall = self.game_context.room_list[0][3]
+        self.in_grid = self in grid_wall.objects
+        if self.in_grid:
+            self.use_grid_collisions()
+
+        self.grid_reference = self.game_context.get_reference("grid")
+        self.key_reference = self.game_context.get_reference("key")
+        self.drawer_background_reference = self.game_context.get_reference("gray_bg_drawer")
+
+
+    def use_grid_collisions(self):
+        #json_path = self.game_context.room_list[0][3].json_collisions_path
+        # if we are on the right wall of room 1 where the grid minigame is located
+        self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
+        self.raw_grid_collisions = self.grid_collisions.copy()
+        grid_start_rect = self.collision_rects[-1]
+        end_rect = self.collision_rects[-2]
+
+        self.collision_rects = [grid_start_rect, end_rect]
+        self.raw_collision_rects = self.collision_rects.copy()
+
 
     def change_collision_rects(self, json_collisions_path, wall_id_str):
         super().change_collision_rects(json_collisions_path, wall_id_str)
         # if we are on the right wall of room 1 where the grid minigame is located
         if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
-            self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
-            self.raw_grid_collisions = self.grid_collisions.copy()
-            grid_start_rect = self.collision_rects[-1]
-            end_rect = self.collision_rects[-2]
-
-            self.collision_rects = [grid_start_rect, end_rect]
-            self.raw_collision_rects = self.collision_rects.copy()
+            self.use_grid_collisions()
 
 
     def resize_collision_rects(self):
@@ -58,12 +76,6 @@ class Magnet(Game_object):
             #display_debug_rects(self.grid_collisions, self.game_context.screen)
         else:
             super().display_collision_rect()
-
-
-    def initialize(self):
-        self.grid_reference = self.game_context.get_reference("grid")
-        self.key_reference = self.game_context.get_reference("key")
-        self.drawer_background_reference = self.game_context.get_reference("gray_bg_drawer")
 
 
     def handle_click(self, event):
