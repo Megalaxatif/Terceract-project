@@ -1,1 +1,36 @@
-{}
+{
+    "water_pump": {
+        "image": "assets/cropped_images/cropped_water_pump.png",
+        "rect": [
+            1333,
+            600,
+            476,
+            363
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1333,
+            600,
+            476,
+            363
+        ],
+        "default_wall_id": "41"
+    },
+    "leak1": {
+        "image": "assets/cropped_images/cropped_leak1.png",
+        "rect": [
+            167,
+            52,
+            41,
+            43
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            167,
+            52,
+            41,
+            43
+        ],
+        "default_wall_id": "41"
+    }
+}
