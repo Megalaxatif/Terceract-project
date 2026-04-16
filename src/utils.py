@@ -32,13 +32,14 @@ def clear_json(json_path):
 
 # ----------------------CONVERSION--------------------------
 def convert_to_pygame_rect(rect) -> pygame.Rect | None:
-    if rect:
-        return pygame.Rect(rect)
-    else:
+    if rect is None:
         return None
+    return pygame.Rect(rect)
 
 
-def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
+def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect] | None:
+    if rect_list is None:
+        return None
     pygame_rect_list = []
     for rect in rect_list:
         # print(rect_list)
@@ -47,11 +48,15 @@ def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
     return pygame_rect_list
 
 
-def convert_to_tuple_rect(rect) -> tuple[int, ...]:
+def convert_to_tuple_rect(rect) -> tuple[int, ...] | None:
+    if rect is None:
+        return None
     return tuple(rect)
 
 
-def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
+def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]] | None:
+    if rect_list is None:
+        return None
     tuple_rect_list = []
     for rect in rect_list:
         tuple_rect_list.append(tuple(rect))
@@ -389,18 +394,6 @@ def create_object(
                 default_wall,
                 current_collision_id,
                 True,
-            )
-
-        if obj_name == "magnet":
-            return Magnet(
-                game_context,
-                obj_name,
-                img_path,
-                rect,
-                collision_rects,
-                default_collision,
-                default_wall,
-                current_collision_id,
             )
 
         if "obj_in_drawer" in obj_name:

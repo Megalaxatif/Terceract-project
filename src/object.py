@@ -12,7 +12,7 @@ class Game_object(pygame.sprite.Sprite):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
-        default_collision: pygame.Rect,
+        default_collision: pygame.Rect | None,
         default_wall: str,
         collision_index: int = -1,
         movable: bool = True,
@@ -65,11 +65,13 @@ class Game_object(pygame.sprite.Sprite):
         # print(f"Dropped {self.name} in collision rect {collision_index}")
 
     # try to fit the object in one of the collision rects, returns True if it fits, False otherwise
-    def drop_at_pos(self, x, y) -> bool:
+    def drop_at_pos(self, x, y, collisions = None) -> bool:
+        if collisions is None:
+            collisions = self.collision_rects
         #print(f"Trying to drop {self.name} at ({x}, {y})")
         return_code = False
         point_rect = pygame.Rect(int(x), int(y), 1, 1)
-        collision_index = point_rect.collidelist(self.collision_rects)
+        collision_index = point_rect.collidelist(collisions)
         if self.display_collision_rect_bool: # why ?
             if collision_index != -1:
                 self.drop_in_collision_rect(collision_index)

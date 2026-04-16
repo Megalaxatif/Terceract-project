@@ -33,15 +33,11 @@ class Closet(Game_object):
         self.lock = lock
 
     def initialize(self):
-        self.list_reference = self.game_context.get_reference_large("obj_in_closet") # useful to change the visibility
-        if self.list_reference == []:
-            print(f"initialize of object named \"{self.name}\" error: no object with \"obj_in_closet\" in its name found in the game, exiting")
-            self.game_context.quit()
-
-        self.opened_closet_reference = self.game_context.get_reference("opened_closet") # useful to change the visibility
-        if self.opened_closet_reference is None:
-            print(f"initialize of object named \"{self.name}\" error: no object with name \"opened_closet\" found in the game, exiting")
-            self.game_context.quit()
+        self.list_reference = self.game_context.get_reference_large("obj_in_closet")
+        self.opened_closet_reference = self.game_context.get_reference("opened_closet")
+        self.key_reference = self.game_context.get_reference("key")
+        if self.key_reference.collision_rect_id == 1:
+            self.lock = False
 
     def handle_click_selection(self, event):
         if not self.lock:

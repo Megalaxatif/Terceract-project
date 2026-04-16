@@ -32,7 +32,6 @@ class Grid(Game_object):
 
         self.interactible = True
         self.displayed = displayed
-        self.on_wall = self.displayed
 
 
     def initialize(self):

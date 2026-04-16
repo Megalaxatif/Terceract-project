@@ -368,11 +368,11 @@ class Game:
                 return
 
 
-    def drop_current_object(self, event):
+    def drop_current_object(self, event, collisions = None):
         return_code = False
         if event and self.current_object:
             # self.current_object.handle_click(event)
-            return_code = self.current_object.drop_at_pos(event.pos[0], event.pos[1])  # TODO: change to return the collision rect id
+            return_code = self.current_object.drop_at_pos(event.pos[0], event.pos[1], collisions)  # TODO: change to return the collision rect id
             if self.network_manager.is_connected:
                 self.network_manager.send_package("variable", "game", "other_player_object_name", "")
                 self.network_manager.send_package(

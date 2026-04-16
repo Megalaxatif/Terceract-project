@@ -11,7 +11,7 @@ class Magnet(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
-        default_collision: pygame.Rect,
+        default_collision: pygame.Rect | None,
         default_wall: str,
         collision_index: int = -1,
     ):
@@ -51,6 +51,7 @@ class Magnet(Game_object):
 
         self.collision_rects = [grid_start_rect, end_rect]
         self.raw_collision_rects = self.collision_rects.copy()
+        self.valid_rect = self.collision_rects[self.collision_rect_id]
 
 
     def change_collision_rects(self, json_collisions_path, wall_id_str):
@@ -101,7 +102,7 @@ class Magnet(Game_object):
         point_rect = pygame.Rect(self.rect.center[0], self.rect.center[1], 1, 1)
         col_id = point_rect.collidelist(self.grid_collisions)
         if col_id != -1:
-            self.game_context.drop_current_object(event)
+            self.game_context.drop_current_object(event, self.collision_rects)
 
 
     def update(self, event):

@@ -1,5 +1,6 @@
 import pygame
 from object import Game_object
+from utils import *
 
 
 class Key(Game_object):
@@ -28,7 +29,12 @@ class Key(Game_object):
         )
 
     def display_collision_rect(self):
-        if self.grid_reference.displayed and self.display_collision_rect_bool:
+        if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+            if self.grid_reference.displayed and self.display_collision_rect_bool:
+                display_debug_rects([self.collision_rects[0]], self.game_context.screen)
+            else:
+                display_debug_rects([self.collision_rects[1]], self.game_context.screen)
+        else:
             super().display_collision_rect()
 
 
@@ -41,11 +47,10 @@ class Key(Game_object):
         # TODO: there is a non blocking error happening if we take the key out from the inventory.
         # this is because inventory drop is called after this function. solution: make a function drop() for the object that calls either inventory_drop or handle_click
         self.game_context.drop_current_object(event)
-        if self.collision_rect_id and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
-            self.displayed = False
-            #self.gone = True
-            self.closed_closet_reference.lock = False
-            #self.game_context.inventory.remove_current_object(event)
-            return True
+        if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
+            if self.collision_rect_id == 1:
+                self.displayed = False
+                self.closed_closet_reference.lock = False
+                return True
 
         return False
