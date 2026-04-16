@@ -35,8 +35,7 @@ class Grid_background(Game_object):
     def handle_click_selection(self, event):
         self.displayed = False
         self.grid_reference.displayed = False
+        self.key_reference.displayed = False
         if self.magnet_reference.in_grid:
             self.magnet_reference.displayed = False
             self.magnet_reference.display_collision_rect_bool = False
-        if self.key_reference.found:
-            self.key_reference.displayed = False

@@ -7,7 +7,23 @@
             null,
             null,
             null,
-            null,
+            {
+                "name": "obj_in_closet_clothes2",
+                "image": "assets/cropped_images/cropped_obj_in_closet_clothes2.png",
+                "rect": [
+                    1141,
+                    1067,
+                    168,
+                    152
+                ],
+                "default_collision": [
+                    1058,
+                    377,
+                    168,
+                    152
+                ],
+                "default_wall_id": "14"
+            },
             null,
             null,
             null

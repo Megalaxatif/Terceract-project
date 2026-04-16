@@ -27,7 +27,6 @@ class Magnet(Game_object):
             movable=True,
             displayed=False,
         )
-        self.i = 0
 
 
     def initialize(self):
@@ -45,7 +44,7 @@ class Magnet(Game_object):
     def use_grid_collisions(self):
         #json_path = self.game_context.room_list[0][3].json_collisions_path
         # if we are on the right wall of room 1 where the grid minigame is located
-        self.grid_collisions = self.collision_rects[1:-2] # we start at 1 because the first element in the json is the default rect
+        self.grid_collisions = self.collision_rects[:-2] # we start at 1 because the first element in the json is the default rect
         self.raw_grid_collisions = self.grid_collisions.copy()
         grid_start_rect = self.collision_rects[-1]
         end_rect = self.collision_rects[-2]
@@ -83,8 +82,12 @@ class Magnet(Game_object):
         dropped = self.game_context.drop_current_object(event)
         if dropped and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
             self.in_grid = True
-            if self.game_context.network_manager.connected:
-                self.game_context.network_manager.send_package("variable", "magnet", "in_grid", "True")
+            # if self.game_context.network_manager.connected:
+            #     self.game_context.network_manager.send_package("variable", "magnet", "in_grid", "True")
+            if self.collision_rect_id == 1: # if we are on the finish square
+                self.key_reference.displayed = True
+                self.displayed = False
+                # TODO: add network here
         return True # avoid error
 
 

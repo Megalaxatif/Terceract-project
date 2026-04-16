@@ -27,20 +27,25 @@ class Key(Game_object):
             displayed=False,
         )
 
-        self.found = False
+    def display_collision_rect(self):
+        if self.grid_reference.displayed and self.display_collision_rect_bool:
+            super().display_collision_rect()
 
 
     def initialize(self):
         self.closed_closet_reference = self.game_context.get_reference("closed_closet")# useful to change the visibility
-
+        self.grid_reference = self.game_context.get_reference("grid")
 
     def handle_click(self, event):
-        if self.closed_closet_reference.rect.collidepoint(event.pos):
+        #if self != self.game_context.inventory.current_object:
+        # TODO: there is a non blocking error happening if we take the key out from the inventory.
+        # this is because inventory drop is called after this function. solution: make a function drop() for the object that calls either inventory_drop or handle_click
+        self.game_context.drop_current_object(event)
+        if self.collision_rect_id and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
             self.displayed = False
-            self.gone = True
+            #self.gone = True
             self.closed_closet_reference.lock = False
-            self.game_context.inventory.remove_current_object(event)
-            print("unlocked")
+            #self.game_context.inventory.remove_current_object(event)
             return True
 
-        self.game_context.drop_current_object(event)
+        return False

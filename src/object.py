@@ -40,9 +40,7 @@ class Game_object(pygame.sprite.Sprite):
             self.collision_rects.insert(0,self.default_collision)
             self.raw_default_collision = self.default_collision.copy()
         self.raw_collision_rects = self.collision_rects.copy()
-        self.collision_rect_id = (
-            collision_index  # which collision rect the object is in
-        )
+        self.collision_rect_id = collision_index  # which collision rect the object is in)
 
         self.rect = rect
         self.raw_rect = self.rect

@@ -537,6 +537,8 @@ class Game:
                     else:
                         if self.current_mini_game == "game":
                             wall = self.current_wall.objects
+
+                            # TODO: remove that, the function is not meant to do this
                             for obj in wall:
                                 if obj.displayed and "gray_bg" in obj.name:
                                     obj.swap_display()

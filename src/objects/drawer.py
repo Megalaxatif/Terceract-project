@@ -36,11 +36,13 @@ class Drawer(Game_object):
         self.background = "gray_bg" in self.name
         self.gone = False
 
+
     def initialize(self):
         self.magnet_reference = self.game_context.get_reference("magnet")  # useful to change the visibility
         self.glue_reference = self.game_context.get_reference("obj_in_drawer_glue")  # useful to change the visibility
         self.trigger_reference = self.game_context.get_reference("drawer_up_view_withFB_trigger")  # useful to change the visibility
         self.withFB_list_reference = self.game_context.get_reference_large("withFB")  # useful to change the visibility
+
 
     def swap_display(self):
         wall = self.game_context.current_wall.objects
@@ -54,6 +56,7 @@ class Drawer(Game_object):
 
         self.glue_reference.displayed = self.displayed
         self.glue_reference.display_collision_rect_bool = self.displayed
+
 
     def handle_click_selection(self, event):
         inv = self.game_context.inventory
