@@ -13,6 +13,9 @@ class BrokenPipe(Game_object):
         default_collision: pygame.Rect,
         default_wall: str,
         collision_index: int,
+        movable: bool,
+        displayed: bool,
+        interactible: bool,
     ):
         super().__init__(
             game_context,
@@ -23,11 +26,12 @@ class BrokenPipe(Game_object):
             default_collision,
             default_wall,
             collision_index,
-            movable=False,
-            displayed=True,
+            movable,
+            displayed,
+            interactible,
         ) 
-
-        self.interactible = True           #fonctionne comme un closet mais avec 2 options
+        self.displayed = displayed
+        self.interactible = interactible           #fonctionne comme un closet mais avec 2 options
         self.unclogged = False
         self.collisions = collisions
         self.open = False
@@ -37,8 +41,8 @@ class BrokenPipe(Game_object):
         self.menu_reference = self.game_context.get_reference("open_broken_pipe")
         self.bg_reference = self.game_context.get_reference("gray_bg_broken_pipe")
 
-    def handle_click(self, event): #ca ouvre rien :( jsp pk
-        if self.open:
+    def handle_click(self, event): #ca ouvre rien :( jsp pk, update : je pense c psk je gere pas correctement open broken pipe a l'initialisation
+        if self.open and not self.background:
             if self.menu_reference.collisions[1].collidepoint(event.pos):
                 self.unclogged = True
                 self.open = False
@@ -53,7 +57,7 @@ class BrokenPipe(Game_object):
             else :
                 self.open = False
                 self.menu_reference.displayed = False
-        elif not self.unclogged:
+        elif not self.background:
             self.open = not self.open
             self.menu_reference.displayed = self.open
             self.bg_reference.displayed = self.open
