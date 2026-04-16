@@ -282,33 +282,6 @@ class Inventory:
             self.current_object,
         )
 
-    def remove_current_object(self, event):
-        obj = self.current_object
-        if obj is None:
-            print("remove_current_object error: current_object is None")
-            return -1
-
-        row, col = obj.last_inventory_pos
-
-        self.slots[row][col] = None
-
-        if self.game_context.network_manager.is_connected:
-            # send the information to the other player
-            self.game_context.network_manager.send_package(
-                "function",
-                "inventory",
-                "inventory_remove_object",
-                obj.name,
-                row,
-                col
-            )
-        self.current_object = None
-        if self.game_context.network_manager.is_connected:
-            self.game_context.network_manager.send_package(
-                "variable", "game", "other_player_object_name", ""
-            )
-        self.current_object = None
-
     # -------------------------NETWORK-------------------------------------
 
     # function useful for network
@@ -408,18 +381,6 @@ class Inventory:
                 self.game_context.other_player_inventory_object.name
             )
 
-
-    def inventory_remove_object(self, obj_name, row, col):
-        obj = self.game_context.other_player_inventory_object
-
-        if obj is None:
-            print(
-                f"inventory_drop_object error: impossible to find the object {obj_name} in the inventory"
-            )
-            return -1 # remove it from inventory
-
-        self.slots[row][col] = None
-        self.game_context.other_player_inventory_object = None
     # -------------------------------------------------------------------
 
     def draw_grid(self):

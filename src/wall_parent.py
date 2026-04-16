@@ -137,7 +137,6 @@ class Wall:
 
             # make sure we are on the default wall to create the object with the default collision
             if 10*(self.room_id+1)+self.wall_id+1 != int(default_wall): # NOTE: idk why this line works but not the one above
-                print("room_id : ", self.room_id +1, "wall_id: ", self.wall_id +1, "default_room: ", default_wall[0], "default_wall: ",default_wall[1])
                 converted_default_collision = None
 
             object = create_object(

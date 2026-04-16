@@ -113,7 +113,7 @@ class Game_object(pygame.sprite.Sprite):
 
         if self.default_wall == wall_id_str:
             if self.default_collision:
-                new_collision_rects.append(self.default_collision)
+                new_collision_rects.insert(0,self.default_collision)
 
 
         converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)
@@ -139,8 +139,6 @@ class Game_object(pygame.sprite.Sprite):
     def handle_click(self, event):
         if self != self.game_context.inventory.current_object:
             self.game_context.drop_current_object(event)
-
-        # TODO: why these return values ?
             return True
         return False
 
