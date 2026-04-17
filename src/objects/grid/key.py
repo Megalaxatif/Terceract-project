@@ -51,6 +51,8 @@ class Key(Game_object):
             if self.collision_rect_id == 1:
                 self.displayed = False
                 self.closed_closet_reference.lock = False
+                self.game_context.network_manager.send_package("variable", "closed_closet", "lock", False)
+                self.game_context.network_manager.send_package("variable", "key", "displayed", False)
                 return True
 
         return False

@@ -308,12 +308,12 @@
     "key": {
         "image": "assets/cropped_images/cropped_key.png",
         "rect": [
-            1439,
-            548,
+            700,
+            542,
             93,
             76
         ],
-        "collision_id": 1,
+        "collision_id": -1,
         "default_collision": [
             700,
             542,
@@ -321,17 +321,5 @@
             76
         ],
         "default_wall_id": "14"
-    },
-    "magnet": {
-        "image": "assets/cropped_images/cropped_magnet.png",
-        "rect": [
-            711,
-            549,
-            62,
-            62
-        ],
-        "collision_id": 1,
-        "default_collision": null,
-        "default_wall_id": "12"
     }
 }

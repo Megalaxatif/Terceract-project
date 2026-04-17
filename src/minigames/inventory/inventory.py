@@ -317,7 +317,7 @@ class Inventory:
         self.slots[row][col] = object  # put the object in inventory
         dest_wall_id = f"{self.game_context.current_room_id + 1}{self.game_context.current_wall_id + 1}"
         object.change_collision_rects(
-            self.game_context.current_wall.collision_layers_dir, dest_wall_id
+            self.game_context.current_wall.json_collisions_path, dest_wall_id
         )  # change its collision rects
         src_wall.objects.remove(object)  # remove the object from the wall
 
@@ -347,7 +347,7 @@ class Inventory:
         dest_wall.objects.add(obj)  # add the object on the wall
         dest_wall_id_str = f"{dest_room_id + 1}{dest_wall_id + 1}"
         obj.change_collision_rects(
-            dest_wall.collision_layers_dir, dest_wall_id_str
+            dest_wall.json_collisions_path, dest_wall_id_str
         )  # update its collision rects
         obj.drop_in_collision_rect(
             collision_rect_id

@@ -80,6 +80,8 @@ class Network_manager:
                             location = self.game_context.get_reference("magnet")
                         case "key":
                             location = self.game_context.get_reference("key")
+                        case "closed_closet":
+                            location = self.game_context.get_reference("closed_closet")
 
                         case _: # TODO
                             print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")

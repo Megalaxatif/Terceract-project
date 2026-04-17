@@ -83,12 +83,14 @@ class Magnet(Game_object):
         dropped = self.game_context.drop_current_object(event)
         if dropped and self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
             self.in_grid = True
-            # if self.game_context.network_manager.connected:
-            #     self.game_context.network_manager.send_package("variable", "magnet", "in_grid", "True")
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "magnet", "in_grid", True)
             if self.collision_rect_id == 1: # if we are on the finish square
                 self.key_reference.displayed = True
                 self.displayed = False
                 # TODO: add network here
+                self.game_context.network_manager.send_package("variable", "key", "displayed", True)
+                self.game_context.network_manager.send_package("variable", "magnet", "displayed", False)
         return True # avoid error
 
 
@@ -106,6 +108,11 @@ class Magnet(Game_object):
 
 
     def update(self, event):
+        # prevent the magnet to be invisible for one player when the grid is opened in both players pov and the magnet is put inside
+        key_found = self.key_reference.displayed or self.key_reference.collision_rect_id == 1 # if the key is displayed or it is in the closet
+        if self.in_grid and self.grid_reference.displayed and not key_found:
+            self.displayed = True
+
         if self.game_context.current_object == self and event.type == pygame.MOUSEMOTION:
             if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3:
                 if self.grid_reference.displayed:
