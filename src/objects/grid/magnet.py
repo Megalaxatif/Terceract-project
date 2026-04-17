@@ -88,9 +88,10 @@ class Magnet(Game_object):
             if self.collision_rect_id == 1: # if we are on the finish square
                 self.key_reference.displayed = True
                 self.displayed = False
-                # TODO: add network here
-                self.game_context.network_manager.send_package("variable", "key", "displayed", True)
-                self.game_context.network_manager.send_package("variable", "magnet", "displayed", False)
+                # network
+                if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "key", "displayed", True)
+                    self.game_context.network_manager.send_package("variable", "magnet", "displayed", False)
         return True # avoid error
 
 
