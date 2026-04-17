@@ -33,6 +33,23 @@
         ],
         "default_wall_id": "12"
     },
+    "drawer": {
+        "image": "assets/cropped_images/cropped_drawer.png",
+        "rect": [
+            85,
+            529,
+            761,
+            551
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            85,
+            529,
+            761,
+            551
+        ],
+        "default_wall_id": "12"
+    },
     "big_frame2": {
         "image": "assets/cropped_images/cropped_big_frame2.png",
         "rect": [
@@ -67,6 +84,23 @@
         ],
         "default_wall_id": "12"
     },
+    "bottle": {
+        "image": "assets/cropped_images/cropped_bottle.png",
+        "rect": [
+            691,
+            309,
+            76,
+            226
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            691,
+            309,
+            76,
+            226
+        ],
+        "default_wall_id": "12"
+    },
     "gray_bg_table": {
         "image": "assets/cropped_images/cropped_gray_bg_table.png",
         "rect": [
@@ -84,8 +118,42 @@
         ],
         "default_wall_id": "12"
     },
+    "gray_bg_drawer": {
+        "image": "assets/cropped_images/cropped_gray_bg_drawer.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "12"
+    },
     "opened_table": {
         "image": "assets/cropped_images/cropped_opened_table.png",
+        "rect": [
+            212,
+            58,
+            1497,
+            960
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            212,
+            58,
+            1497,
+            960
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer_up_view_withoutFB": {
+        "image": "assets/cropped_images/cropped_drawer_up_view_withoutFB.png",
         "rect": [
             212,
             58,
@@ -132,6 +200,74 @@
             611,
             94,
             56
+        ],
+        "default_wall_id": "12"
+    },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            626,
+            202,
+            62,
+            62
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            626,
+            202,
+            62,
+            62
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer_up_view_withFB": {
+        "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
+        "rect": [
+            212,
+            58,
+            1497,
+            960
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            212,
+            58,
+            1497,
+            960
+        ],
+        "default_wall_id": "12"
+    },
+    "obj_in_drawer_glue": {
+        "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
+        "rect": [
+            846,
+            420,
+            320,
+            138
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            846,
+            420,
+            320,
+            138
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer_up_view_withFB_trigger": {
+        "image": "assets/cropped_images/cropped_drawer_up_view_withFB_trigger.png",
+        "rect": [
+            318,
+            360,
+            59,
+            133
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            318,
+            360,
+            59,
+            133
         ],
         "default_wall_id": "12"
     }

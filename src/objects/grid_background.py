@@ -2,7 +2,7 @@ import pygame
 from object import Game_object
 
 
-class Padlock_door(Game_object):
+class Grid_background(Game_object):
     def __init__(
         self,
         game_context,
@@ -24,13 +24,18 @@ class Padlock_door(Game_object):
             default_wall,
             collision_index,
             movable=False,
-            displayed=True,
+            displayed=False,
         )
-        self.interactible = True
-        self.padlock_reference = None
 
     def initialize(self):
-        self.padlock_reference = self.game_context.get_reference("padlock")  # useful to change the visibility
+        self.magnet_reference = self.game_context.get_reference("magnet")  # useful to check if magnet was moved
+        self.grid_reference = self.game_context.get_reference("grid")  # useful to check if grid was moved
+        self.key_reference = self.game_context.get_reference("key")
 
     def handle_click_selection(self, event):
-        self.padlock_reference.displayed = True
+        self.displayed = False
+        self.grid_reference.displayed = False
+        self.key_reference.displayed = False
+        if self.magnet_reference.in_grid:
+            self.magnet_reference.displayed = False
+            self.magnet_reference.display_collision_rect_bool = False

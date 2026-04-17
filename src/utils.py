@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import pygame
 
+
 # ---------------------JSON-----------------------------------
 #
 def load_json_file(json_path: Path) -> dict:
@@ -31,13 +32,14 @@ def clear_json(json_path):
 
 # ----------------------CONVERSION--------------------------
 def convert_to_pygame_rect(rect) -> pygame.Rect | None:
-    if rect:
-        return pygame.Rect(rect)
-    else:
+    if rect is None:
         return None
+    return pygame.Rect(rect)
 
 
-def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
+def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect] | None:
+    if rect_list is None:
+        return None
     pygame_rect_list = []
     for rect in rect_list:
         # print(rect_list)
@@ -46,11 +48,15 @@ def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect]:
     return pygame_rect_list
 
 
-def convert_to_tuple_rect(rect) -> tuple[int, ...]:
+def convert_to_tuple_rect(rect) -> tuple[int, ...] | None:
+    if rect is None:
+        return None
     return tuple(rect)
 
 
-def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
+def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]] | None:
+    if rect_list is None:
+        return None
     tuple_rect_list = []
     for rect in rect_list:
         tuple_rect_list.append(tuple(rect))
@@ -58,12 +64,27 @@ def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
 
 
 # ------------------------------------------------------------------
+def resize_rects(rects, raw_rects, delta): # resize a given list of rectangles using their raw dimensions and a delta
+    ll = len(rects)
+    for i in range(ll):
+        raw_rect = raw_rects[i]
+        new_x = int(delta * raw_rect.x)
+        new_y = int(delta * raw_rect.y)
+        new_w = int(delta * raw_rect.w)
+        new_h = int(delta * raw_rect.h)
 
+        rect = rects[i]
+        if ((new_x != rect.x) or (new_y != rect.y) or (new_w != rect.w) or (new_h != rect.h)):
+            rects[i] = pygame.Rect(new_x, new_y, new_w, new_h)
+
+def display_debug_rects(debug_rects, screen):
+    for rect in debug_rects:
+        temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+        pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
+        screen.blit(temp_surface, rect)
 
 # returns the list of the paths of all the collision layers of an object
-def load_collision_layers_path(
-    collision_layers_dir: Path, object_name: str
-) -> list[Path]:
+def load_collision_layers_path(collision_layers_dir: Path, object_name: str) -> list[Path]:
     collision_layers_path = list(collision_layers_dir.iterdir())
 
     valid_collision_layers_path = []
@@ -82,11 +103,9 @@ def load_collision_layers_path(
 
 def get_collision_rects(
     collision_layers_dir: Path, object_name: str
-) -> list[tuple[int, int, int, int]]:  # TODO: can we move this to utils ?
+) -> list[tuple[int, int, int, int]]:
     collision_rects = []
-    collision_layers_path = load_collision_layers_path(
-        collision_layers_dir, object_name
-    )
+    collision_layers_path = load_collision_layers_path(collision_layers_dir, object_name)
     for path in collision_layers_path:
         collision_layer = pygame.image.load(path).convert_alpha()
         rect = get_bounding_box(collision_layer)
@@ -175,6 +194,7 @@ def create_object(
     from objects.screwdriver import Screwdriver
     from objects.paper import Paper
     from objects.fullscreen_paper import Fullscreen_paper
+    from objects.grid_background import Grid_background
     from objects.table import Table
     from objects.plank import Plank
 
@@ -284,7 +304,7 @@ def create_object(
         )
 
     elif obj_name == "grid":
-        return Grid(
+        return Game_object(
             game_context,
             obj_name,
             img_path,
@@ -294,6 +314,19 @@ def create_object(
             default_wall,
             current_collision_id,
             False,
+            False
+        )
+
+    elif obj_name == "grid_background":
+        return Grid_background(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id
         )
 
     elif obj_name == "closed_closet":
@@ -364,17 +397,6 @@ def create_object(
             )
 
         if "obj_in_drawer" in obj_name:
-            if "magnet" in obj_name:
-                return Magnet(
-                    game_context,
-                    obj_name,
-                    img_path,
-                    rect,
-                    collision_rects,
-                    default_collision,
-                    default_wall,
-                    current_collision_id,
-                )
 
             return Game_object(
                 game_context,
@@ -465,6 +487,8 @@ def create_object(
             default_collision,
             default_wall,
             current_collision_id,
+            False,
+            False
         )
 
     elif obj_name == "padlock_door":
