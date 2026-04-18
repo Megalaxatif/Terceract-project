@@ -4,8 +4,40 @@
             null,
             null,
             null,
-            null,
-            null,
+            {
+                "name": "magnet",
+                "image": "assets/cropped_images/cropped_magnet.png",
+                "rect": [
+                    642,
+                    1165,
+                    62,
+                    62
+                ],
+                "default_collision": [
+                    626,
+                    202,
+                    62,
+                    62
+                ],
+                "default_wall_id": "12"
+            },
+            {
+                "name": "obj_in_drawer_glue",
+                "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
+                "rect": [
+                    702,
+                    1035,
+                    320,
+                    138
+                ],
+                "default_collision": [
+                    846,
+                    420,
+                    320,
+                    138
+                ],
+                "default_wall_id": "12"
+            },
             null,
             null,
             null,

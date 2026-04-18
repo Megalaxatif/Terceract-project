@@ -155,10 +155,15 @@ class Game:
 
     def initialize_all_objects(
         self,
-    ):  # this function finishes the initialization of the objects when all the variable they would need have been created (useful for the axe for examble)
+    ):  # this function finishes the initialization of the objects when all the variable
+        # they would need have been created (useful for the axe for examble)
         for room in self.room_list:
             for wall in room:
                 for obj in wall.objects:
+                    obj.initialize()
+        for line in self.inventory.slots:
+            for obj in line:
+                if obj:
                     obj.initialize()
 
     def save_game(self):  # save all the game data
@@ -417,11 +422,19 @@ class Game:
             object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
     def get_reference(self, name):  # returns the reference to an object in the game
+        # search in the walls
         for room in self.room_list:
             for wall in room:
                 for obj in wall.objects:
                     if obj.name == name:
                         return obj
+        # search in the inventory
+        for line in self.inventory.slots:
+            for obj in line:
+                if obj:
+                    if obj.name == name:
+                        return obj
+
         print(f'get_reference error: no object with name {name} found in the game, exiting')
         self.quit()
 
