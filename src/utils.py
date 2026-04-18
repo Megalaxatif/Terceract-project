@@ -202,6 +202,10 @@ def create_object(
     from objects.scotch import Scotch
     from objects.stool import Stool
     from objects.wallet import Wallet
+    from objects.keycard_reader import Keycard_Reader
+    from objects.keycard import Keycard
+    from objects.water_bottle import Water_bottle
+    from objects.water_vase import Water_vase
 
     if obj_name == "calculator":
         return Digicode(
@@ -741,6 +745,48 @@ def create_object(
             default_collision,
             default_wall,
             current_collision_id,
+        )
+
+    elif obj_name == "keycard_reader":
+        return Keycard_Reader(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            True,
+        )
+
+    elif obj_name == "water_bottle":
+        return Water_bottle(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            True,
+            True,
+        )
+    
+    elif obj_name == "water_vase":
+        return Water_vase(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            True,
         )
 
     else:

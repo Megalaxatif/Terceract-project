@@ -2,7 +2,7 @@ import pygame
 from object import Game_object
 
 
-class Keycard_Reader(Game_object):
+class Water_vase(Game_object):
     def __init__(
         self,
         game_context,
@@ -26,9 +26,6 @@ class Keycard_Reader(Game_object):
             default_wall,
             collision_index,
             movable,
-            displayed
+            displayed,
         )
-        self.unlocked = False
-        self.collisions = collisions
-        self.displayed = True
-        self.movable = False
+        self.water_count = 3

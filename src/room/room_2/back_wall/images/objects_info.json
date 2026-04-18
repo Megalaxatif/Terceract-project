@@ -67,8 +67,8 @@
         ],
         "default_wall_id": "21"
     },
-    "green_vase": {
-        "image": "assets/cropped_images/cropped_green_vase.png",
+    "water_vase": {
+        "image": "assets/cropped_images/cropped_water_vase.png",
         "rect": [
             1521,
             749,

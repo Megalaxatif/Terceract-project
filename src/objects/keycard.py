@@ -2,7 +2,7 @@ import pygame
 from object import Game_object
 
 
-class Wallet(Game_object):
+class Keycard(Game_object):
     def __init__(
         self,
         game_context,
@@ -30,6 +30,7 @@ class Wallet(Game_object):
         )
         self.displayed = False
         self.collisions = collisions
+        self.movable = True
     
     def initialize(self):
         self.lock_reference = self.game_context.get_reference("keycard_reader")
@@ -37,3 +38,4 @@ class Wallet(Game_object):
     def handle_click(self, event):
         if self.rect.colliderect(self.lock_reference.rect):
             self.lock_reference.unlocked = True
+            self.game_context.room_5_unlocked = False

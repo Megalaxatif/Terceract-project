@@ -27,12 +27,16 @@ class WaterPump(Game_object):
         )
 
         self.disabled = True
+        self.water_count = 0
+        self.leaking = True
 
-    def handle_click(self, event):
+    def initialize(self):
+        self.wallet_reference = self.game_context.get_reference("wallet")
+
+    def update(self, event):
+        if not self.leaking and self.water_count >= 2 : #faudra remettre 4 a la fin
+            self.disabled = False
+
+    def handle_click_selection(self, event):
         if not self.disabled:
-            for obj in self.game_context.rooms[0].objects:
-                if obj.name == "wallet": #a faire
-                    obj.displayed = True
-                    #todo : network
-                    return True
-        return False
+            self.wallet_reference.displayed = True

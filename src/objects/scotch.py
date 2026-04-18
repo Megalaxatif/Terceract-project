@@ -26,28 +26,20 @@ class Scotch(Game_object):
             displayed=True,
         )                                #todo network
 
-        self.original_displayed = False
+        self.displayed = False
         self.stool_reference = []
-        self.collisions = collisions #problemes : scotch pas caché au début
+        self.collisions = collisions #pas de pb, ca marche :D (mais pas pu vérifier avec leak derriere stash)
 
     def initialize(self):
         self.stool_reference = self.game_context.get_reference("stool")
-        self.leak_reference = self.game_context.get_reference_large("leak") # useful to change the visibility
+        self.leak_reference = self.game_context.get_reference_large("leak") 
         if self.leak_reference == []:
             print(f"initialize of object named \"{self.name}\" error: no object with \"leak\" in its name found in the game, exiting")
             self.game_context.quit()
 
     def update(self, event):
-        #if self.leak_reference[0].rect.collidepoint(pygame.mouse.get_pos()) :
-        #    print(f"0") #back wall
-        #if self.leak_reference[1].rect.collidepoint(pygame.mouse.get_pos()) :
-        #    print(f"1") #coté
-        #if self.leak_reference[2].rect.collidepoint(pygame.mouse.get_pos()) :
-        #    print(f"2") #coté
-        #if self.leak_reference[3].rect.collidepoint(pygame.mouse.get_pos()) :
-        #    print(f"3") #front
 
-        if self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 1 and not self.displayed and event.type == pygame.MOUSEBUTTONDOWN and self.collisions[0].collidepoint(event.pos) :
+        if self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 1 and not self.displayed and event.type == pygame.MOUSEBUTTONDOWN and (self.collisions[0].collidepoint(event.pos) or self.collisions[1].collidepoint(event.pos)):
             self.displayed = True
 
     def handle_click_selection(self, event):

@@ -84,8 +84,8 @@
         ],
         "default_wall_id": "12"
     },
-    "bottle": {
-        "image": "assets/cropped_images/cropped_bottle.png",
+    "water_bottle": {
+        "image": "assets/cropped_images/cropped_water_bottle.png",
         "rect": [
             691,
             309,

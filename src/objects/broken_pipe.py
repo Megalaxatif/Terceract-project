@@ -35,28 +35,33 @@ class BrokenPipe(Game_object):
         self.collisions = collisions
         self.open = False
         self.background = "gray_bg" in self.name
+        self.movable = False
 
     def initialize(self):
         self.menu_reference = self.game_context.get_reference("open_broken_pipe")
         self.bg_reference = self.game_context.get_reference("gray_bg_broken_pipe")
 
-    def handle_click(self, event): #ca ouvre rien :( jsp pk, update : je pense c psk je gere pas correctement open broken pipe a l'initialisation
+    def handle_click_selection(self, event): #unclog sur les deux boutons ?? et bloqué après
         if self.open and not self.background:
-            if self.menu_reference.collisions[1].collidepoint(event.pos):
+            if self.menu_reference.collisions[0].collidepoint(event.pos):
                 self.unclogged = True
                 self.open = False
                 self.menu_reference.displayed = False
-            elif self.menu_reference.collisions[0].collidepoint(event.pos) and not self.unclogged:
+                self.bg_reference.displayed = False
+                print("pipe unclogged")
+            elif self.menu_reference.collisions[1].collidepoint(event.pos) and not self.unclogged:
                 print("still clogged")
-            elif self.menu_reference.collisions[0].collidepoint(event.pos) and self.unclogged:
+            elif self.menu_reference.collisions[1].collidepoint(event.pos) and self.unclogged:
                 self.interactible = False
                 self.movable = True
                 self.open = False
                 self.menu_reference.displayed = False
+                self.bg_reference.displayed = False
             else :
                 self.open = False
                 self.menu_reference.displayed = False
-        elif not self.background:
+                self.bg_reference.displayed = False
+        elif not self.background and not self.unclogged:
             self.open = not self.open
             self.menu_reference.displayed = self.open
             self.bg_reference.displayed = self.open
