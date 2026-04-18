@@ -203,6 +203,23 @@
         ],
         "default_wall_id": "12"
     },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            626,
+            202,
+            62,
+            62
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            626,
+            202,
+            62,
+            62
+        ],
+        "default_wall_id": "12"
+    },
     "drawer_up_view_withFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
         "rect": [
@@ -217,6 +234,23 @@
             58,
             1497,
             960
+        ],
+        "default_wall_id": "12"
+    },
+    "obj_in_drawer_glue": {
+        "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
+        "rect": [
+            846,
+            420,
+            320,
+            138
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            846,
+            420,
+            320,
+            138
         ],
         "default_wall_id": "12"
     },
