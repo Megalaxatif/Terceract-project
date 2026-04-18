@@ -66,5 +66,73 @@
             273
         ],
         "default_wall_id": "13"
+    },
+    "gray_bg_wallet": {
+        "image": "assets/cropped_images/cropped_gray_bg_wallet.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "13"
+    },
+    "opened_wallet": {
+        "image": "assets/cropped_images/cropped_opened_wallet.png",
+        "rect": [
+            406,
+            263,
+            1109,
+            555
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            406,
+            263,
+            1109,
+            555
+        ],
+        "default_wall_id": "13"
+    },
+    "wallet": {
+        "image": "assets/cropped_images/cropped_wallet.png",
+        "rect": [
+            1572,
+            897,
+            130,
+            140
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1572,
+            897,
+            130,
+            140
+        ],
+        "default_wall_id": "13"
+    },
+    "keycard": {
+        "image": "assets/cropped_images/cropped_keycard.png",
+        "rect": [
+            1012,
+            406,
+            356,
+            268
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1012,
+            406,
+            356,
+            268
+        ],
+        "default_wall_id": "13"
     }
 }

@@ -1,1 +1,36 @@
-{}
+{
+    "leak3": {
+        "image": "assets/cropped_images/cropped_leak3.png",
+        "rect": [
+            483,
+            231,
+            41,
+            43
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            483,
+            231,
+            41,
+            43
+        ],
+        "default_wall_id": "42"
+    },
+    "leak4": {
+        "image": "assets/cropped_images/cropped_leak4.png",
+        "rect": [
+            1141,
+            382,
+            41,
+            43
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1141,
+            382,
+            41,
+            43
+        ],
+        "default_wall_id": "42"
+    }
+}

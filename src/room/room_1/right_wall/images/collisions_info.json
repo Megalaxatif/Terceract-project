@@ -1,14 +1,13 @@
 {
-    "grid_wall": [],
-    "drawer": [],
-    "closed_closet": [],
-    "big_frame": [],
-    "bottle": [],
-    "gray_bg_drawer": [],
-    "opened_closet": [],
-    "grid": [],
-    "drawer_up_view_withoutFB": [],
-    "obj_in_drawer_magnet": [
+    "key": [
+        [
+            1207,
+            128,
+            557,
+            917
+        ]
+    ],
+    "magnet": [
         [
             531,
             486,
@@ -92,29 +91,6 @@
             203,
             57,
             62
-        ]
-    ],
-    "obj_in_closet_vhs": [],
-    "obj_in_closet_umbrella": [],
-    "obj_in_closet_shoes": [],
-    "obj_in_closet_screwdriver": [],
-    "obj_in_closet_plush2": [],
-    "obj_in_closet_plush": [],
-    "obj_in_closet_lightbulb": [],
-    "obj_in_closet_glasses": [],
-    "obj_in_closet_clothes3": [],
-    "obj_in_closet_clothes2": [],
-    "obj_in_closet_clothes": [],
-    "obj_in_closet_ball": [],
-    "key": [],
-    "drawer_up_view_withFB": [],
-    "obj_in_drawer_glue": [],
-    "drawer_up_view_withFB_trigger": [
-        [
-            317,
-            364,
-            57,
-            126
         ]
     ]
 }

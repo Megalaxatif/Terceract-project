@@ -19,7 +19,6 @@ ROOM_2 = 1
 ROOM_3 = 2
 ROOM_4 = 3
 ROOM_5 = 4
-
 BACK_WALL = 0
 LEFT_WALL = 1
 FRONT_WALL = 2
@@ -127,9 +126,9 @@ class Game:
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
 
         self.room_1_unlocked = True
-        self.room_2_unlocked = False
-        self.room_3_unlocked = False
-        self.room_4_unlocked = False
+        self.room_2_unlocked = True
+        self.room_3_unlocked = True
+        self.room_4_unlocked = True
 
         self.current_room_id = 0
         self.current_wall_id = 0
@@ -156,10 +155,15 @@ class Game:
 
     def initialize_all_objects(
         self,
-    ):  # this function finishes the initialization of the objects when all the variable they would need have been created (useful for the axe for examble)
+    ):  # this function finishes the initialization of the objects when all the variable
+        # they would need have been created (useful for the axe for examble)
         for room in self.room_list:
             for wall in room:
                 for obj in wall.objects:
+                    obj.initialize()
+        for line in self.inventory.slots:
+            for obj in line:
+                if obj:
                     obj.initialize()
 
     def save_game(self):  # save all the game data
@@ -355,9 +359,7 @@ class Game:
             self.room_4_unlocked = True
 
     def select_current_object(self, event):
-        for obj in reversed(
-            self.current_wall.objects.sprites()
-        ):  # reversed so we click the top object first
+        for obj in reversed(self.current_wall.objects.sprites()):  # reversed so we click the top object first
             if obj.displayed and obj.rect.collidepoint(event.pos):
                 if obj.movable:
                     if (
@@ -375,16 +377,13 @@ class Game:
                 obj.handle_click_selection(event)
                 return
 
-    def drop_current_object(self, event):
+
+    def drop_current_object(self, event, collisions = None):
+        return_code = False
         if event and self.current_object:
-            # self.current_object.handle_click(event)
-            self.current_object.drop_at_pos(
-                event.pos[0], event.pos[1]
-            )  # TODO: change to return the collision rect id
+            return_code = self.current_object.drop_at_pos(event.pos[0], event.pos[1], collisions)  # TODO: change to return the collision rect id
             if self.network_manager.is_connected:
-                self.network_manager.send_package(
-                    "variable", "game", "other_player_object_name", ""
-                )
+                self.network_manager.send_package("variable", "game", "other_player_object_name", "")
                 self.network_manager.send_package(
                     "function",
                     "game",
@@ -398,18 +397,15 @@ class Game:
 
         elif event and self.inventory.current_object:
             if self.network_manager.is_connected:
-                self.network_manager.send_package(
-                    "variable", "game", "other_player_inventory_object_name", ""
-                )
-            self.inventory.drop_current_object(event, event.pos[0], event.pos[1])  # TODO: change to return the collision rect id
+                self.network_manager.send_package("variable", "game", "other_player_inventory_object_name", "")
+            return_code = self.inventory.drop_current_object(event)  # TODO: change to return the collision rect id
+
+        return return_code
+
 
     # function useful for network
-    def drop_object(
-        self, obj_name, room_id, wall_id, collision_rect_id
-    ):  # move an object on a given wall in a given room to a given collision_rect
-        dest_wall = self.room_list[room_id][
-            wall_id
-        ]  # on which wall do we want to put it
+    def drop_object(self, obj_name, room_id, wall_id, collision_rect_id):  # move an object on a given wall in a given room to a given collision_rect
+        dest_wall = self.room_list[room_id][wall_id]  # on which wall do we want to put it
 
         object = None
         for obj in dest_wall.objects:
@@ -417,31 +413,32 @@ class Game:
                 object = obj
 
         if object is None:
-            print(
-                f"drop_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}"
-            )
+            print(f"drop_object error: invalid object name, the name {obj_name} was not found in room {room_id} wall {wall_id}")
             return 1
 
-        if (
-            collision_rect_id == -1
-        ):  # we tried to move the object at a wrong position when it was at its initial position
+        if (collision_rect_id == -1):  # we tried to move the object at a wrong position when it was at its initial position
             object.raw_rect.center = object.valid_rect.center
         else:
-            object.drop_in_collision_rect(
-                collision_rect_id
-            )  # set the new collision rect id of the object and put it inside
+            object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
     def get_reference(self, name):  # returns the reference to an object in the game
+        # search in the walls
         for room in self.room_list:
             for wall in room:
                 for obj in wall.objects:
                     if obj.name == name:
                         return obj
-        return None
+        # search in the inventory
+        for line in self.inventory.slots:
+            for obj in line:
+                if obj:
+                    if obj.name == name:
+                        return obj
 
-    def get_reference_large(
-        self, name
-    ):  # returns the reference to an object in the game
+        print(f'get_reference error: no object with name {name} found in the game, exiting')
+        self.quit()
+
+    def get_reference_large(self, name):  # returns the reference to an object in the game
         res = []
         for room in self.room_list:
             for wall in room:
@@ -454,15 +451,15 @@ class Game:
         if self.last_delta != self.delta:
             delta = self.delta
             self.last_delta = delta
-            
+
             new_x = int(delta * self.stash_raw_rect.x)
             new_y = int(delta * self.stash_raw_rect.y)
             new_width = int(self.raw_stash.get_width() * delta)
             new_height = int(self.raw_stash.get_height() * delta)
-            
+
             self.stash = pygame.transform.scale(self.raw_stash, (new_width, new_height))
             self.stash_rect = pygame.Rect(new_x, new_y, new_width, new_height)
-            
+
             self.font = pygame.font.Font(None, int(30 * delta))
 
     def display_room_counter(self):  # for debug purposes
@@ -522,9 +519,7 @@ class Game:
             self.screen.blit(self.stash, (0,0))
             self.display_mouse_hover()
 
-    def recalculate_deltas(
-        self,
-    ):  # recalculate the delta values when the window is resized
+    def recalculate_deltas(self):  # recalculate the delta values when the window is resized
         self.height = self.screen.get_height()
         self.width = self.screen.get_width()
         self.delta_w = self.width / 1080
@@ -533,9 +528,7 @@ class Game:
 
         self.current_wall.delta_w = self.delta_w * (1080 / 1920)
         self.current_wall.delta_h = self.delta_h * (720 / 1080)
-        self.current_wall.delta = min(
-            self.current_wall.delta_w, self.current_wall.delta_h
-        )
+        self.current_wall.delta = min(self.current_wall.delta_w, self.current_wall.delta_h)
 
     def handle_basic_game_events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -587,6 +580,8 @@ class Game:
                     else:
                         if self.current_mini_game == "game":
                             wall = self.current_wall.objects
+
+                            # TODO: remove that, the function is not meant to do this
                             for obj in wall:
                                 if obj.displayed and "gray_bg" in obj.name:
                                     obj.swap_display()
@@ -619,6 +614,7 @@ class Game:
             self.dialogues.update()
             self.display_gui()
             self.inventory.draw_current_object()
+
 
         elif self.current_mini_game == "menu":
             self.mini_game_menu.update()  # TODO: separate update from display

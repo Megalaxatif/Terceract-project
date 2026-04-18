@@ -42,16 +42,11 @@ class Table(Game_object):
             self.game_context.quit()
 
         self.opened_table_reference = self.game_context.get_reference("opened_table")  # useful to change the visibility
-        if self.opened_table_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "opened_table" found in the game, exiting')
-            self.game_context.quit()
 
         self.bg_reference = self.game_context.get_reference("gray_bg_table")  # useful to change the visibility
-        if self.bg_reference is None:
-            print(f'initialize of object named "{self.name}" error: no object with name "gray_bg_table" found in the game, exiting')
-            self.game_context.quit()
 
         self.list_reference.append(self.bg_reference)
+
 
     def handle_click_selection(self, event):
         inv = self.game_context.inventory
