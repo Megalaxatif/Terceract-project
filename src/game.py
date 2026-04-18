@@ -126,9 +126,9 @@ class Game:
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
 
         self.room_1_unlocked = True
-        self.room_2_unlocked = False
-        self.room_3_unlocked = False
-        self.room_4_unlocked = False
+        self.room_2_unlocked = True
+        self.room_3_unlocked = True
+        self.room_4_unlocked = True
 
         self.current_room_id = 0
         self.current_wall_id = 0

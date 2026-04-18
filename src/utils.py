@@ -197,6 +197,11 @@ def create_object(
     from objects.grid_background import Grid_background
     from objects.table import Table
     from objects.plank import Plank
+    from objects.water_pump import WaterPump
+    from objects.broken_pipe import BrokenPipe
+    from objects.scotch import Scotch
+    from objects.stool import Stool
+    from objects.wallet import Wallet
 
     if obj_name == "calculator":
         return Digicode(
@@ -610,6 +615,124 @@ def create_object(
 
     elif obj_name == "fullscreen_paper":
         return Fullscreen_paper(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+        )
+
+    elif obj_name == "water_pump":
+        return WaterPump(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+        )
+    
+    elif "broken_pipe" in obj_name:
+        if obj_name == "broken_pipe":
+            return BrokenPipe(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                default_collision,
+                default_wall,
+                current_collision_id,
+                False,
+                True,
+                True,
+            )
+        return BrokenPipe(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            False,
+            False,
+        )
+    
+    elif obj_name == "scotch":
+        return Scotch(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+        )
+    
+    elif "wallet" in obj_name:
+        if obj_name == "wallet":
+            return Wallet(
+                game_context,
+                obj_name,
+                img_path,
+                rect,
+                collision_rects,
+                default_collision,
+                default_wall,
+                current_collision_id,
+                False,
+                False,
+            )
+        return Wallet(    #meme chose ? un peu oui
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            False,
+        )
+    
+    elif obj_name == "keycard":
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            False,
+        )
+
+    elif obj_name == "scotch":
+        return Scotch(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+        )
+    
+    elif obj_name == "stool":
+        return Stool(
             game_context,
             obj_name,
             img_path,
