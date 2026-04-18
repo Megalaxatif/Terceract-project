@@ -1,4 +1,38 @@
 {
+    "gray_bg_broken_pipe": {
+        "image": "assets/cropped_images/cropped_gray_bg_broken_pipe.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "44"
+    },
+    "open_broken_pipe": {
+        "image": "assets/cropped_images/cropped_open_broken_pipe.png",
+        "rect": [
+            521,
+            286,
+            879,
+            383
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            521,
+            286,
+            879,
+            383
+        ],
+        "default_wall_id": "44"
+    },
     "broken_pipe": {
         "image": "assets/cropped_images/cropped_broken_pipe.png",
         "rect": [

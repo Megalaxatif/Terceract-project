@@ -40,7 +40,8 @@ class Wallet(Game_object):
         self.menu_reference = self.game_context.get_reference("open_wallet")
         self.bg_reference = self.game_context.get_reference("gray_bg_wallet")
 
-    def handle_click(self, event): 
+    def handle_click_selection(self, event): 
+        print("click wallet")
         if self.open and not self.background:
             if self.menu_reference.collisions[0].collidepoint(event.pos): 
                 self.card_taken = True

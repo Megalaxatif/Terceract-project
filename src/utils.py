@@ -614,20 +614,6 @@ def create_object(
         )
     
     elif "broken_pipe" in obj_name:
-        if obj_name == "broken_pipe":
-            return BrokenPipe(
-                game_context,
-                obj_name,
-                img_path,
-                rect,
-                collision_rects,
-                default_collision,
-                default_wall,
-                current_collision_id,
-                False,
-                True,
-                True,
-            )
         return BrokenPipe(
             game_context,
             obj_name,
@@ -638,8 +624,7 @@ def create_object(
             default_wall,
             current_collision_id,
             False,
-            False,
-            False,
+            True,
         )
     
     elif obj_name == "scotch":
@@ -666,7 +651,7 @@ def create_object(
                 default_wall,
                 current_collision_id,
                 False,
-                False,
+                True,
             )
         return Wallet(    #meme chose ? un peu oui
             game_context,

@@ -15,7 +15,6 @@ class BrokenPipe(Game_object):
         collision_index: int,
         movable: bool,
         displayed: bool,
-        interactible: bool,
     ):
         super().__init__(
             game_context,
@@ -28,20 +27,22 @@ class BrokenPipe(Game_object):
             collision_index,
             movable,
             displayed,
-            interactible,
         ) 
-        self.displayed = displayed
-        self.interactible = interactible           #fonctionne comme un closet mais avec 2 options
         self.unclogged = False
         self.collisions = collisions
         self.open = False
         self.background = "gray_bg" in self.name
+        self.interactible = not self.background           #fonctionne comme un closet mais avec 2 options
+        self.displayed = not self.background
+        print("broken pipe init")
 
     def initialize(self):
         self.menu_reference = self.game_context.get_reference("open_broken_pipe")
+        self.menu_reference.displayed = False
         self.bg_reference = self.game_context.get_reference("gray_bg_broken_pipe")
 
-    def handle_click(self, event): #ca ouvre rien :( jsp pk, update : je pense c psk je gere pas correctement open broken pipe a l'initialisation
+    def handle_click_selection(self, event): 
+        print("click") 
         if self.open and not self.background:
             if self.menu_reference.collisions[1].collidepoint(event.pos):
                 self.unclogged = True
@@ -58,6 +59,7 @@ class BrokenPipe(Game_object):
                 self.open = False
                 self.menu_reference.displayed = False
         elif not self.background:
+            print("open")
             self.open = not self.open
             self.menu_reference.displayed = self.open
             self.bg_reference.displayed = self.open

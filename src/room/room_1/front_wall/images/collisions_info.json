@@ -2,5 +2,9 @@
     "door": [],
     "borne": [],
     "removable_plank2": [],
-    "removable_plank1": []
+    "removable_plank1": [],
+    "gray_bg_wallet": [],
+    "opened_wallet": [],
+    "wallet": [],
+    "keycard": []
 }

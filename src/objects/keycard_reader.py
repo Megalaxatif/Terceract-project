@@ -30,3 +30,4 @@ class Wallet(Game_object):
         )
         self.unlocked = False
         self.collisions = collisions
+        self.unlocked = False

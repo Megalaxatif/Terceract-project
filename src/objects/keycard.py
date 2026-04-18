@@ -37,3 +37,4 @@ class Wallet(Game_object):
     def handle_click(self, event):
         if self.rect.colliderect(self.lock_reference.rect):
             self.lock_reference.unlocked = True
+            self.game_context.unlock_room(self.game_context.current_room_id)
