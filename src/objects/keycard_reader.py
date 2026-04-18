@@ -26,7 +26,7 @@ class Wallet(Game_object):
             default_wall,
             collision_index,
             movable,
-            displayed,
+            displayed
         )
         self.unlocked = False
         self.collisions = collisions

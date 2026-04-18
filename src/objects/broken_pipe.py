@@ -27,9 +27,8 @@ class BrokenPipe(Game_object):
             default_wall,
             collision_index,
             movable,
-            displayed,
-            interactible,
-        ) 
+            displayed
+        )
         self.displayed = displayed
         self.interactible = interactible           #fonctionne comme un closet mais avec 2 options
         self.unclogged = False

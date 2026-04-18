@@ -1,21 +1,4 @@
 {
-    "stool": {
-        "image": "assets/cropped_images/cropped_stool.png",
-        "rect": [
-            1603,
-            683,
-            192,
-            278
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1603,
-            683,
-            192,
-            278
-        ],
-        "default_wall_id": "43"
-    },
     "leak2": {
         "image": "assets/cropped_images/cropped_leak2.png",
         "rect": [
@@ -47,6 +30,23 @@
             502,
             113,
             131
+        ],
+        "default_wall_id": "43"
+    },
+    "stool": {
+        "image": "assets/cropped_images/cropped_stool.png",
+        "rect": [
+            1603,
+            683,
+            192,
+            278
+        ],
+        "collision_id": 0,
+        "default_collision": [
+            1603,
+            683,
+            192,
+            278
         ],
         "default_wall_id": "43"
     }

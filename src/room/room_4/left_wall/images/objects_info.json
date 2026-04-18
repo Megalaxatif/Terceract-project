@@ -32,22 +32,5 @@
             43
         ],
         "default_wall_id": "42"
-    },
-    "scotch": {
-        "image": "assets/cropped_images/cropped_scotch.png",
-        "rect": [
-            468,
-            848,
-            136,
-            134
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            468,
-            848,
-            136,
-            134
-        ],
-        "default_wall_id": "42"
     }
 }

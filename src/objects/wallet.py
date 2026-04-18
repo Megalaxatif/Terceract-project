@@ -37,12 +37,12 @@ class Wallet(Game_object):
 
     def initialize(self):
         self.card_reference = self.game_context.get_reference("keycard") #g peur que la carte reste énorme meme en dehors du wallet
-        self.menu_reference = self.game_context.get_reference("open_wallet")
+        self.menu_reference = self.game_context.get_reference("opened_wallet")
         self.bg_reference = self.game_context.get_reference("gray_bg_wallet")
 
-    def handle_click(self, event): 
+    def handle_click(self, event):
         if self.open and not self.background:
-            if self.menu_reference.collisions[0].collidepoint(event.pos): 
+            if self.menu_reference.collisions[0].collidepoint(event.pos):
                 self.card_taken = True
                 self.open = False
                 self.menu_reference.displayed = False
