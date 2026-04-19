@@ -28,14 +28,16 @@ class Keycard(Game_object):
             movable,
             displayed,
         )
-        self.displayed = False
+        self.displayed = False #pour poser et prendre c le meme systeme que magnet (g pas compris ou il le fait)
         self.collisions = collisions
         self.movable = True
     
     def initialize(self):
         self.lock_reference = self.game_context.get_reference("keycard_reader")
+        self.wallet_reference = self.game_context.get_reference("wallet")
 
     def handle_click(self, event):
         if self.rect.colliderect(self.lock_reference.rect):
             self.lock_reference.unlocked = True
-            self.game_context.room_5_unlocked = False
+            self.game_context.room_5_unlocked = True
+            print("the door is unlocked")

@@ -694,7 +694,7 @@ def create_object(
                 default_wall,
                 current_collision_id,
                 False,
-                False,
+                True, #pour test, a remettre a false a la fin
             )
         return Wallet(    #meme chose ? un peu oui
             game_context,

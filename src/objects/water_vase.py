@@ -28,4 +28,4 @@ class Water_vase(Game_object):
             movable,
             displayed,
         )
-        self.water_count = 3
+        self.water_count = 3 #marche niquel :D

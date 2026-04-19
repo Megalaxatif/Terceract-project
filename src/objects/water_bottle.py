@@ -31,22 +31,22 @@ class Water_bottle(Game_object):
         self.empty = False
         self.interactible = True
         self.movable = True
-        self.displayed = True
+        self.displayed = True #marche niquel :D
 
     def initialize(self):
         self.vase_reference = self.game_context.get_reference("water_vase")
         self.water_pump_reference = self.game_context.get_reference("water_pump")
     
     def handle_click(self, event):
-        if not self.empty and self.water_pump_reference.rect.collidepoint(event.pos) and self.water_pump_reference.disabled:
+        if not self.empty and self.water_pump_reference.rect.collidepoint(event.pos) and self.water_pump_reference.water_count < 2 and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
             self.empty = True
             self.water_pump_reference.water_count += 1
             print("water the pump")
 
-        elif not self.empty and self.water_pump_reference.rect.collidepoint(event.pos):
+        elif not self.empty and self.water_pump_reference.rect.collidepoint(event.pos) and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
             print("the pump is already full")
 
-        elif self.empty and self.vase_reference.rect.collidepoint(event.pos):
+        elif self.empty and self.vase_reference.rect.collidepoint(event.pos) and self.game_context.current_room_id == 1 and self.game_context.current_wall_id == 0:
             if self.vase_reference.water_count <= 0:
                 print("the vase is already empty")
             else:

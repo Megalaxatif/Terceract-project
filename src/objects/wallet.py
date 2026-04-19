@@ -28,7 +28,7 @@ class Wallet(Game_object):
             movable,
             displayed,
         )
-        self.interactible = "wallet" == self.name
+        self.interactible = "wallet" == self.name #en soi ca marche mais j'arrive pas a prendre la carte D:
         self.original_displayed = displayed
         self.displayed = displayed
         self.open = not self.displayed
@@ -42,13 +42,15 @@ class Wallet(Game_object):
 
     def handle_click_selection(self, event):
         if self.open and not self.background:
-            if self.card_reference.collisions[0].collidepoint(event.pos): #"game object has no attribute collisions" ???
+            if self.card_reference.rect.collidepoint(event.pos): 
+                while self not in self.game_context.inventory.objects: #au cas ou tu la prend et drop direct, elle se remet dans wallet et synchro display avec
+                    self.card_taken = False
                 self.card_taken = True
-                self.open = False
-                self.menu_reference.displayed = False
             else :
                 self.open = False
                 self.menu_reference.displayed = False
+                self.bg_reference.displayed = False
+                self.card_reference.displayed = False
         elif not self.background:
             self.open = not self.open
             self.menu_reference.displayed = self.open
