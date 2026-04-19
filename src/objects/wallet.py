@@ -42,16 +42,17 @@ class Wallet(Game_object):
 
     def handle_click_selection(self, event):
         if self.open and not self.background:
-            if self.card_reference.rect.collidepoint(event.pos): 
-                while self not in self.game_context.inventory.objects: #au cas ou tu la prend et drop direct, elle se remet dans wallet et synchro display avec
+            if self.card_reference.rect.collidepoint(event.pos): #prend la carte wsh, il veut pas
+                while self.card_reference not in self.game_context.inventory.objects: #au cas ou tu la prend et drop direct, elle se remet dans wallet et synchro display avec
                     self.card_taken = False
+                    #self.game_context.current_object = self.card_reference #il veut vrmt pas la prendre hein
                 self.card_taken = True
             else :
                 self.open = False
                 self.menu_reference.displayed = False
                 self.bg_reference.displayed = False
                 self.card_reference.displayed = False
-        elif not self.background:
+        else:
             self.open = not self.open
             self.menu_reference.displayed = self.open
             self.bg_reference.displayed = self.open

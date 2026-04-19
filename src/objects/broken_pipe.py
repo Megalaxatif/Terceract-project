@@ -35,15 +35,17 @@ class BrokenPipe(Game_object):
         self.collisions = collisions
         self.open = False
         self.background = "gray_bg" in self.name
+        self.menu = not self.name == "broken_pipe"
         self.movable = False
+        self.taken = False
 
     def initialize(self):
         self.menu_reference = self.game_context.get_reference("open_broken_pipe")
         self.bg_reference = self.game_context.get_reference("gray_bg_broken_pipe")
 
-    def handle_click_selection(self, event): #unclog sur les deux boutons ?? et bloqué après
-        if self.open and not self.background:
-            if self.menu_reference.collisions[0].collidepoint(event.pos):
+    def handle_click_selection(self, event):
+        if self.open and not self.menu and not self.taken: #faire attention aux 3 objets qui sont broken pipe (obj, bg et menu), menu continue de s'ouvrir meme quand taken a cause de ca je pense
+            if self.menu_reference.collisions[2].collidepoint(event.pos): #collisions[0] c le menu en entier
                 self.unclogged = True
                 self.open = False
                 self.menu_reference.displayed = False
@@ -52,16 +54,22 @@ class BrokenPipe(Game_object):
             elif self.menu_reference.collisions[1].collidepoint(event.pos) and not self.unclogged:
                 print("still clogged")
             elif self.menu_reference.collisions[1].collidepoint(event.pos) and self.unclogged:
+                self.taken = True
                 self.interactible = False
                 self.movable = True
                 self.open = False
                 self.menu_reference.displayed = False
                 self.bg_reference.displayed = False
+                print("you took the pipe")  
             else :
                 self.open = False
                 self.menu_reference.displayed = False
                 self.bg_reference.displayed = False
-        elif not self.background and not self.unclogged:
+        elif not self.unclogged and not self.taken:
             self.open = not self.open
             self.menu_reference.displayed = self.open
             self.bg_reference.displayed = self.open
+        elif self.taken :
+            self.open = False
+            self.menu_reference.displayed = False
+            self.bg_reference.displayed = False

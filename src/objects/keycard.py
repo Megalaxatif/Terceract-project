@@ -31,6 +31,7 @@ class Keycard(Game_object):
         self.displayed = False #pour poser et prendre c le meme systeme que magnet (g pas compris ou il le fait)
         self.collisions = collisions
         self.movable = True
+        self.interactible = True
     
     def initialize(self):
         self.lock_reference = self.game_context.get_reference("keycard_reader")
