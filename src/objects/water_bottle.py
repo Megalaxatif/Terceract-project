@@ -31,7 +31,7 @@ class Water_bottle(Game_object):
         self.empty = False
         self.interactible = True
         self.movable = True
-        self.displayed = True #marche niquel :D
+        self.displayed = True #marche niquel :D MAIS comment je fais le compteur d'eau en network ?
 
     def initialize(self):
         self.vase_reference = self.game_context.get_reference("water_vase")

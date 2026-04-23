@@ -24,7 +24,7 @@ class Scotch(Game_object):
             collision_index,
             movable=True,
             displayed=True,
-        )                                #todo network
+        )                                #todo network jsp comment faire disparaitre les fuites en network
 
         self.displayed = False
         self.stool_reference = []
@@ -51,10 +51,14 @@ class Scotch(Game_object):
                 obj = self.leak_reference[i]
                 if obj.displayed and obj.rect.collidepoint(event.pos) and self.stool_reference.placed[i]: #normalement match
                     obj.displayed = False
+                    if self.game_context.network_manager.is_connected:
+                        self.game_context.network_manager.send_package("variable", "AAAAAAAAAAAAAAA", "displayed", False)
                     if not any([v.displayed for v in self.leak_reference]):
                         for obj in self.game_context.rooms[self.game_context.current_room_id].objects:
                             if obj.name == "water_pump":
-                                obj.disabled = False
+                                obj.leaking = False
+                                if self.game_context.network_manager.is_connected:
+                                    self.game_context.network_manager.send_package("variable", "water_pump", "leaking", False)
                     return True
 
         self.game_context.drop_current_object(event)

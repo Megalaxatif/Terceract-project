@@ -28,7 +28,6 @@ class Keycard_Reader(Game_object):
             movable,
             displayed
         )
-        self.unlocked = False
         self.collisions = collisions
         self.displayed = True
         self.movable = False

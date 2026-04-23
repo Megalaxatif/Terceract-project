@@ -47,6 +47,8 @@ class BrokenPipe(Game_object):
         if self.open and not self.menu and not self.taken: #faire attention aux 3 objets qui sont broken pipe (obj, bg et menu), menu continue de s'ouvrir meme quand taken a cause de ca je pense
             if self.menu_reference.collisions[2].collidepoint(event.pos): #collisions[0] c le menu en entier
                 self.unclogged = True
+                if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "broken_pipe", "unclogged", True)
                 self.open = False
                 self.menu_reference.displayed = False
                 self.bg_reference.displayed = False
@@ -55,6 +57,9 @@ class BrokenPipe(Game_object):
                 print("still clogged")
             elif self.menu_reference.collisions[1].collidepoint(event.pos) and self.unclogged:
                 self.taken = True
+                if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "broken_pipe", "taken", True)
+                    self.game_context.network_manager.send_package("variable", "broken_pipe", "movable", True) 
                 self.interactible = False
                 self.movable = True
                 self.open = False

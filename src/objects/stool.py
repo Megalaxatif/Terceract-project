@@ -32,15 +32,28 @@ class Stool(Game_object):
     def update(self, event):
         if self.rect.colliderect(self.collisions[0]) and self.game_context.current_wall_id == 0: #back wall
             self.placed[0] = True
+            if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "stool", "placed[0]", True)
         else : 
             self.placed[0] = False
+            if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "stool", "placed[0]", False)
 
         if self.rect.colliderect(self.collisions[0]) and self.game_context.current_wall_id == 2: #front wall
             self.placed[3] = True
+            if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "stool", "placed[3]", True)
         else :
             self.placed[3] = False
+            if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "stool", "placed[3]", False)
 
         if self.rect.colliderect(self.collisions[0]) and self.game_context.current_wall_id == 3: #left wall
             self.placed[4] = True
+            if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "stool", "placed[4]", True)
+
         else :
             self.placed[4] = False
+            if self.game_context.network_manager.is_connected:
+                    self.game_context.network_manager.send_package("variable", "stool", "placed[4]", False)
