@@ -29,3 +29,6 @@ class Water_vase(Game_object):
             displayed,
         )
         self.water_count = 3 #marche niquel :D
+
+    def decrease_water(self):
+        self.water_count -= 1
