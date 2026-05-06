@@ -40,6 +40,6 @@ class Keycard(Game_object):
     def handle_click(self, event):
         if self.rect.colliderect(self.lock_reference.rect):
             self.game_context.room_5_unlocked = True
-            if self.game_context.network_manager.is_connected:
-                    self.game_context.network_manager.send_package("variable", "game_context", "room_5_unlocked", True)
+            #if self.game_context.network_manager.is_connected:        a voir comment on peut faire
+            #        self.game_context.network_manager.send_package("variable", "game_context", "room_5_unlocked", True)
             print("the door is unlocked")
