@@ -206,6 +206,7 @@ def create_object(
     from objects.keycard import Keycard
     from objects.water_bottle import Water_bottle
     from objects.water_vase import Water_vase
+    from objects.leak import Leak
 
     if obj_name == "calculator":
         return Digicode(
@@ -735,6 +736,18 @@ def create_object(
             current_collision_id,
         )
     
+    elif "leak" in obj_name:
+        return Leak(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+        )
+
     elif obj_name == "stool":
         return Stool(
             game_context,
