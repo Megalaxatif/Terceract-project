@@ -87,16 +87,16 @@
     "grid": {
         "image": "assets/cropped_images/cropped_grid.png",
         "rect": [
-            448,
+            449,
             28,
-            1024,
+            1022,
             1024
         ],
         "collision_id": -1,
         "default_collision": [
-            448,
+            449,
             28,
-            1024,
+            1022,
             1024
         ],
         "default_wall_id": "14"
