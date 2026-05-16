@@ -31,44 +31,40 @@ class BrokenPipe(Game_object):
         )
         self.interactible = interactible           #fonctionne comme un closet mais avec 2 options
         self.unclogged = False
-        self.open = False
+        self.open = not (self.name == "broken_pipe")
         self.background = "gray_bg" in self.name
-        self.menu = not self.name == "broken_pipe"
         self.taken = False
 
     def initialize(self):
         self.menu_reference = self.game_context.get_reference("open_broken_pipe")
         self.bg_reference = self.game_context.get_reference("gray_bg_broken_pipe")
+        self.pipe_reference = self.game_context.get_reference("broken_pipe")
 
     def swap_display(self):
-        self.open = not self.open
-        self.menu_reference.displayed = self.open
-        self.bg_reference.displayed = self.open
+        self.menu_reference.displayed = not self.menu_reference.displayed
+        self.bg_reference.displayed = not self.bg_reference.displayed
 
     def handle_click_selection(self, event):
-        if self.open and not self.menu and not self.taken: #faire attention aux 3 objets qui sont broken pipe (obj, bg et menu), menu continue de s'ouvrir meme quand taken a cause de ca je pense
-            if self.menu_reference.collisions[2].collidepoint(event.pos): #collisions[0] c le menu en entier
-                self.unclogged = True
+        if self.open and not self.pipe_reference.taken: #faire attention aux 3 objets qui sont broken pipe (obj, bg et menu), menu continue de s'ouvrir meme quand taken a cause de ca je pense
+            if self.menu_reference.collision_rects[2].collidepoint(event.pos): #collision_rects[0] c le menu en entier
+                self.pipe_reference.unclogged = True
                 if self.game_context.network_manager.is_connected:
                     self.game_context.network_manager.send_package("variable", "broken_pipe", "unclogged", True)
-                self.swap_display()
                 print("pipe unclogged")
 
-            elif self.menu_reference.collisions[1].collidepoint(event.pos) and not self.unclogged:
+            elif self.menu_reference.collision_rects[1].collidepoint(event.pos) and not self.pipe_reference.unclogged:
                 print("still clogged")
 
-            elif self.menu_reference.collisions[1].collidepoint(event.pos) and self.unclogged:
-                self.taken = True
+            elif self.menu_reference.collision_rects[1].collidepoint(event.pos) and self.pipe_reference.unclogged:
+                self.pipe_reference.taken = True
                 if self.game_context.network_manager.is_connected:
                     self.game_context.network_manager.send_package("variable", "broken_pipe", "taken", True)
                     self.game_context.network_manager.send_package("variable", "broken_pipe", "movable", True) 
-                self.interactible = False
-                self.movable = True
-                self.swap_display()
+                self.pipe_reference.interactible = False
+                self.pipe_reference.movable = True
                 print("you took the pipe")  
             else :
                 self.swap_display()
-        elif not self.unclogged and not self.taken:
-            self.swap_display()
-        elif self.taken :
+        elif not self.pipe_reference.unclogged or not self.pipe_reference.taken or self.background:
+            print("swap here")
             self.swap_display()

@@ -33,6 +33,23 @@
         ],
         "default_wall_id": "13"
     },
+    "wallet": {
+        "image": "assets/cropped_images/cropped_wallet.png",
+        "rect": [
+            1572,
+            897,
+            130,
+            140
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1572,
+            897,
+            130,
+            140
+        ],
+        "default_wall_id": "13"
+    },
     "removable_plank2": {
         "image": "assets/cropped_images/cropped_removable_plank2.png",
         "rect": [
@@ -98,23 +115,6 @@
             263,
             1109,
             555
-        ],
-        "default_wall_id": "13"
-    },
-    "wallet": {
-        "image": "assets/cropped_images/cropped_wallet.png",
-        "rect": [
-            1572,
-            897,
-            130,
-            140
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1572,
-            897,
-            130,
-            140
         ],
         "default_wall_id": "13"
     },

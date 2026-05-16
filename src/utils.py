@@ -710,7 +710,7 @@ def create_object(
         )
     
     elif obj_name == "keycard":
-        return Game_object(
+        return Keycard(
             game_context,
             obj_name,
             img_path,
@@ -719,7 +719,7 @@ def create_object(
             default_collision,
             default_wall,
             current_collision_id,
-            False,
+            True,
             False,
         )
 

@@ -40,21 +40,27 @@ class Wallet(Game_object):
         self.menu_reference = self.game_context.get_reference("opened_wallet")
         self.bg_reference = self.game_context.get_reference("gray_bg_wallet")
 
+    def swap_display(self):
+        wall = self.game_context.current_wall.objects
+        for obj in wall:
+            if isinstance(obj, Wallet) and obj.open:
+                obj.displayed = not obj.displayed
+                obj.display_collision_rect_bool = self.displayed
+
+        self.card_reference.displayed = self.displayed
+        self.card_reference.display_collision_rect_bool = self.displayed # will follow the opening and the closing of the drawer automaticaly
+
     def handle_click_selection(self, event):
-        if self.open and not self.background:
-            if self.card_reference.rect.collidepoint(event.pos): #prend la carte wsh, il veut pas
-                while self.card_reference not in self.game_context.inventory.objects: #au cas ou tu la prend et drop direct, elle se remet dans wallet et synchro display avec
-                    self.card_taken = False
-                    #self.game_context.current_object = self.card_reference #il veut vrmt pas la prendre hein
-                self.card_taken = True
-            else :
-                self.open = False
-                self.menu_reference.displayed = False
-                self.bg_reference.displayed = False
-                self.card_reference.displayed = False
-        else:
-            self.open = not self.open
-            self.menu_reference.displayed = self.open
-            self.bg_reference.displayed = self.open
-            if not self.card_taken:
-                self.card_reference.displayed = self.open
+        inv = self.game_context.inventory
+
+        if not self.open or self.background:
+            self.swap_display()
+
+        for i in range(inv.rows):
+            for j in range(inv.cols):
+                if inv.slots[i][j]:
+                    if "keycard" in inv.slots[i][j].name:
+                        inv.slots[i][j].displayed = self.displayed
+                        inv.slots[i][j].display_collision_rect_bool = self.displayed
+
+        self.game_context.drop_current_object(event)
