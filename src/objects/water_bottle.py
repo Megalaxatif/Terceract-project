@@ -36,7 +36,7 @@ class Water_bottle(Game_object):
         self.water_pump_reference = self.game_context.get_reference("water_pump")
     
     def handle_click(self, event):
-        if not self.empty and self.water_pump_reference.rect.collidepoint(event.pos) and self.water_pump_reference.water_count < 4 and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
+        if not self.empty and self.water_pump_reference.rect.collidepoint(event.pos) and self.water_pump_reference.water_count < 3 and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
             self.empty = True
             self.water_pump_reference.water_count += 1
             if self.game_context.network_manager.is_connected:
