@@ -30,5 +30,5 @@ class Water_vase(Game_object):
         )
         self.water_count = 3 #marche niquel :D
 
-    def decrease_water(self):
-        self.water_count -= 1
+    def decrease_water(self, i):
+        self.water_count -= int(i)

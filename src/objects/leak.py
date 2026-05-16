@@ -1,7 +1,7 @@
 import pygame
 from object import Game_object
 
-class Scotch(Game_object):
+class Leak(Game_object):
     def __init__(
         self,
         game_context,
@@ -27,3 +27,5 @@ class Scotch(Game_object):
         )
 
         self.collisions = collisions
+        if object_name == "leak1":
+            self.displayed = False

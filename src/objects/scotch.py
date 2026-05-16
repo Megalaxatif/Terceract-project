@@ -24,11 +24,12 @@ class Scotch(Game_object):
             collision_index,
             movable=True,
             displayed=True,
-        )                                #todo network jsp comment faire disparaitre les fuites en network
+        )                                #network FAIT hihihihi
+                                        #lien avec pump fait
 
         self.displayed = False
         self.stool_reference = []
-        self.collisions = collisions #pas de pb, ca marche :D (mais pas pu vérifier avec leak derriere stash)
+        self.collisions = collisions #pas de pb, ca marche :D
 
     def initialize(self):
         self.stool_reference = self.game_context.get_reference("stool")
@@ -51,12 +52,22 @@ class Scotch(Game_object):
                 obj = self.leak_reference[i]
                 if obj.displayed and obj.rect.collidepoint(event.pos) and self.stool_reference.placed[i]: #normalement match
                     obj.displayed = False
+                    #print("caché")
+                    #print(f"{i}")
                     if self.game_context.network_manager.is_connected:
-                        self.game_context.network_manager.send_package("variable", "AAAAAAAAAAAAAAA", "displayed", False)
+                        if i == 0 : 
+                            self.game_context.network_manager.send_package("variable", "leak1", "displayed", False)
+                        if i == 1 : 
+                            self.game_context.network_manager.send_package("variable", "leak3", "displayed", False)
+                        if i == 2 : 
+                            self.game_context.network_manager.send_package("variable", "leak4", "displayed", False)
+                        if i == 3 : 
+                            self.game_context.network_manager.send_package("variable", "leak2", "displayed", False)
                     if not any([v.displayed for v in self.leak_reference]):
-                        for obj in self.game_context.rooms[self.game_context.current_room_id].objects:
+                        for obj in self.game_context.back_wall_R4.objects:
                             if obj.name == "water_pump":
                                 obj.leaking = False
+                                #print("leaking stopped omg ahhhhhhh")
                                 if self.game_context.network_manager.is_connected:
                                     self.game_context.network_manager.send_package("variable", "water_pump", "leaking", False)
                     return True

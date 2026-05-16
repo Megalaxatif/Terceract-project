@@ -28,15 +28,16 @@ class Keycard(Game_object):
             movable,
             displayed,
         )
-        self.interactible = False
+        self.interactible = False     #ouvre que la porte que quand wallet est ouvert, et a voir pour multi
     
     def initialize(self):
         self.lock_reference = self.game_context.get_reference("keycard_reader")
         self.wallet_reference = self.game_context.get_reference("wallet")
 
     def handle_click(self, event):
+        #print(f"{self.rect.colliderect(self.lock_reference.rect)}")
         if self.rect.colliderect(self.lock_reference.rect):
             self.game_context.room_5_unlocked = True
-            if self.game_context.network_manager.is_connected:
-                    self.game_context.network_manager.send_package("variable", "game_context", "room_5_unlocked", True)
+            #if self.game_context.network_manager.is_connected:        # a voir comment on peut faire
+            #        self.game_context.network_manager.send_package("variable", "game_context", "room_5_unlocked", True)
             print("the door is unlocked")

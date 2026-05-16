@@ -82,7 +82,22 @@ class Network_manager:
                             location = self.game_context.get_reference("key")
                         case "closed_closet":
                             location = self.game_context.get_reference("closed_closet")
-
+                        case "water_pump":
+                            location = self.game_context.get_reference("water_pump")
+                        case "water_vase":
+                            location = self.game_context.get_reference("water_vase")
+                        case "broken_pipe":
+                            location = self.game_context.get_reference("broken_pipe")
+                        case "stool":
+                            location = self.game_context.get_reference("stool")
+                        case "leak1":
+                            location = self.game_context.get_reference("leak1")
+                        case "leak2":
+                            location = self.game_context.get_reference("leak2")
+                        case "leak3":
+                            location = self.game_context.get_reference("leak3")
+                        case "leak4":
+                            location = self.game_context.get_reference("leak4")
                         case _: # TODO
                             print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")
                             return
