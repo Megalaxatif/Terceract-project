@@ -43,7 +43,13 @@ class Inventory:
 
         self.init_images()
 
-    def save_images(self):
+
+    def reset(self):
+        self.slots = [[None for _ in range(self.cols)] for _ in range(self.rows)] # clear slots
+        self.save()
+
+
+    def save(self):
         objects_list = {"data": [[]]}
         for i in range(len(self.slots)):
             objects_list["data"].append([])
@@ -52,11 +58,7 @@ class Inventory:
                     objects_list["data"][i].append(None)
                 else:
                     converted_rect = convert_to_tuple_rect(obj.raw_rect)
-                    converted_default_collision = None
-                    if obj.default_collision:
-                        converted_default_collision = convert_to_tuple_rect(
-                            obj.default_collision
-                        )
+                    converted_default_collision = convert_to_tuple_rect(obj.default_collision)
 
                     objects_list["data"][i].append(
                         {
@@ -90,11 +92,14 @@ class Inventory:
                             default_wall = sprite_dict["default_wall_id"]
 
                             converted_rect = convert_to_pygame_rect(rect)
-                            converted_default_collision = None
-                            if default_collision:
-                                converted_default_collision = convert_to_pygame_rect(default_collision)
+                            converted_default_collision = convert_to_pygame_rect(default_collision)
                             collision_rects = get_collision_rects(collision_layers_dir, name)
                             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
+
+                            # add the default collision if we are on the right wall
+                            if 10*(self.game_context.current_room_id+1)+self.game_context.current_wall_id+1 == int(default_wall):
+                                converted_collision_rects.insert(0,converted_default_collision)
+
                             object = create_object(
                                 name,
                                 self.game_context,
@@ -107,7 +112,6 @@ class Inventory:
                             )
 
                             self.slots[i][j] = object
-        self.update_object_collision_rects()
 
     def resize_objects(self):
         for i in range(len(self.slots)):

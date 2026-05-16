@@ -13,7 +13,7 @@ class Game_object(pygame.sprite.Sprite):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
-        default_collision: pygame.Rect | None,
+        default_collision: pygame.Rect,
         default_wall: str,
         collision_index: int = -1,
         movable: bool = True,
@@ -34,15 +34,11 @@ class Game_object(pygame.sprite.Sprite):
         self.image_name = str(self.image_path.name)
 
         self.collision_rects = collisions
-        self.default_collision = default_collision
-        self.raw_default_collision = None
-        self.default_wall = default_wall
-        if self.default_collision:
-            self.collision_rects.insert(0,self.default_collision)
-            self.raw_default_collision = self.default_collision.copy()
         self.raw_collision_rects = self.collision_rects.copy()
+        self.default_collision = default_collision
+        self.raw_default_collision = self.default_collision.copy()
         self.collision_rect_id = collision_index
-
+        self.default_wall = default_wall
         self.rect = rect
         self.raw_rect = self.rect
         if self.collision_rect_id != -1:
@@ -122,8 +118,7 @@ class Game_object(pygame.sprite.Sprite):
                     new_collision_rects.append(rect)
 
         if self.default_wall == wall_id_str:
-            if self.default_collision:
-                new_collision_rects.insert(0,self.default_collision)
+            new_collision_rects.insert(0,self.default_collision)
 
 
         converted_collision_rects = convert_to_pygame_rect_list(new_collision_rects)

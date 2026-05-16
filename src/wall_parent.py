@@ -25,8 +25,6 @@ class Wall:
         self.json_objects_path = Path(self.root_dir / "images/objects_info.json")
         self.json_collisions_path = Path(self.root_dir / "images/collisions_info.json")
 
-        #clear_json(self.json_objects_path)  # TODO: to remove also
-
         self.background = self.create_background()
         self.background_w = self.background.get_width()
         self.background_h = self.background.get_height()
@@ -43,6 +41,7 @@ class Wall:
             self.game_context.delta_w * (1080 / 1920),
             self.game_context.delta_h * (720 / 1080),
         )
+        #self.reset()
         self.create_wall_objects()
 
     # ---------------------------INIT---------------------------------------
@@ -78,7 +77,7 @@ class Wall:
         return collision_data
 
 
-    def get_objects_data(self):
+    def reset(self):
         collisions_data = self.get_collision_data()
         objects_data = {}
         object_layers_path = [f for f in sorted(Path(self.object_layers_dir).iterdir())]
@@ -88,17 +87,21 @@ class Wall:
             else:
                 object_name = f"{object_path.parent.name}_{object_path.stem[2:]}"
             cropped_name = f"cropped_{object_name}.png"
-            save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
-            bbox = create_cropped_object(object_path, save_path.as_posix())
 
-            default_collision = bbox
+            # NOTE: uncoment these two lines to reset the game completely by recreating the cropped images
+            #save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
+            #bbox = create_cropped_object(object_path, save_path.as_posix())
+
+            # NOTE: coment these two lines if you want to reset the game completely
+            object = self.game_context.get_reference(object_name)
+            bbox = convert_to_tuple_rect(object.default_collision)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
             objects_data[object_name]["rect"] = bbox
             objects_data[object_name]["collision_id"] = -1
-            objects_data[object_name]["default_collision"] = default_collision
+            objects_data[object_name]["default_collision"] = bbox
             objects_data[object_name]["default_wall_id"] = self.wall_id_str
 
         save_data_in_json(objects_data, self.json_objects_path) # save data
@@ -112,10 +115,6 @@ class Wall:
 
         if self.game_context.network_manager.is_host:
             objects_data = load_json_file(self.json_objects_path)  # load or init the JSON file
-            # case where we launched the game for the first time or we previously reset the progression
-
-            if not objects_data:
-                objects_data, collisions_data = self.get_objects_data()
 
         else:
             objects_data = self.game_context.game_data["wall_data"][self.room_id][self.wall_id] # the data from the other player
@@ -133,11 +132,9 @@ class Wall:
             converted_collision_rects = convert_to_pygame_rect_list(collision_rects)
             converted_default_collision = convert_to_pygame_rect(default_collision)
 
-            #if self.room_id +1 != int(default_wall[0]) and self.wall_id+1 != int(default_wall[1]): # wall_id and room_id start at 0 so we add 1
-
             # make sure we are on the default wall to create the object with the default collision
-            if 10*(self.room_id+1)+self.wall_id+1 != int(default_wall): # NOTE: idk why this line works but not the one above
-                converted_default_collision = None
+            if 10*(self.room_id+1)+self.wall_id+1 == int(default_wall):
+                converted_collision_rects.insert(0,converted_default_collision)
 
             object = create_object(
                 key,

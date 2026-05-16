@@ -2,17 +2,17 @@
     "mirror": {
         "image": "assets/cropped_images/cropped_mirror.png",
         "rect": [
-            1416,
-            45,
-            310,
-            636
+            1486,
+            52,
+            270,
+            574
         ],
         "collision_id": -1,
         "default_collision": [
-            1416,
-            45,
-            310,
-            636
+            1486,
+            52,
+            270,
+            574
         ],
         "default_wall_id": "24"
     },

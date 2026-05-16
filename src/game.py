@@ -138,11 +138,8 @@ class Game:
         self.other_player_inventory_object_name = ""  # TODO
         self.other_player_inventory_object = None
         self.mini_game_menu = Menu(self)
-        self.inventory = Inventory(
-            self, 40, 615, 1, 10, 100, True
-        )  # Create inventory (it's a line here)
+        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # Create inventory (it's a line here)
         self.laboratory_game = Laboratory(self)
-
         self.dialogues = Dialogue(self)
 
         self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
@@ -152,6 +149,15 @@ class Game:
         self.network_manager.quit()
         pygame.quit()
         sys.exit()
+
+
+    def reset_game(self):
+        for room in self.room_list:
+            for wall in room:
+                wall.reset()
+        self.inventory.reset()
+        self.quit()
+
 
     def initialize_all_objects(
         self,
@@ -173,7 +179,7 @@ class Game:
                 for wall in room:
                     wall.save_objects_data()
             print("save inventory")
-            self.inventory.save_images()
+            self.inventory.save()
 
     def start(self):
         #gamemode = "s"
@@ -530,7 +536,7 @@ class Game:
         self.current_wall.delta_h = self.delta_h * (720 / 1080)
         self.current_wall.delta = min(self.current_wall.delta_w, self.current_wall.delta_h)
 
-    def handle_basic_game_events(self, event):
+    def handle_keyboard_events(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 self.change_wall("left")
@@ -542,6 +548,8 @@ class Game:
                 self.change_room(-1)
             elif event.key == pygame.K_i:
                 self.inventory.displayed = not self.inventory.displayed
+            elif event.key == pygame.K_r:
+                self.reset_game()
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             temp_inv_obj = self.inventory.current_object
@@ -595,7 +603,7 @@ class Game:
 
             elif self.current_mini_game == "game":
                 self.update_walls(event)
-                self.handle_basic_game_events(event)
+                self.handle_keyboard_events(event)
                 self.dialogues.handle_event(event)
 
             elif self.current_mini_game == "laboratory":  # TODO
