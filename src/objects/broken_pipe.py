@@ -13,9 +13,6 @@ class BrokenPipe(Game_object):
         default_collision: pygame.Rect,
         default_wall: str,
         collision_index: int,
-        movable: bool,
-        displayed: bool,
-        interactible: bool,
     ):
         super().__init__(
             game_context,
@@ -26,49 +23,33 @@ class BrokenPipe(Game_object):
             default_collision,
             default_wall,
             collision_index,
-            movable,
-            displayed
+            movable=True,
+            displayed=True,
         )
-        self.interactible = interactible           #fonctionne comme un closet mais avec 2 options
-        self.unclogged = False
-        self.open = False
-        self.background = "gray_bg" in self.name
-        self.menu = not self.name == "broken_pipe"
-        self.taken = False
+        self.interactible = True
+        self.collisions = collisions
 
     def initialize(self):
-        self.menu_reference = self.game_context.get_reference("open_broken_pipe")
-        self.bg_reference = self.game_context.get_reference("gray_bg_broken_pipe")
+    #    self.stool_reference = self.game_context.get_reference("stool")
+        self.water_pump_reference = self.game_context.get_reference("water_pump")
 
-    def swap_display(self):
-        self.open = not self.open
-        self.menu_reference.displayed = self.open
-        self.bg_reference.displayed = self.open
+    def update(self, event):
+        if self.rect.colliderect(self.collisions[1]):
+            self.water_pump_reference.pipe_fixed = True
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "water_pump", "pipe_fixed", True)
+        else :
+            self.water_pump_reference.pipe_fixed = False
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "water_pump", "pipe_fixed", False)
 
-    def handle_click_selection(self, event):
-        if self.open and not self.menu and not self.taken: #faire attention aux 3 objets qui sont broken pipe (obj, bg et menu), menu continue de s'ouvrir meme quand taken a cause de ca je pense
-            if self.menu_reference.collisions[2].collidepoint(event.pos): #collisions[0] c le menu en entier
-                self.unclogged = True
-                if self.game_context.network_manager.is_connected:
-                    self.game_context.network_manager.send_package("variable", "broken_pipe", "unclogged", True)
-                self.swap_display()
-                print("pipe unclogged")
-
-            elif self.menu_reference.collisions[1].collidepoint(event.pos) and not self.unclogged:
-                print("still clogged")
-
-            elif self.menu_reference.collisions[1].collidepoint(event.pos) and self.unclogged:
-                self.taken = True
-                if self.game_context.network_manager.is_connected:
-                    self.game_context.network_manager.send_package("variable", "broken_pipe", "taken", True)
-                    self.game_context.network_manager.send_package("variable", "broken_pipe", "movable", True) 
-                self.interactible = False
-                self.movable = True
-                self.swap_display()
-                print("you took the pipe")  
-            else :
-                self.swap_display()
-        elif not self.unclogged and not self.taken:
-            self.swap_display()
-        elif self.taken :
-            self.swap_display()
+    #def handle_click(self, event):
+    #    if self.rect.colliderect(self.collisions[1]):
+    #        print(f"{self.rect.colliderect(self.collisions[1])}")
+    #        if self.stool_reference.placed[4] and self.rect.colliderect(self.collisions[1]):
+    #            self.game_context.drop_current_object(event, [self.collisions[1]])
+    #        else :
+    #            #self.drop_in_collision_rect(0) #il veut pas arreter de suivre la souris
+    #            self.game_context.drop_current_object(event, [self.collisions[0]])
+    #    else:
+    #        self.game_context.drop_current_object(event)

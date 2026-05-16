@@ -37,12 +37,13 @@ class WaterPump(Game_object):
     def water_increase(self, i):
         self.water_count += int(i)
 
-    def update(self, event):
-        if not self.leaking and self.water_count >= 4 and self.pipe_fixed: #faudra remettre 4 a la fin
-            self.disabled = False
-            print("pump not disabled anymore")
+    #def update(self, event):
+        #print(f"water count : {self.water_count}, leaking : {self.leaking}, pipe fixed : {self.pipe_fixed}")
+        #if not self.leaking and self.water_count >= 4 and self.pipe_fixed: #faudra remettre 4 a la fin
+            #self.disabled = False
+            #print("pump not disabled anymore")
 
     def handle_click_selection(self, event):
-        if not self.disabled:
+        if not self.leaking and self.water_count >= 4 and self.pipe_fixed: #and self.rect.collidepoint(event.pos) and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
             self.wallet_reference.displayed = True
             print("something happened...")
