@@ -78,7 +78,8 @@ class Wall:
 
 
     def reset(self):
-        collisions_data = self.get_collision_data()
+        # NOTE: uncoment this line to reset the collisions (when you added new ones for example)
+        #collisions_data = self.get_collision_data()
         objects_data = {}
         object_layers_path = [f for f in sorted(Path(self.object_layers_dir).iterdir())]
         for object_path in reversed(object_layers_path):  # reversed so we draw the object with the lowest layer id first
@@ -89,24 +90,22 @@ class Wall:
             cropped_name = f"cropped_{object_name}.png"
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
 
-            # NOTE: uncoment these two lines to reset the game completely by recreating the cropped images
+            # NOTE: uncoment these two lines to reset the object data completely by recreating the cropped images
             #save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
             #bbox = create_cropped_object(object_path, save_path.as_posix())
 
             # NOTE: coment these two lines if you want to reset the game completely
             object = self.game_context.get_reference(object_name)
-            bbox = convert_to_tuple_rect(object.default_collision)
+            converted_default_collision = convert_to_tuple_rect(object.default_collision)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
-            objects_data[object_name]["rect"] = bbox
+            objects_data[object_name]["rect"] = converted_default_collision
             objects_data[object_name]["collision_id"] = -1
-            objects_data[object_name]["default_collision"] = bbox
+            objects_data[object_name]["default_collision"] = converted_default_collision
             objects_data[object_name]["default_wall_id"] = self.wall_id_str
 
         save_data_in_json(objects_data, self.json_objects_path) # save data
-
-        return objects_data, collisions_data
 
 
     def create_wall_objects(self):

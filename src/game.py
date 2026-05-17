@@ -159,9 +159,7 @@ class Game:
         self.quit()
 
 
-    def initialize_all_objects(
-        self,
-    ):  # this function finishes the initialization of the objects when all the variable
+    def initialize_all_objects(self):  # this function finishes the initialization of the objects when all the variable
         # they would need have been created (useful for the axe for examble)
         for room in self.room_list:
             for wall in room:

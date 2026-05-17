@@ -10,9 +10,7 @@ class Menu:
         self.game_context = game_context
         self.SCREEN_WIDTH = 1080
         self.SCREEN_HEIGHT = 720
-        self.screen = pygame.display.set_mode(
-            (self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE
-        )
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
         pygame.display.set_caption("Main Menu")
 
         self.game_paused = True
@@ -22,34 +20,20 @@ class Menu:
         self.font = pygame.font.SysFont("arialblack", 40)
         self.TEXT_COL = (255, 255, 255)
 
-        root_dir = Path(__file__).resolve().parent
+        root_dir = Path(__file__).resolve().parent.parent.parent.parent
 
         # load images raw
-        self.resume_img_raw = pygame.image.load(
-            root_dir / "images/button_resume.png"
-        ).convert_alpha()
-        self.options_img_raw = pygame.image.load(
-            root_dir / "images/button_options.png"
-        ).convert_alpha()
-        self.quit_img_raw = pygame.image.load(
-            root_dir / "images/button_quit.png"
-        ).convert_alpha()
+        self.background = pygame.image.load(root_dir / "assets/gui/background.png").convert_alpha()
 
-        self.video_img_raw = pygame.image.load(
-            root_dir / "images/button_video.png"
-        ).convert_alpha()
-        self.audio_img_raw = pygame.image.load(
-            root_dir / "images/button_audio.png"
-        ).convert_alpha()
-        self.keys_img_raw = pygame.image.load(
-            root_dir / "images/button_keys.png"
-        ).convert_alpha()
-        self.back_img_raw = pygame.image.load(
-            root_dir / "images/button_back.png"
-        ).convert_alpha()
-        self.save_img_raw = pygame.image.load(
-            root_dir / "images/button_save.png"
-        ).convert_alpha()
+        self.resume_img_raw = pygame.image.load(root_dir / "assets/gui/resume_button.png").convert_alpha()
+        self.options_img_raw = pygame.image.load(root_dir / "assets/gui/options_button.png").convert_alpha()
+        self.quit_img_raw = pygame.image.load(root_dir / "assets/gui/quit_button.png").convert_alpha()
+
+        self.fullscreen_img_raw = pygame.image.load(root_dir / "assets/gui/fullscreen_button.png").convert_alpha()
+        self.reset_img_raw = pygame.image.load(root_dir / "assets/gui/reset_button.png").convert_alpha()
+        self.keys_img_raw = pygame.image.load(root_dir / "assets/gui/keybinds_button.png").convert_alpha()
+        self.back_img_raw = pygame.image.load(root_dir / "assets/gui/back_button.png").convert_alpha()
+        self.save_img_raw = pygame.image.load(root_dir / "assets/gui/save_button.png").convert_alpha()
 
         self.create_buttons()
 
@@ -90,18 +74,18 @@ class Menu:
         )
 
         self.video_img = pygame.transform.scale(
-            self.video_img_raw,
+            self.fullscreen_img_raw,
             (
-                int(self.video_img_raw.get_width() * delta),
-                int(self.video_img_raw.get_height() * delta),
+                int(self.fullscreen_img_raw.get_width() * delta),
+                int(self.fullscreen_img_raw.get_height() * delta),
             ),
         )
 
-        self.audio_img = pygame.transform.scale(
-            self.audio_img_raw,
+        self.reset_img = pygame.transform.scale(
+            self.reset_img_raw,
             (
-                int(self.audio_img_raw.get_width() * delta),
-                int(self.audio_img_raw.get_height() * delta),
+                int(self.reset_img_raw.get_width() * delta),
+                int(self.reset_img_raw.get_height() * delta),
             ),
         )
 
@@ -123,54 +107,54 @@ class Menu:
 
         # menu principal
         self.save_button = menu_button.MenuButton(
-            center_x // 1.5 - self.save_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.1),
+            center_x - self.save_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.03),
             self.save_img,
             1,
         )
 
         self.resume_button = menu_button.MenuButton(
-            center_x // 1.5 - self.resume_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.25),
+            center_x - self.resume_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.27),
             self.resume_img,
             1,
         )
 
         self.options_button = menu_button.MenuButton(
-            center_x // 1.5 - self.options_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.4),
+            center_x - self.options_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.52),
             self.options_img,
             1,
         )
         self.quit_button = menu_button.MenuButton(
-            center_x // 1.5 - self.quit_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.55),
+            center_x - self.quit_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.77),
             self.quit_img,
             1,
         )
 
         # menu options
-        self.video_button = menu_button.MenuButton(
-            center_x // 1.5 - self.video_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.25),
+        self.fullscreen_button = menu_button.MenuButton(
+            center_x - self.video_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.03),
             self.video_img,
             1,
         )
-        self.audio_button = menu_button.MenuButton(
-            center_x // 1.5 - self.audio_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.4),
-            self.audio_img,
+        self.reset_button = menu_button.MenuButton(
+            center_x - self.reset_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.27),
+            self.reset_img,
             1,
         )
         self.keys_button = menu_button.MenuButton(
-            center_x // 1.5 - self.keys_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.55),
+            center_x - self.keys_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.52),
             self.keys_img,
             1,
         )
         self.back_button = menu_button.MenuButton(
-            center_x // 1.5 - self.back_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.7),
+            center_x - self.back_img.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.77),
             self.back_img,
             1,
         )
@@ -190,7 +174,7 @@ class Menu:
         self.create_buttons()
 
     def update(self):
-        self.screen.fill((45, 45, 45))
+        self.screen.blit(self.background, (0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.SCREEN_WIDTH = 1080 * self.game_context.delta_w
         self.SCREEN_HEIGHT = 720 * self.game_context.delta_h
 
@@ -204,12 +188,12 @@ class Menu:
             options_hover = self.options_button.draw(self.screen)
             quit_hover = self.quit_button.draw(self.screen)
         elif self.menu_state == "options":
-            video_hover = self.video_button.draw(self.screen)
-            audio_hover = self.audio_button.draw(self.screen)
+            video_hover = self.fullscreen_button.draw(self.screen)
+            reset_hover = self.reset_button.draw(self.screen)
             keys_hover = self.keys_button.draw(self.screen)
             back_hover = self.back_button.draw(self.screen)
 
-        # --- GESTION DES CLICS ---
+        # --- CLICS HANDLING ---
         mouse_pressed = pygame.mouse.get_pressed()[0]  # left click
 
         if self.menu_state == "menu":
@@ -228,7 +212,7 @@ class Menu:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))
                 return
             elif not mouse_pressed:
-                self.pressed = False  # relachement
+                self.pressed = False  # release
 
         elif self.menu_state == "options":
             if video_hover and mouse_pressed and not self.pressed:
@@ -239,9 +223,9 @@ class Menu:
                 self.game_context.recalculate_deltas()
                 pygame.display.toggle_fullscreen()
                 print("Video Settings")
-            elif audio_hover and mouse_pressed and not self.pressed:
+            elif reset_hover and mouse_pressed and not self.pressed:
                 self.pressed = True
-                print("Audio Settings")
+                self.game_context.reset_game()
             elif keys_hover and mouse_pressed and not self.pressed:
                 self.pressed = True
                 print("Change Key Bindings")
@@ -249,7 +233,7 @@ class Menu:
                 self.pressed = True
                 self.menu_state = "menu"
             elif not mouse_pressed:
-                self.pressed = False  # relachement
+                self.pressed = False  # release
 
         self.handle_events()
 
