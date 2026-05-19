@@ -25,8 +25,21 @@ class Dialogue:
             "IS THAT.. ?",
             "ONE OFF, ONE MORE TO GO",
             "THERE WAS A KEY BEHIND THE WALL !",
-            "SHIT, THAT HURT! I THINK I'M BLEEDING.. THIS WHOLE THING IS SO ANNOYING! AT LEAST THIS DOOR IS OPEN"
-        ]
+            "SHIT, THAT HURT! I THINK I'M BLEEDING.. THIS WHOLE THING IS SO ANNOYING! AT LEAST THIS DOOR IS OPEN",
+
+            "I FOUND SOMETHING.. THIS IS DISGUSTING", #index 12 (fait)
+            "I CAN'T REACH !", #(fait)
+            "I FILLED THE BOTTLE", #(fait)
+            "I EMPTIED THE BOTTLE IN THE PUMP", #(fait)
+            "WATER IS MISSING", #(fait)
+            "IT'S LEAKING EVERYWHERE", #(fait)
+            "THE PIPE IS MISSING A PIECE", #(fait)
+            "IT'S FULL", #(fait)
+            "I HEARD SOMETHING DROP FAR AWAY, MAYBE IF I FOLLOW THE PIPES...", #index 20 (fait)
+            "THE DOOR IS UNLOCKED", #(fait)
+            "THE BOTTLE IS ALREADY FILLED", #(fait)
+            "THE BOTTLE IS EMPTY" #(fait)
+            ]
 
         self.visible = True
         self.complete = True

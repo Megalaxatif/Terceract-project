@@ -29,11 +29,11 @@ class Wallet(Game_object):
             displayed,
         )
         self.interactible = "wallet" == self.name #en soi ca marche mais j'arrive pas a prendre la carte D:
-        self.original_displayed = displayed
-        self.displayed = displayed
         self.open = not self.displayed
         self.background = "gray_bg" in self.name
         self.card_taken = False
+        self.displayed = False
+        self.original_displayed = False
 
     def initialize(self):
         self.card_reference = self.game_context.get_reference("keycard") #g peur que la carte reste énorme meme en dehors du wallet

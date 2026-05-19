@@ -348,16 +348,30 @@ class Game:
             return self.room_3_unlocked
         elif room_id == 3:
             return self.room_4_unlocked
+        elif room_id == 4:
+            return self.room_5_unlocked
 
     def unlock_room(self, room_id):
         if room_id == 0:
             self.room_1_unlocked = True
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "room_1_unlocked", True)
         elif room_id == 1:
             self.room_2_unlocked = True
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "room_2_unlocked", True)
         elif room_id == 2:
             self.room_3_unlocked = True
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "room_3_unlocked", True)
         elif room_id == 3:
             self.room_4_unlocked = True
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "room_4_unlocked", True)
+        elif room_id == 4:
+            self.room_5_unlocked = True
+            if self.network_manager.is_connected:
+                self.network_manager.send_package("variable", "game", "room_5_unlocked", True)
 
     def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()):  # reversed so we click the top object first
