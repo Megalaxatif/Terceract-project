@@ -421,7 +421,8 @@ class Menu:
             elif port_hover and mouse_pressed and not self.pressed:
                 pass
             elif connect_hover and mouse_pressed and not self.pressed:
-                pass
+                self.pressed = False
+                self.game_context.launch_duo("localhost", self.game_context.network_manager.server_port) # NOTE: to change
             elif join_back_hover and mouse_pressed and not self.pressed:
                 self.menu_state = "multiplayer"
             elif not mouse_pressed:

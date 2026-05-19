@@ -11,7 +11,7 @@ class Magnet(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
-        default_collision: pygame.Rect | None,
+        default_collision: pygame.Rect,
         default_wall: str,
         collision_index: int = -1,
     ):

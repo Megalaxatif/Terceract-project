@@ -55,14 +55,35 @@ class Game:
         self.mouse_enabled = True
         self.network_manager = Network_manager(self)
         self.sound_manager = SoundManager(self)
-        self.mouse_hover_image = pygame.image.load(
-            "../assets/images/mouse_hover.png"
-        ).convert_alpha()
+        self.mouse_hover_image = pygame.image.load("../assets/images/mouse_hover.png").convert_alpha()
         self.mouse_hover_image = pygame.transform.scale(
             self.mouse_hover_image, (40, 40)
         )
-        self.start()
+        self.launch_solo() #launch solo by default
 
+        self.create_all_walls()
+
+        self.room_1_unlocked = True
+        self.room_2_unlocked = True
+        self.room_3_unlocked = True
+        self.room_4_unlocked = True
+
+        self.current_room_id = 0
+        self.current_wall_id = 0
+        self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
+        self.current_object = None
+        self.other_player_object_name = ""
+        self.other_player_inventory_object_name = ""  # TODO
+        self.other_player_inventory_object = None
+        self.mini_game_menu = Menu(self)
+        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # Create inventory (it's a line here)
+        self.laboratory_game = Laboratory(self)
+        self.dialogues = Dialogue(self)
+
+        self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
+
+
+    def create_all_walls(self):
         self.back_wall_R1 = Back_wall_R1(self, 0, 0)
         self.left_wall_R1 = Left_wall_R1(self, 0, 1)
         self.front_wall_R1 = Front_wall_R1(self, 0, 2)
@@ -125,24 +146,6 @@ class Game:
 
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
 
-        self.room_1_unlocked = True
-        self.room_2_unlocked = True
-        self.room_3_unlocked = True
-        self.room_4_unlocked = True
-
-        self.current_room_id = 0
-        self.current_wall_id = 0
-        self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
-        self.current_object = None
-        self.other_player_object_name = ""
-        self.other_player_inventory_object_name = ""  # TODO
-        self.other_player_inventory_object = None
-        self.mini_game_menu = Menu(self)
-        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # Create inventory (it's a line here)
-        self.laboratory_game = Laboratory(self)
-        self.dialogues = Dialogue(self)
-
-        self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
 
     def quit(self):
         self.game_running = False
@@ -170,6 +173,7 @@ class Game:
                 if obj:
                     obj.initialize()
 
+
     def save_game(self):  # save all the game data
         if self.network_manager.is_host:
             print("save game")
@@ -179,32 +183,13 @@ class Game:
             print("save inventory")
             self.inventory.save()
 
-    def start(self):
-        #gamemode = "s"
-        gamemode = input("wanna play solo (s) or duo (d) ? ")
 
-        if gamemode == "s":
-            print("launching solo...")
-            self.launch_solo()
-
-        elif gamemode == "d":
-            print("launching duo...")
-            # ip, port = self.listen_for_host()
-            ip = input("ip of the guy: ")
-            self.launch_duo(ip, self.network_manager.server_port)
-
-        else:
-            print("invalid answer")
-            self.quit()
-
-        incoming_data_thread = threading.Thread(
-            target=self.network_manager.network_manager, daemon=True
-        )
-        incoming_data_thread.start()
-
-    def launch_solo(self):  # TODO adapt this function to make it work again
+    def launch_solo(self):
         self.network_manager.is_host = True
         self.network_manager.setup_server()
+        incoming_data_thread = threading.Thread(target=self.network_manager.network_manager, daemon=True)
+        incoming_data_thread.start()
+
 
     def launch_duo(self, ip: str, port: int):
         try:
@@ -214,9 +199,6 @@ class Game:
             self.quit()
         else:
             try:
-                # TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
-                # it is undefined behavior we need to use a method that give us the length of the data
-                # data = self.network_manager.client.recv(20480).decode("utf-8")
                 raw_data = self.network_manager.receive_package_list()
 
                 data = raw_data[0].decode("utf-8")
@@ -234,6 +216,14 @@ class Game:
                 else:
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
+                    self.network_manager.server.close() # close the server socket definitively
+                    #------- recreate all the things that depends on wether we're host or client ------
+                    # recreate the walls. Since we changed is_host to False above, they will be created
+                    # with the data of the other player
+                    self.create_all_walls()
+                    self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # reset the inventory
+                    self.initialize_all_objects()
+
 
     def switch_back_to_solo_mode(self):
         self.network_manager.is_connected = False

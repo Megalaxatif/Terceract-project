@@ -41,7 +41,6 @@ class Wall:
             self.game_context.delta_w * (1080 / 1920),
             self.game_context.delta_h * (720 / 1080),
         )
-        #self.reset()
         self.create_wall_objects()
 
     # ---------------------------INIT---------------------------------------
