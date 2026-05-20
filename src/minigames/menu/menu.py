@@ -133,7 +133,7 @@ class Menu:
         )
         self.keys_back_button = menu_button.MenuButton(
             center_x - 0.8 * self.back_img_raw.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.22),
+            int(self.SCREEN_HEIGHT * 0.73),
             self.back_img_raw,
             0.8,
         )
@@ -169,7 +169,7 @@ class Menu:
         )
         self.host_back_button = menu_button.MenuButton(
             center_x - 0.8 * self.back_img_raw.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.22),
+            int(self.SCREEN_HEIGHT * 0.8),
             self.back_img_raw,
             0.8,
         )
