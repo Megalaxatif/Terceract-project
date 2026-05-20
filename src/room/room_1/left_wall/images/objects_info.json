@@ -203,23 +203,6 @@
         ],
         "default_wall_id": "12"
     },
-    "magnet": {
-        "image": "assets/cropped_images/cropped_magnet.png",
-        "rect": [
-            626,
-            202,
-            62,
-            62
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            626,
-            202,
-            62,
-            62
-        ],
-        "default_wall_id": "12"
-    },
     "drawer_up_view_withFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
         "rect": [

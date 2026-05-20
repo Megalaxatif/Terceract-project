@@ -77,7 +77,7 @@ class Wall:
 
 
     def reset(self):
-        # NOTE: uncoment this line to reset the collisions (when you added new ones for example)
+        # NOTE: full reset mode (reset the collisions)
         #collisions_data = self.get_collision_data()
         objects_data = {}
         object_layers_path = [f for f in sorted(Path(self.object_layers_dir).iterdir())]
@@ -89,13 +89,13 @@ class Wall:
             cropped_name = f"cropped_{object_name}.png"
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
 
-            # NOTE: uncoment these two lines to reset the object data completely by recreating the cropped images
-            save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
-            converted_default_collision = create_cropped_object(object_path, save_path.as_posix())
+            # NOTE: full reset mode (reset all the assets)
+            #save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
+            #converted_default_collision = create_cropped_object(object_path, save_path.as_posix())
 
-            # NOTE: coment these two lines if you want to reset the game completely
-            #object = self.game_context.get_reference(object_name)
-            #converted_default_collision = convert_to_tuple_rect(object.default_collision)
+            # NOTE: partial reset mode
+            object = self.game_context.get_reference(object_name)
+            converted_default_collision = convert_to_tuple_rect(object.default_collision)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()

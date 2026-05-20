@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pygame
+from pygame.locals import K_SPACE
 
 from . import menu_button
 
@@ -229,11 +230,10 @@ class Menu:
                             self.ip_field_str = self.ip_field_str[:-1]
                         elif self.port_field_selected:
                             self.port_field_str = self.port_field_str[:-1]
-                    elif event.key != pygame.K_RETURN and event.key != pygame.K_TAB: # no tab or new line allowed
-                        if self.ip_field_selected:
-                            self.ip_field_str += event.unicode
-                        elif self.port_field_selected:
-                            self.port_field_str+= event.unicode
+                    elif self.ip_field_selected and ("a" <= event.unicode <= "z" or "0" <= event.unicode <= "9" or event.unicode == "."):
+                        self.ip_field_str += event.unicode
+                    elif self.port_field_selected and "0" <= event.unicode <= "9":
+                        self.port_field_str+= event.unicode
 
     def update(self, events):
         self.handle_events(events)
@@ -304,7 +304,8 @@ class Menu:
                 self.game_context.recalculate_deltas()
                 pygame.display.toggle_fullscreen()
             elif button == self.reset_button:
-                self.game_context.reset_game()
+                if not self.game_context.network_manager.is_connected:
+                    self.game_context.reset_game()
             elif button == self.keys_button:
                 self.menu_state = "keybinds"
             elif button == self.back_button:
@@ -330,10 +331,10 @@ class Menu:
                 self.ip_field_selected = False
                 self.port_field_selected = True
             elif button == self.connect_button:
-                if self.port_field_str.isdigit():
+                if self.ip_field_str and self.port_field_str:
                     self.duo_error_code = self.game_context.launch_duo(self.ip_field_str, int(self.port_field_str))
                 else:
-                    print("error: invalid port synthax")
+                    self.duo_error_code = 1
             elif button == self.join_back_button:
                 self.menu_state = "multiplayer"
                 self.ip_field_selected = False

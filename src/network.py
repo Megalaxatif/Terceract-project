@@ -11,9 +11,9 @@ class Network_manager:
         self.server_port = 50004
         self.is_host = True  # by default we play in solo
         self.is_connected = False
-        self.running = True  # TODO: suppress this later on, only usefull to avoid nasty errors if we quit the game through the network thread in duo mode
+        self.running = True
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(30)
+        self.client.settimeout(5)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receive_buffer = b""
         self.FPS = 30
@@ -24,7 +24,7 @@ class Network_manager:
         while self.running:
             if self.is_host and not self.is_connected:
                 self.check_new_connection()
-
+                #pass
             elif self.is_connected:
                  self.check_incoming_client_data()
 
@@ -47,7 +47,7 @@ class Network_manager:
     def reset_client(self):
         self.client.close()
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(30)
+        self.client.settimeout(5)
         self.receive_buffer = b""
 
 
@@ -183,8 +183,6 @@ class Network_manager:
 
 
     def receive_package_list(self):
-        self.client.settimeout(30)
-
         while b"\n" not in self.receive_buffer:
             try:
                 chunk = self.client.recv(4096)

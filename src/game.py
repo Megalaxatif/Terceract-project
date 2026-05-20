@@ -203,20 +203,31 @@ class Game:
         else:
             try:
                 raw_data = self.network_manager.receive_package_list()
+                if not raw_data:
+                    print("launch_duo: Error 5: no data to decode")
+                    self.network_manager.handle_disconnection()
+                    return 5
 
                 data = raw_data[0].decode("utf-8")
 
             except Exception as e:
                 print("launch_duo: Error 2", e)
-                self.quit()
+                self.network_manager.handle_disconnection()
+                return 2
             else:
                 try:
                     self.game_data = json.loads(data)
 
                 except JSONDecodeError as e:
                     print("launch_duo Error 3: ", e)
-                    self.quit()
+                    self.network_manager.handle_disconnection()
+                    return 3
                 else:
+                    # just a way to make sure that we start on the exit door to avoid any crash when playing in duo
+                    while self.current_wall_id != 0:
+                        self.change_wall("right")
+                    while self.current_room_id != 0:
+                        self.change_room(1)
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
                     self.network_manager.server.close() # close the server socket definitively
@@ -590,7 +601,7 @@ class Game:
                     swap_mini_game = True
                     if self.current_mini_game == "menu":
                         self.current_mini_game = "game"
-
+                        self.mini_game_menu.duo_error_code = -1
                     else:
                         if self.current_mini_game == "game":
                             wall = self.current_wall.objects

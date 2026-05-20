@@ -109,7 +109,6 @@ class Magnet(Game_object):
 
 
     def update(self, event):
-        #print(self.default_collision, " raw: ", self.raw_default_collision)
         # prevent the magnet to be invisible for one player when the grid is opened in both players pov and the magnet is put inside
         key_found = self.key_reference.displayed or self.key_reference.collision_rect_id == 1 # if the key is displayed or it is in the closet
         if self.in_grid and self.grid_reference.displayed and not key_found:
