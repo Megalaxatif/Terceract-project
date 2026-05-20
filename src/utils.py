@@ -1,6 +1,26 @@
 import json
 from pathlib import Path
 import pygame
+import socket
+import requests
+
+# ---------------------IP-----------------------
+def get_local_ip():
+    try:
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+    except Exception as e:
+        print("get_local_ip Error: ", e)
+        return "Error: use ipconfig to find your ip"
+    return local_ip
+
+def get_public_ip():
+    try:
+        public_ip = requests.get("https://api.ipify.org", timeout=5).text
+    except Exception as e:
+        print("get_public_ip Error: ", e)
+        return "Error: use ipconfig to find your ip"
+    return public_ip
 
 
 # ---------------------JSON-----------------------------------

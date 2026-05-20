@@ -3,6 +3,9 @@ from pathlib import Path
 import pygame
 from pygame.locals import K_SPACE
 
+from utils import get_public_ip
+from  utils import get_local_ip
+
 from . import menu_button
 
 
@@ -282,6 +285,9 @@ class Menu:
         elif self.menu_state == "host":
             self.host_info_button.draw(self.screen)
             self.host_back_button.draw(self.screen)
+            self.draw_text(get_local_ip(), self.host_info_button.rect.x*2, self.host_info_button.rect.y*3, (0, 255, 0))
+            self.draw_text(get_public_ip(), self.host_info_button.rect.x*2, self.host_info_button.rect.y*9, (0, 255, 0))
+            self.draw_text(str(self.game_context.network_manager.server_port), self.host_info_button.rect.x*2, self.host_info_button.rect.y*13, (0, 255, 0))
 
 
     def execute_button_command(self, button):
