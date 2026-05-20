@@ -38,7 +38,8 @@ class Dialogue:
             "I HEARD SOMETHING DROP FAR AWAY, MAYBE IF I FOLLOW THE PIPES...", #index 20 (fait)
             "THE DOOR IS UNLOCKED", #(fait)
             "THE BOTTLE IS ALREADY FILLED", #(fait)
-            "THE BOTTLE IS EMPTY" #(fait)
+            "THE BOTTLE IS EMPTY", #(fait)
+            "IT'S EMPTY.. I THINK I SAW A WATER BOTTLE IN THE FIRST ROOM" #(fait)
             ]
 
         self.visible = True

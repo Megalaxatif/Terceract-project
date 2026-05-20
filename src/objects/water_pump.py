@@ -49,6 +49,8 @@ class WaterPump(Game_object):
             self.game_context.dialogues.start_dialogue(20) #wallet appears
         elif self.leaking:
             self.game_context.dialogues.start_dialogue(17) #pump is leaking
+        elif self.water_count == 0:
+            self.game_context.dialogues.start_dialogue(24) #pump is empty
         elif self.water_count < 3:
             self.game_context.dialogues.start_dialogue(16) #pump not full
         elif not self.pipe_fixed:
