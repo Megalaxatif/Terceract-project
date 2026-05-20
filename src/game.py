@@ -194,9 +194,12 @@ class Game:
     def launch_duo(self, ip: str, port: int):
         try:
             self.network_manager.client.connect((ip, port))
+        except socket.gaierror:
+            print("launch_duo: Error 4: impossible to find a valid host with the information given")
+            return 4
         except Exception as e:
             print("launch_duo: Error 1", e)
-            self.quit()
+            return 1
         else:
             try:
                 raw_data = self.network_manager.receive_package_list()
@@ -223,6 +226,7 @@ class Game:
                     self.create_all_walls()
                     self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # reset the inventory
                     self.initialize_all_objects()
+        return 0
 
 
     def switch_back_to_solo_mode(self):
@@ -294,6 +298,7 @@ class Game:
             for wall in room:
                 wall.update(event)
 
+
     def center_current_object(
         self,
     ):  # put the center of the current object at the mouse position
@@ -332,6 +337,7 @@ class Game:
         # x, y = mx / src_wall.delta, my / src_wall.delta
         object.raw_rect.center = mx, my
 
+
     def is_room_unlocked(self, room_id):
         if room_id == 0:
             return self.room_1_unlocked
@@ -342,6 +348,7 @@ class Game:
         elif room_id == 3:
             return self.room_4_unlocked
 
+
     def unlock_room(self, room_id):
         if room_id == 0:
             self.room_1_unlocked = True
@@ -351,6 +358,7 @@ class Game:
             self.room_3_unlocked = True
         elif room_id == 3:
             self.room_4_unlocked = True
+
 
     def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()):  # reversed so we click the top object first
@@ -415,6 +423,7 @@ class Game:
         else:
             object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
+
     def get_reference(self, name):  # returns the reference to an object in the game
         # search in the walls
         for room in self.room_list:
@@ -432,6 +441,7 @@ class Game:
         print(f'get_reference error: no object with name {name} found in the game, exiting')
         self.quit()
 
+
     def get_reference_large(self, name):  # returns the reference to an object in the game
         res = []
         for room in self.room_list:
@@ -440,6 +450,7 @@ class Game:
                     if name in obj.name:
                         res.append(obj)
         return res
+
 
     def update_gui(self):
         if self.last_delta != self.delta:
@@ -456,6 +467,7 @@ class Game:
 
             self.font = pygame.font.Font(None, int(30 * delta))
 
+
     def display_room_counter(self):  # for debug purposes
         text_surface = self.font.render(
             f"room number {self.current_room_id + 1}",
@@ -466,6 +478,7 @@ class Game:
         y = 25 * self.delta
         self.screen.blit(text_surface, (x, y))
 
+
     def display_fps(self):  # for debug purposes
         text_surface = self.font.render(
             f"FPS {int(self.clock.get_fps())}",
@@ -475,6 +488,7 @@ class Game:
         x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
         y = 45 * self.delta
         self.screen.blit(text_surface, (x, y))
+
 
     def display_current_object_name(self):
         name = ""
@@ -493,6 +507,7 @@ class Game:
         y = 5 * self.delta
         self.screen.blit(text_surface, (x, y))
 
+
     def display_mouse_hover(self):
         pos = pygame.mouse.get_pos()
         if self.stash_rect.collidepoint(pos):
@@ -505,6 +520,7 @@ class Game:
                         self.screen.blit(self.mouse_hover_image, pos)  # draw the cursor
                     return
 
+
     def display_gui(self):
             self.update_gui()
             self.display_room_counter()
@@ -512,6 +528,7 @@ class Game:
             self.display_fps()
             self.screen.blit(self.stash, (0,0))
             self.display_mouse_hover()
+
 
     def recalculate_deltas(self):  # recalculate the delta values when the window is resized
         self.height = self.screen.get_height()
@@ -524,7 +541,8 @@ class Game:
         self.current_wall.delta_h = self.delta_h * (720 / 1080)
         self.current_wall.delta = min(self.current_wall.delta_w, self.current_wall.delta_h)
 
-    def handle_keyboard_events(self, event):
+
+    def handle_keyboard_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 self.change_wall("left")
@@ -561,8 +579,8 @@ class Game:
         elif event.type == pygame.MOUSEMOTION:
             self.center_current_object()
 
-    def handle_all_events(self):
-        events = pygame.event.get()
+    # TODO change this absolutely disgusting stuff
+    def handle_all_events(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 self.quit()
@@ -591,14 +609,16 @@ class Game:
 
             elif self.current_mini_game == "game":
                 self.update_walls(event)
-                self.handle_keyboard_events(event)
+                self.handle_keyboard_event(event)
                 self.dialogues.handle_event(event)
 
-            elif self.current_mini_game == "laboratory":  # TODO
+            elif self.current_mini_game == "laboratory":
                 self.laboratory_game.handle_click(event)
 
+
     def update_all(self):
-        self.handle_all_events()
+        events = pygame.event.get()
+        self.handle_all_events(events)
 
         self.screen.fill((0, 0, 0))  # clear the screen
 
@@ -613,12 +633,12 @@ class Game:
 
 
         elif self.current_mini_game == "menu":
-            self.mini_game_menu.update()  # TODO: separate update from display
+            self.mini_game_menu.update(events)
 
         elif self.current_mini_game == "laboratory":
             self.laboratory_game.update()
 
-        self.mouse_enabled = True
+        self.mouse_enabled = True # TODO useful ?
 
         pygame.display.flip()
 

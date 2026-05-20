@@ -8,19 +8,23 @@ from . import menu_button
 class Menu:
     def __init__(self, game_context):
         self.game_context = game_context
-        self.SCREEN_WIDTH = 1080
-        self.SCREEN_HEIGHT = 720
-        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
-        pygame.display.set_caption("Main Menu")
+        self.screen = self.game_context.screen
+        self.SCREEN_HEIGHT = self.screen.get_height()
+        self.SCREEN_WIDTH = self.screen.get_width()
 
-        self.game_paused = True
+        self.font_size = 70
+        #self.font = pygame.font.SysFont("arialblack", self.font_size)
+
         self.menu_state = "menu"
-        self.button_lock = False
-
-        self.font = pygame.font.SysFont("arialblack", 40)
-        self.TEXT_COL = (255, 255, 255)
+        self.button_dict = {} # dictionary containing all the buttons ordered by menu
 
         root_dir = Path(__file__).resolve().parent.parent.parent.parent
+
+        self.ip_field_str = ""
+        self.port_field_str = "50004"
+        self.duo_error_code = -1
+        self.ip_field_selected = False
+        self.port_field_selected = False
 
         # load images raw
         self.background = pygame.image.load(root_dir / "assets/gui/background.png").convert_alpha()
@@ -44,394 +48,299 @@ class Menu:
         self.connect_img_raw = pygame.image.load(root_dir / "assets/gui/connect_button.png").convert_alpha()
         self.create_buttons()
 
+
+    def resize_all(self, delta):
+        self.resize_font(delta)
+        for menu in self.button_dict:
+            for button in self.button_dict[menu]:
+                button.resize(delta)
+
+
     def create_buttons(self):
         center_x = self.SCREEN_WIDTH // 2
-        delta = min(self.game_context.delta_w, self.game_context.delta_h)
-
-        self.connect_img = pygame.transform.scale(
-            self.connect_img_raw,
-            (
-                int(self.connect_img_raw.get_width() * delta),
-                int(self.connect_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.host_info_img = pygame.transform.scale(
-            self.host_info_img_raw,
-            (
-                int(self.host_info_img_raw.get_width() * delta),
-                int(self.host_info_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.port_field_img = pygame.transform.scale(
-            self.port_field_img_raw,
-            (
-                int(self.port_field_img_raw.get_width() * delta),
-                int(self.port_field_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.ip_field_img = pygame.transform.scale(
-            self.ip_field_img_raw,
-            (
-                int(self.ip_field_img_raw.get_width() * delta),
-                int(self.ip_field_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.host_img = pygame.transform.scale(
-            self.host_img_raw,
-            (
-                int(self.host_img_raw.get_width() * delta),
-                int(self.host_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.join_img = pygame.transform.scale(
-            self.join_img_raw,
-            (
-                int(self.join_img_raw.get_width() * delta),
-                int(self.join_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.multi_img = pygame.transform.scale(
-            self.multi_img_raw,
-            (
-                int(self.multi_img_raw.get_width() * delta),
-                int(self.multi_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.save_img = pygame.transform.scale(
-            self.save_img_raw,
-            (
-                int(self.save_img_raw.get_width() * delta),
-                int(self.save_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.resume_img = pygame.transform.scale(
-            self.resume_img_raw,
-            (
-                int(self.resume_img_raw.get_width() * delta),
-                int(self.resume_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.options_img = pygame.transform.scale(
-            self.options_img_raw,
-            (
-                int(self.options_img_raw.get_width() * delta),
-                int(self.options_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.quit_img = pygame.transform.scale(
-            self.quit_img_raw,
-            (
-                int(self.quit_img_raw.get_width() * delta),
-                int(self.quit_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.fullscreen_img = pygame.transform.scale(
-            self.fullscreen_img_raw,
-            (
-                int(self.fullscreen_img_raw.get_width() * delta),
-                int(self.fullscreen_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.reset_img = pygame.transform.scale(
-            self.reset_img_raw,
-            (
-                int(self.reset_img_raw.get_width() * delta),
-                int(self.reset_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.keys_img = pygame.transform.scale(
-            self.keys_img_raw,
-            (
-                int(self.keys_img_raw.get_width() * delta),
-                int(self.keys_img_raw.get_height() * delta),
-            ),
-        )
-        self.keys_info_img = pygame.transform.scale(
-            self.keys_info_img_raw,
-            (
-                int(self.keys_info_img_raw.get_width() * delta),
-                int(self.keys_info_img_raw.get_height() * delta),
-            ),
-        )
-
-        self.back_img = pygame.transform.scale(
-            self.back_img_raw,
-            (
-                int(self.back_img_raw.get_width() * delta),
-                int(self.back_img_raw.get_height() * delta),
-            ),
-        )
 
         # main menu
         self.resume_button = menu_button.MenuButton(
-            center_x - self.resume_img.get_width() // 2,
+            center_x - 0.8 * self.resume_img_raw.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.05),
-            self.resume_img,
-            0.75,
+            self.resume_img_raw,
+            0.8,
         )
 
         self.save_button = menu_button.MenuButton(
-            center_x - self.save_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.20),
-            self.save_img,
-            0.75,
+            center_x - 0.8 * self.save_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.22),
+            self.save_img_raw,
+            0.8,
         )
 
         self.multi_button = menu_button.MenuButton(
-            center_x - self.multi_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.35),
-            self.multi_img,
-            0.75,
+            center_x - 0.8 * self.multi_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.39),
+            self.multi_img_raw,
+            0.8,
         )
 
         self.options_button = menu_button.MenuButton(
-            center_x - self.options_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.50),
-            self.options_img,
-            0.75,
+            center_x - 0.8 * self.options_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.56),
+            self.options_img_raw,
+            0.8,
         )
+
         self.quit_button = menu_button.MenuButton(
-            center_x - self.quit_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.65),
-            self.quit_img,
-            0.75,
+            center_x - 0.8 * self.quit_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.73),
+            self.quit_img_raw,
+            0.8,
         )
+        self.button_dict["menu"] = [self.resume_button, self.save_button, self.multi_button, self.options_button, self.quit_button]
 
         # menu options
         self.fullscreen_button = menu_button.MenuButton(
-            center_x - self.fullscreen_img.get_width() // 2,
+            center_x - 0.8 * self.fullscreen_img_raw.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.05),
-            self.fullscreen_img,
-            0.75,
+            self.fullscreen_img_raw,
+            0.8,
         )
         self.reset_button = menu_button.MenuButton(
-            center_x - self.reset_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.20),
-            self.reset_img,
-            0.75,
+            center_x - 0.8 * self.reset_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.22),
+            self.reset_img_raw,
+            0.8,
         )
         self.keys_button = menu_button.MenuButton(
-            center_x - self.keys_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.35),
-            self.keys_img,
-            0.75,
+            center_x - 0.8 * self.keys_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.39),
+            self.keys_img_raw,
+            0.8,
         )
         self.back_button = menu_button.MenuButton(
-            center_x - self.back_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.50),
-            self.back_img,
-            0.75,
+            center_x - 0.8 * self.back_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.56),
+            self.back_img_raw,
+            0.8,
         )
+        self.button_dict["options"] = [self.fullscreen_button, self.reset_button, self.keys_button, self.back_button]
+
         # keybinds info
         self.keys_info_button = menu_button.MenuButton(
-            center_x - self.keys_info_img.get_width() // 2.5,
+            center_x - 0.8 * self.keys_info_img_raw.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.05),
-            self.keys_info_img,
-            0.75,
+            self.keys_info_img_raw,
+            0.8,
         )
         self.keys_back_button = menu_button.MenuButton(
-            center_x - self.back_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.75),
-            self.back_img,
-            0.75,
+            center_x - 0.8 * self.back_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.22),
+            self.back_img_raw,
+            0.8,
         )
+        self.button_dict["keybinds"] = [self.keys_info_button, self.keys_back_button]
+
         # multi interface
         self.join_button = menu_button.MenuButton(
-            center_x - self.join_img.get_width() // 2,
+            center_x - 0.8 * self.join_img_raw.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.05),
-            self.join_img,
-            0.75,
+            self.join_img_raw,
+            0.8,
         )
         self.host_button = menu_button.MenuButton(
-            center_x - self.host_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.20),
-            self.host_img,
-            0.75,
+            center_x - 0.8 * self.host_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.22),
+            self.host_img_raw,
+            0.8,
         )
         self.multi_back_button = menu_button.MenuButton(
-            center_x - self.back_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.35),
-            self.back_img,
-            0.75,
+            center_x - 0.8 * self.back_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.39),
+            self.back_img_raw,
+            0.8,
         )
+        self.button_dict["multiplayer"] = [self.join_button, self.host_button, self.multi_back_button]
+
         # host interface
         self.host_info_button = menu_button.MenuButton(
-            0,
-            0,
-            self.host_info_img,
-            0.75,
+            center_x - 0.8 * self.host_info_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.05),
+            self.host_info_img_raw,
+            0.8,
         )
         self.host_back_button = menu_button.MenuButton(
-            center_x - self.back_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.20),
-            self.back_img,
-            0.75,
+            center_x - 0.8 * self.back_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.22),
+            self.back_img_raw,
+            0.8,
         )
+        self.button_dict["host"] = [self.host_info_button, self.host_back_button]
+
         # join interface
         self.ip_field = menu_button.MenuButton(
-            center_x - self.ip_field_img.get_width() // 2,
+            center_x - 0.8 * self.ip_field_img_raw.get_width() // 2,
             int(self.SCREEN_HEIGHT * 0.05),
-            self.ip_field_img,
-            0.75,
+            self.ip_field_img_raw,
+            0.8,
         )
         self.port_field = menu_button.MenuButton(
-            center_x - self.port_field_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.20),
-            self.port_field_img,
-            0.75,
+            center_x - 0.8 * self.port_field_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.22),
+            self.port_field_img_raw,
+            0.8,
         )
         self.connect_button = menu_button.MenuButton(
-            center_x - self.connect_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.35),
-            self.connect_img,
-            0.75,
+            center_x - 0.8 * self.connect_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.39),
+            self.connect_img_raw,
+            0.8,
         )
         self.join_back_button = menu_button.MenuButton(
-            center_x - self.back_img.get_width() // 2,
-            int(self.SCREEN_HEIGHT * 0.50),
-            self.back_img,
-            0.75,
+            center_x - 0.8 * self.back_img_raw.get_width() // 2,
+            int(self.SCREEN_HEIGHT * 0.56),
+            self.back_img_raw,
+            0.8,
         )
+        self.button_dict["join"] = [self.ip_field, self.port_field, self.connect_button, self.join_back_button]
 
-    def draw_text_centered(self, text, y):
-        img = self.font.render(text, True, self.TEXT_COL)
-        rect = img.get_rect(center=(self.SCREEN_WIDTH // 2, y))
-        self.screen.blit(img, rect)
+    # the two following methods are for rendering text properly in the fields
+    def resize_font(self, delta):
+        self.font = pygame.font.Font(None, int(self.font_size * delta))
 
-    def handle_events(self):
-        for event in pygame.event.get():  # TODO: change this to respect the event queue
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.game_paused = not self.game_paused
+    def draw_text(self, text, x, y, color = (0,0,0)):
+        text_surface = self.font.render(
+            text,
+            True,
+            color,
+        )
+        self.game_context.screen.blit(text_surface,(x,y))
 
-        self.SCREEN_WIDTH, self.SCREEN_HEIGHT = self.screen.get_size()
-        self.create_buttons()
 
-    def update(self):
-        self.screen.blit(self.background, (0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-        self.SCREEN_WIDTH = 1080 * self.game_context.delta_w
-        self.SCREEN_HEIGHT = 720 * self.game_context.delta_h
+    def handle_events(self, events):
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = event.pos
+                for button in self.button_dict[self.menu_state]:
+                    if button.rect.collidepoint(pos):
+                        self.execute_button_command(button)
 
-        if not hasattr(self, "pressed"):
-            self.pressed = False  # initialize once
+            elif event.type == pygame.KEYDOWN:
+                if self.ip_field_selected or self.port_field_selected:
+                    if event.key == pygame.K_BACKSPACE:
+                        if self.ip_field_selected:
+                            self.ip_field_str = self.ip_field_str[:-1]
+                        elif self.port_field_selected:
+                            self.port_field_str = self.port_field_str[:-1]
+                    elif event.key != pygame.K_RETURN and event.key != pygame.K_TAB: # no tab or new line allowed
+                        if self.ip_field_selected:
+                            self.ip_field_str += event.unicode
+                        elif self.port_field_selected:
+                            self.port_field_str+= event.unicode
 
-        # --- BUTTON DISPLAY ---
+    def update(self, events):
+        self.handle_events(events)
+        self.draw_menu()
+
+    def draw_menu(self):
+        screen_size = self.screen.get_size()
+        self.screen.blit(self.background, (0, 0, screen_size[0], screen_size[1]))
+        delta = min(self.game_context.delta_w, self.game_context.delta_h)
+        self.resize_all(delta) # TODO: maybe optimize a little to resize only when chanching the size of the window
+        self.draw_buttons()
+
+    def draw_buttons(self):
         if self.menu_state == "menu":
-            resume_hover = self.resume_button.draw(self.screen)
-            save_hover = self.save_button.draw(self.screen)
-            multi_hover = self.multi_button.draw(self.screen)
-            options_hover = self.options_button.draw(self.screen)
-            quit_hover = self.quit_button.draw(self.screen)
+            self.resume_button.draw(self.screen)
+            self.save_button.draw(self.screen)
+            self.multi_button.draw(self.screen)
+            self.options_button.draw(self.screen)
+            self.quit_button.draw(self.screen)
         elif self.menu_state == "options":
-            fullscreen_hover = self.fullscreen_button.draw(self.screen)
-            reset_hover = self.reset_button.draw(self.screen)
-            keys_hover = self.keys_button.draw(self.screen)
-            back_hover = self.back_button.draw(self.screen)
+            self.fullscreen_button.draw(self.screen)
+            self.reset_button.draw(self.screen)
+            self.keys_button.draw(self.screen)
+            self.back_button.draw(self.screen)
         elif self.menu_state == "keybinds":
-            keys_info_hover = self.keys_info_button.draw(self.screen)
-            keys_back_hover = self.keys_back_button.draw(self.screen)
+            self.keys_info_button.draw(self.screen)
+            self.keys_back_button.draw(self.screen)
         elif self.menu_state == "multiplayer":
-            join_hover = self.join_button.draw(self.screen)
-            host_hover = self.host_button.draw(self.screen)
-            multi_back_hover = self.multi_back_button.draw(self.screen)
+            self.join_button.draw(self.screen)
+            self.host_button.draw(self.screen)
+            self.multi_back_button.draw(self.screen)
         elif self.menu_state == "join":
-            ip_hover = self.ip_field.draw(self.screen)
-            port_hover = self.port_field.draw(self.screen)
-            connect_hover = self.connect_button.draw(self.screen)
-            join_back_hover = self.join_back_button.draw(self.screen)
+            self.ip_field.draw(self.screen)
+            self.port_field.draw(self.screen)
+            self.connect_button.draw(self.screen)
+            self.join_back_button.draw(self.screen)
+            self.draw_text(self.ip_field_str, self.ip_field.rect.x*2, self.ip_field.rect.y*1.8)
+            self.draw_text(self.port_field_str, self.port_field.rect.x*2.5, self.port_field.rect.y*1.2)
+
+            x = self.join_back_button.rect.x * 1.3
+            y = self.join_back_button.rect.y * 1.4
+            if self.duo_error_code > 0:
+                self.draw_text("Invalid IP or port", x ,y, (255,0,0))
+            elif self.duo_error_code == 0:
+                self.draw_text("connected", x, y,(0,255,0))
         elif self.menu_state == "host":
-            host_info_hover = self.host_info_button.draw(self.screen)
-            host_back_hover = self.host_back_button.draw(self.screen)
+            self.host_info_button.draw(self.screen)
+            self.host_back_button.draw(self.screen)
 
-        # --- CLICS HANDLING ---
-        mouse_pressed = pygame.mouse.get_pressed()[0]  # left click
 
+    def execute_button_command(self, button):
         if self.menu_state == "menu":
-            if resume_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            if button == self.resume_button:
                 self.game_context.current_mini_game = "game"
-            elif save_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.save_button:
                 self.game_context.save_game()
-            elif multi_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.multi_button:
                 self.menu_state = "multiplayer"
-            elif options_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.options_button:
                 self.menu_state = "options"
-            elif quit_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.quit_button:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))
                 return
-            elif not mouse_pressed:
-                self.pressed = False  # release
 
         elif self.menu_state == "options":
-            if fullscreen_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            if button == self.fullscreen_button:
                 self.game_context.screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
                 self.game_context.recalculate_deltas()
                 pygame.display.toggle_fullscreen()
-            elif reset_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.reset_button:
                 self.game_context.reset_game()
-            elif keys_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.keys_button:
                 self.menu_state = "keybinds"
-            elif back_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            elif button == self.back_button:
                 self.menu_state = "menu"
-            elif not mouse_pressed:
-                self.pressed = False  # release
 
         elif self.menu_state == "keybinds":
-            if keys_back_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
+            if button == self.keys_back_button:
                 self.menu_state = "options"
-            elif not mouse_pressed:
-                self.pressed = False  # release
-        elif self.menu_state == "multiplayer":
-            if multi_back_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
-                self.menu_state = "menu"
-            elif join_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
-                self.menu_state = "join"
-            elif host_hover and mouse_pressed and not self.pressed:
-                self.pressed = True
-                self.menu_state = "host"
-            elif not mouse_pressed:
-                self.pressed = False # release
-        elif self.menu_state == "join":
-            if ip_hover and mouse_pressed and not self.pressed:
-                pass
-            elif port_hover and mouse_pressed and not self.pressed:
-                pass
-            elif connect_hover and mouse_pressed and not self.pressed:
-                self.pressed = False
-                self.game_context.launch_duo("localhost", self.game_context.network_manager.server_port) # NOTE: to change
-            elif join_back_hover and mouse_pressed and not self.pressed:
-                self.menu_state = "multiplayer"
-            elif not mouse_pressed:
-                self.pressed = False
-        elif self.menu_state == "host":
-            if host_back_hover and mouse_pressed and not self.pressed:
-                self.menu_state = "multiplayer"
-            elif not mouse_pressed:
-                self.pressed = False
-        self.handle_events()
 
-        # pygame.display.update()
+        elif self.menu_state == "multiplayer":
+            if button == self.multi_back_button:
+                self.menu_state = "menu"
+            elif button == self.join_button:
+                self.menu_state = "join"
+            elif button == self.host_button:
+                self.menu_state = "host"
+
+        elif self.menu_state == "join":
+            if button == self.ip_field:
+                self.port_field_selected = False
+                self.ip_field_selected = True
+            elif button == self.port_field:
+                self.ip_field_selected = False
+                self.port_field_selected = True
+            elif button == self.connect_button:
+                if self.port_field_str.isdigit():
+                    self.duo_error_code = self.game_context.launch_duo(self.ip_field_str, int(self.port_field_str))
+                else:
+                    print("error: invalid port synthax")
+            elif button == self.join_back_button:
+                self.menu_state = "multiplayer"
+                self.ip_field_selected = False
+                self.port_field_selected = False
+                self.duo_error_code = -1
+
+        elif self.menu_state == "host":
+            if button == self.host_back_button:
+                self.pressed = True
+                self.menu_state = "multiplayer"

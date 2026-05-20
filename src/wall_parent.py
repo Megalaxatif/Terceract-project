@@ -90,12 +90,12 @@ class Wall:
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
 
             # NOTE: uncoment these two lines to reset the object data completely by recreating the cropped images
-            #save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
-            #bbox = create_cropped_object(object_path, save_path.as_posix())
+            save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
+            converted_default_collision = create_cropped_object(object_path, save_path.as_posix())
 
             # NOTE: coment these two lines if you want to reset the game completely
-            object = self.game_context.get_reference(object_name)
-            converted_default_collision = convert_to_tuple_rect(object.default_collision)
+            #object = self.game_context.get_reference(object_name)
+            #converted_default_collision = convert_to_tuple_rect(object.default_collision)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()
@@ -213,5 +213,4 @@ class Wall:
     # NOTE: can be redefined in child classes
     def update(self, event):
         for obj in self.objects:
-            #if obj.displayed:
             obj.update(event)  # interactions relative to each object

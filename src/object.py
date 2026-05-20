@@ -89,6 +89,7 @@ class Game_object(pygame.sprite.Sprite):
                 self.replace()
         return return_code
 
+
     def resize_image(self):
         delta = self.game_context.current_wall.delta
         new_x = int(delta * self.raw_rect.x)

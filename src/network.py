@@ -1,6 +1,5 @@
 from json.decoder import JSONDecodeError
 import pygame
-import sys
 import json
 import socket
 from utils import *

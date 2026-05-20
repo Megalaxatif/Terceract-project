@@ -5,23 +5,7 @@
             null,
             null,
             null,
-            {
-                "name": "obj_in_drawer_glue",
-                "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
-                "rect": [
-                    668,
-                    1081,
-                    320,
-                    138
-                ],
-                "default_collision": [
-                    846,
-                    420,
-                    320,
-                    138
-                ],
-                "default_wall_id": "12"
-            },
+            null,
             null,
             null,
             null,

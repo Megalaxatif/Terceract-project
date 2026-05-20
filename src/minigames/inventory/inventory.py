@@ -250,7 +250,6 @@ class Inventory:
                     obj.collision_rect_id
                 )
             self.game_context.current_wall.objects.add(obj)
-            self.current_object = None
             if self.game_context.network_manager.is_connected:
                 self.game_context.network_manager.send_package("variable", "game", "other_player_object_name", "")
             self.current_object = None
