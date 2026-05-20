@@ -15,17 +15,17 @@ class Dialogue:
 
         self.dialogues_list = [
             "WHAT WAS THIS NOISE ? WHERE AM I ?! THIS DOOR IS STUCK AND IT SEEMS TO BE THE ONLY EXIT..",
-            "SHIT! THAT HURT, AND IT DIDN'T EVEN WORK",
-            "WHY CAN'T I JUST GO BACK..?",
-            "WHAT'S THIS.. A PIECE OF VASE ? WHY IS IT BROKEN..",
-            "SOMETHING SOUNDS HOLLOW",
-            "AS GOOD AS NEW! IT'S LIKE IT WAS NEVER BROKEN..",
-            "...",
-            "I HEARD SOMETHING CLICK",
-            "IS THAT.. ?",
-            "ONE OFF, ONE MORE TO GO",
-            "THERE WAS A KEY BEHIND THE WALL !",
-            "SHIT, THAT HURT! I THINK I'M BLEEDING.. THIS WHOLE THING IS SO ANNOYING! AT LEAST THIS DOOR IS OPEN",
+            "SHIT! THAT HURT, AND IT DIDN'T EVEN WORK", #useless
+            "WHY CAN'T I JUST GO BACK..?", #useless
+            "WHAT'S THIS.. A PIECE OF VASE ? WHY IS IT BROKEN..", #useless
+            "SOMETHING SOUNDS HOLLOW", #(fait)  DEMANDER A NOAH
+            "AS GOOD AS NEW! IT'S LIKE IT WAS NEVER BROKEN..", #index 5 (useless)
+            "...", #(useless)
+            "THAT'S LOCKED", #(fait)
+            "THERE'S A KEYCARD", #(fait)
+            "IT'S OPEN", #(fait)
+            "THERE WAS A KEY BEHIND THE WALL !", #index 10 (fait)
+            "SHIT, THAT HURT! I THINK I'M BLEEDING.. THIS WHOLE THING IS SO ANNOYING! AT LEAST THIS DOOR IS OPEN", #nul
 
             "I FOUND SOMETHING.. THIS IS DISGUSTING", #index 12 (fait)
             "I CAN'T REACH !", #(fait)

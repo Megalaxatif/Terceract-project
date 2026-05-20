@@ -52,3 +52,4 @@ class Grid(Game_object):
         is_key_displayable = self.key_reference.collision_rect_id != 1 and self.magnet_reference.collision_rect_id == 1
         if is_key_displayable:
             self.key_reference.displayed = True
+            #self.game_context.dialogues.start_dialogue(10) #key found

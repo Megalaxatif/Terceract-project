@@ -70,6 +70,8 @@ class Drawer(Game_object):
             return
 
         elif not self.open or self.background:
+            if not self.open:
+                self.game_context.dialogues.start_dialogue(4)  # something sounds hollow DEMANDER A NOAH
             self.swap_display()
 
         for i in range(inv.rows):

@@ -46,6 +46,7 @@ class Screwdriver(Game_object):
                     obj.displayed = False
                     if not any([v.displayed for v in self.removable_planks_reference]):
                         self.game_context.unlock_room(self.game_context.current_room_id)
+                        self.game_context.dialogues.start_dialogue(21) #door open
                     return True
 
         self.game_context.drop_current_object(event)

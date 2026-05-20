@@ -28,7 +28,7 @@ class Wallet(Game_object):
             movable,
             displayed,
         )
-        self.interactible = "wallet" == self.name #en soi ca marche mais j'arrive pas a prendre la carte D:
+        self.interactible = "wallet" == self.name 
         self.open = not self.displayed
         self.background = "gray_bg" in self.name
         self.card_taken = False
@@ -36,7 +36,7 @@ class Wallet(Game_object):
         self.original_displayed = False
 
     def initialize(self):
-        self.card_reference = self.game_context.get_reference("keycard") #g peur que la carte reste énorme meme en dehors du wallet
+        self.card_reference = self.game_context.get_reference("keycard") 
         self.menu_reference = self.game_context.get_reference("opened_wallet")
         self.bg_reference = self.game_context.get_reference("gray_bg_wallet")
 
@@ -54,6 +54,8 @@ class Wallet(Game_object):
         inv = self.game_context.inventory
 
         if not self.open or self.background:
+            if not self.open:
+                self.game_context.dialogues.start_dialogue(8)  # THERE'S A KEYCARD
             self.swap_display()
 
         for i in range(inv.rows):
