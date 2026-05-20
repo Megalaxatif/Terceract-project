@@ -43,6 +43,7 @@ class Axe(Game_object):
                 return True
             self.hole_reference.displayed = True
             self.paper_reference.displayed = True
+            self.game_context.dialogues.start_dialogue(25)  # break the wall
             return False
 
         elif self != self.game_context.inventory.current_object:

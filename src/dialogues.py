@@ -18,12 +18,12 @@ class Dialogue:
             "SHIT! THAT HURT, AND IT DIDN'T EVEN WORK", #useless
             "WHY CAN'T I JUST GO BACK..?", #useless
             "WHAT'S THIS.. A PIECE OF VASE ? WHY IS IT BROKEN..", #useless
-            "SOMETHING SOUNDS HOLLOW", #(fait)  DEMANDER A NOAH
+            "SOMETHING SOUNDS HOLLOW..?", #(fait)  DEMANDER A NOAH
             "AS GOOD AS NEW! IT'S LIKE IT WAS NEVER BROKEN..", #index 5 (useless)
             "...", #(useless)
             "THAT'S LOCKED", #(fait)
-            "THERE'S A KEYCARD", #(fait)
-            "IT'S OPEN", #(fait)
+            "THERE'S A KEYCARD !", #(fait)
+            "IT'S OPEN !", #(fait)
             "THERE WAS A KEY BEHIND THE WALL !", #index 10 (fait)
             "SHIT, THAT HURT! I THINK I'M BLEEDING.. THIS WHOLE THING IS SO ANNOYING! AT LEAST THIS DOOR IS OPEN", #nul
 
@@ -39,7 +39,9 @@ class Dialogue:
             "THE DOOR IS UNLOCKED", #(fait)
             "THE BOTTLE IS ALREADY FILLED", #(fait)
             "THE BOTTLE IS EMPTY", #(fait)
-            "IT'S EMPTY.. I THINK I SAW A WATER BOTTLE IN THE FIRST ROOM" #(fait)
+            "IT'S EMPTY.. I THINK I SAW A WATER BOTTLE IN THE FIRST ROOM", #(fait)
+
+            "THERE WAS SOMETHING BEHIND THE WALL !" #index 25 (fait)
             ]
 
         self.visible = True

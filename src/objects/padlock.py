@@ -38,6 +38,7 @@ class Padlock(Game_object):
         if self.text == self.code:
             self.game_context.unlock_room(self.game_context.current_room_id)
             self.displayed = False
+            self.game_context.dialogues.start_dialogue(21)  # the door is unlocked
             # self.game_context.network_manager.send_package("variable", ) # TODO: network
             print("code valid")
 
