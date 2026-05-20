@@ -23,9 +23,9 @@ class Leak(Game_object):
             default_wall,
             collision_index,
             movable=False,
-            displayed=True,
+            displayed=False,
         )
 
         self.collisions = collisions
         if object_name == "leak1":
-            self.displayed = False
+            self.displayed = True

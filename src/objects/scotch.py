@@ -52,27 +52,27 @@ class Scotch(Game_object):
     def handle_click(self, event):
         if self.game_context.current_wall.room_id == 3: 
             for obj in self.leak_reference:
-                if obj.displayed and obj.rect.collidepoint(event.pos) and (not obj.name == "leak2" or self.stool_reference.placed):
-                    obj.displayed = False
+                if not obj.displayed and obj.rect.collidepoint(event.pos) and (not obj.name == "leak2" or self.stool_reference.placed):
+                    obj.displayed = True
                     #print("caché")
                     #print(f"{i}")
                     if self.game_context.network_manager.is_connected:
                         if obj.name == "leak1":
-                            self.game_context.network_manager.send_package("variable", "leak1", "displayed", False)
+                            self.game_context.network_manager.send_package("variable", "leak1", "displayed", True)
                         if obj.name == "leak3":
-                            self.game_context.network_manager.send_package("variable", "leak3", "displayed", False)
+                            self.game_context.network_manager.send_package("variable", "leak3", "displayed", True)
                         if obj.name == "leak4":
-                            self.game_context.network_manager.send_package("variable", "leak4", "displayed", False)
+                            self.game_context.network_manager.send_package("variable", "leak4", "displayed", True)
                         if obj.name == "leak2":
-                            self.game_context.network_manager.send_package("variable", "leak2", "displayed", False)
-                    if not any([v.displayed for v in self.leak_reference]):
+                            self.game_context.network_manager.send_package("variable", "leak2", "displayed", True)
+                    if not any([not v.displayed for v in self.leak_reference]):
                         for obj in self.game_context.back_wall_R4.objects:
                             if obj.name == "water_pump":
                                 obj.leaking = False
                                 if self.game_context.network_manager.is_connected:
                                     self.game_context.network_manager.send_package("variable", "water_pump", "leaking", False)
                     return True
-                elif obj.displayed and obj.rect.collidepoint(event.pos) and not self.stool_reference.placed:
+                elif not obj.displayed and obj.rect.collidepoint(event.pos) and not self.stool_reference.placed:
                     self.game_context.dialogues.start_dialogue(13)
                     return True
 

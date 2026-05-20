@@ -2,51 +2,51 @@
     "leak3": {
         "image": "assets/cropped_images/cropped_leak3.png",
         "rect": [
-            483,
-            231,
-            41,
-            43
+            285,
+            264,
+            92,
+            60
         ],
         "collision_id": -1,
         "default_collision": [
-            483,
-            231,
-            41,
-            43
+            285,
+            264,
+            92,
+            60
         ],
         "default_wall_id": "42"
     },
     "leak4": {
         "image": "assets/cropped_images/cropped_leak4.png",
         "rect": [
-            1141,
-            382,
-            41,
-            43
+            991,
+            400,
+            73,
+            56
         ],
         "collision_id": -1,
         "default_collision": [
-            1141,
-            382,
-            41,
-            43
+            991,
+            400,
+            73,
+            56
         ],
         "default_wall_id": "42"
     },
     "scotch": {
         "image": "assets/cropped_images/cropped_scotch.png",
         "rect": [
-            468,
-            848,
-            136,
-            134
+            264,
+            912,
+            164,
+            161
         ],
         "collision_id": -1,
         "default_collision": [
-            468,
-            848,
-            136,
-            134
+            264,
+            912,
+            164,
+            161
         ],
         "default_wall_id": "42"
     }
