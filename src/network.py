@@ -1,6 +1,5 @@
 from json.decoder import JSONDecodeError
 import pygame
-import sys
 import json
 import socket
 from utils import *
@@ -12,9 +11,9 @@ class Network_manager:
         self.server_port = 50004
         self.is_host = True  # by default we play in solo
         self.is_connected = False
-        self.running = True  # TODO: suppress this later on, only usefull to avoid nasty errors if we quit the game through the network thread in duo mode
+        self.running = True
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(30)
+        self.client.settimeout(5)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receive_buffer = b""
         self.FPS = 30
@@ -25,7 +24,7 @@ class Network_manager:
         while self.running:
             if self.is_host and not self.is_connected:
                 self.check_new_connection()
-
+                #pass
             elif self.is_connected:
                  self.check_incoming_client_data()
 
@@ -40,7 +39,7 @@ class Network_manager:
 
     def setup_server(self):
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.setblocking(False) # TODO: I don't remember why I put this here, do we realy need the server socket to be non-blocking ?
+        self.server.setblocking(False)
         self.server.bind(("", self.server_port))
         self.server.listen(1)
 
@@ -48,7 +47,7 @@ class Network_manager:
     def reset_client(self):
         self.client.close()
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(30)
+        self.client.settimeout(5)
         self.receive_buffer = b""
 
 
@@ -71,6 +70,7 @@ class Network_manager:
                     name = data["name"]
                     args = data["args"]
 
+                    # TODO optimize this
                     match location:
                         case "game":
                             location = self.game_context
@@ -84,6 +84,8 @@ class Network_manager:
                             location = self.game_context.get_reference("closed_closet")
                         case "water_pump":
                             location = self.game_context.get_reference("water_pump")
+                        case "wallet":
+                            location = self.game_context.get_reference("wallet")
                         case "water_vase":
                             location = self.game_context.get_reference("water_vase")
                         case "broken_pipe":
@@ -199,8 +201,6 @@ class Network_manager:
 
 
     def receive_package_list(self):
-        self.client.settimeout(30)
-
         while b"\n" not in self.receive_buffer:
             try:
                 chunk = self.client.recv(4096)

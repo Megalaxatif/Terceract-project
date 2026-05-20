@@ -4,44 +4,28 @@
             null,
             null,
             null,
-            null,
-            null,
-            null,
-            null,
             {
-                "name": "scotch",
-                "image": "assets/cropped_images/cropped_scotch.png",
+                "name": "magnet",
+                "image": "assets/cropped_images/cropped_magnet.png",
                 "rect": [
-                    602,
-                    1076,
-                    136,
-                    134
+                    623,
+                    1161,
+                    62,
+                    62
                 ],
                 "default_collision": [
-                    468,
-                    848,
-                    136,
-                    134
-                ],
-                "default_wall_id": "42"
-            },
-            {
-                "name": "obj_in_drawer_glue",
-                "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
-                "rect": [
-                    702,
-                    1035,
-                    320,
-                    138
-                ],
-                "default_collision": [
-                    846,
-                    420,
-                    320,
-                    138
+                    626,
+                    202,
+                    62,
+                    62
                 ],
                 "default_wall_id": "12"
             },
+            null,
+            null,
+            null,
+            null,
+            null,
             null
         ],
         []

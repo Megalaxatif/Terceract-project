@@ -11,7 +11,7 @@ class Magnet(Game_object):
         image_path: str,
         rect: pygame.Rect,
         collisions: list[pygame.Rect],
-        default_collision: pygame.Rect | None,
+        default_collision: pygame.Rect,
         default_wall: str,
         collision_index: int = -1,
     ):
@@ -72,8 +72,8 @@ class Magnet(Game_object):
     def display_collision_rect(self):
         if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 3 and self.grid_reference.displayed:
             display_debug_rects([self.collision_rects[0]], self.game_context.screen)
-            display_debug_rects([self.collision_rects[1]], self.game_context.screen)
-            display_debug_rects(self.grid_collisions, self.game_context.screen)
+            # display_debug_rects([self.collision_rects[1]], self.game_context.screen)
+            # display_debug_rects(self.grid_collisions, self.game_context.screen)
         else:
             super().display_collision_rect()
 
@@ -109,7 +109,6 @@ class Magnet(Game_object):
 
 
     def update(self, event):
-        #print(self.default_collision, " raw: ", self.raw_default_collision)
         # prevent the magnet to be invisible for one player when the grid is opened in both players pov and the magnet is put inside
         key_found = self.key_reference.displayed or self.key_reference.collision_rect_id == 1 # if the key is displayed or it is in the closet
         if self.in_grid and self.grid_reference.displayed and not key_found:

@@ -46,6 +46,8 @@ class WaterPump(Game_object):
     def handle_click_selection(self, event):
         if not self.leaking and self.water_count >= 3 and self.pipe_fixed: #and self.rect.collidepoint(event.pos) and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
             self.wallet_reference.displayed = True
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "wallet", "displayed", True)
             self.game_context.dialogues.start_dialogue(20) #wallet appears
         elif self.leaking:
             self.game_context.dialogues.start_dialogue(17) #pump is leaking

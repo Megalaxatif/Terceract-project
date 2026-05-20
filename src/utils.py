@@ -1,6 +1,26 @@
 import json
 from pathlib import Path
 import pygame
+import socket
+import requests
+
+# ---------------------IP-----------------------
+def get_local_ip():
+    try:
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+    except Exception as e:
+        print("get_local_ip Error: ", e)
+        return "Error: use ipconfig to find your ip"
+    return local_ip
+
+def get_public_ip():
+    try:
+        public_ip = requests.get("https://api.ipify.org", timeout=5).text
+    except Exception as e:
+        print("get_public_ip Error: ", e)
+        return "Error: use ipconfig to find your ip"
+    return public_ip
 
 
 # ---------------------JSON-----------------------------------
@@ -37,9 +57,9 @@ def convert_to_pygame_rect(rect) -> pygame.Rect | None:
     return pygame.Rect(rect)
 
 
-def convert_to_pygame_rect_list(rect_list) -> list[pygame.Rect] | None:
+def convert_to_pygame_rect_list(rect_list) -> list:
     if rect_list is None:
-        return None
+        return []
     pygame_rect_list = []
     for rect in rect_list:
         # print(rect_list)
@@ -54,9 +74,9 @@ def convert_to_tuple_rect(rect) -> tuple[int, ...] | None:
     return tuple(rect)
 
 
-def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]] | None:
+def convert_to_tuple_rect_list(rect_list) -> list[tuple[int, ...]]:
     if rect_list is None:
-        return None
+        return []
     tuple_rect_list = []
     for rect in rect_list:
         tuple_rect_list.append(tuple(rect))
@@ -119,14 +139,13 @@ def create_cropped_object(raw_image_path, save_path):
     bbox = get_bounding_box(image)
     if bbox is None:
         print(f"No visible pixels in {raw_image_path}")
-        return
+        return 0,0,0,0
 
     x, y, w, h = bbox
     cropped_image = create_sub_surface(x, y, w, h, image)
 
     pygame.image.save(cropped_image, save_path)
     print(f"Cropped image saved to {save_path}")
-
     return bbox
 
 
@@ -641,7 +660,7 @@ def create_object(
             default_wall,
             current_collision_id,
         )
-    
+
     elif obj_name == "broken_pipe":
         return BrokenPipe(
             game_context,
@@ -653,7 +672,7 @@ def create_object(
             default_wall,
             current_collision_id,
         )
-    
+
     elif obj_name == "scotch":
         return Scotch(
             game_context,
@@ -665,7 +684,7 @@ def create_object(
             default_wall,
             current_collision_id,
         )
-    
+
     elif "wallet" in obj_name:
         if obj_name == "wallet":
             return Wallet(
@@ -692,7 +711,7 @@ def create_object(
             False,
             False,
         )
-    
+
     elif obj_name == "keycard":
         return Keycard(
             game_context,
@@ -706,7 +725,7 @@ def create_object(
             True,
             False,
         )
-    
+
     elif "leak" in obj_name:
         return Leak(
             game_context,
@@ -758,7 +777,7 @@ def create_object(
             True,
             True,
         )
-    
+
     elif obj_name == "water_vase":
         return Water_vase(
             game_context,

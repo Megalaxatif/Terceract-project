@@ -55,14 +55,35 @@ class Game:
         self.mouse_enabled = True
         self.network_manager = Network_manager(self)
         self.sound_manager = SoundManager(self)
-        self.mouse_hover_image = pygame.image.load(
-            "../assets/images/mouse_hover.png"
-        ).convert_alpha()
+        self.mouse_hover_image = pygame.image.load("../assets/images/mouse_hover.png").convert_alpha()
         self.mouse_hover_image = pygame.transform.scale(
             self.mouse_hover_image, (40, 40)
         )
-        self.start()
+        self.launch_solo() #launch solo by default
 
+        self.create_all_walls()
+
+        self.room_1_unlocked = True
+        self.room_2_unlocked = True
+        self.room_3_unlocked = True
+        self.room_4_unlocked = True
+
+        self.current_room_id = 0
+        self.current_wall_id = 0
+        self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
+        self.current_object = None
+        self.other_player_object_name = ""
+        self.other_player_inventory_object_name = ""  # TODO
+        self.other_player_inventory_object = None
+        self.mini_game_menu = Menu(self)
+        self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # Create inventory (it's a line here)
+        self.laboratory_game = Laboratory(self)
+        self.dialogues = Dialogue(self)
+
+        self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
+
+
+    def create_all_walls(self):
         self.back_wall_R1 = Back_wall_R1(self, 0, 0)
         self.left_wall_R1 = Left_wall_R1(self, 0, 1)
         self.front_wall_R1 = Front_wall_R1(self, 0, 2)
@@ -125,28 +146,6 @@ class Game:
 
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
 
-        self.room_1_unlocked = True
-        self.room_2_unlocked = True
-        self.room_3_unlocked = True
-        self.room_4_unlocked = True
-        self.room_5_unlocked = False
-
-        self.current_room_id = 0
-        self.current_wall_id = 0
-        self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
-        self.current_object = None
-        self.other_player_object_name = ""
-        self.other_player_inventory_object_name = ""  # TODO
-        self.other_player_inventory_object = None
-        self.mini_game_menu = Menu(self)
-        self.inventory = Inventory(
-            self, 40, 615, 1, 10, 100, True
-        )  # Create inventory (it's a line here)
-        self.laboratory_game = Laboratory(self)
-
-        self.dialogues = Dialogue(self)
-
-        self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
 
     def quit(self):
         self.game_running = False
@@ -154,9 +153,16 @@ class Game:
         pygame.quit()
         sys.exit()
 
-    def initialize_all_objects(
-        self,
-    ):  # this function finishes the initialization of the objects when all the variable
+
+    def reset_game(self):
+        for room in self.room_list:
+            for wall in room:
+                wall.reset()
+        self.inventory.reset()
+        self.quit()
+
+
+    def initialize_all_objects(self):  # this function finishes the initialization of the objects when all the variable
         # they would need have been created (useful for the axe for examble)
         for room in self.room_list:
             for wall in room:
@@ -167,6 +173,7 @@ class Game:
                 if obj:
                     obj.initialize()
 
+
     def save_game(self):  # save all the game data
         if self.network_manager.is_host:
             print("save game")
@@ -174,63 +181,64 @@ class Game:
                 for wall in room:
                     wall.save_objects_data()
             print("save inventory")
-            self.inventory.save_images()
+            self.inventory.save()
 
-    def start(self):
-        #gamemode = "s"
-        gamemode = input("wanna play solo (s) or duo (d) ? ")
 
-        if gamemode == "s":
-            print("launching solo...")
-            self.launch_solo()
-
-        elif gamemode == "d":
-            print("launching duo...")
-            # ip, port = self.listen_for_host()
-            ip = input("ip of the guy: ")
-            self.launch_duo(ip, self.network_manager.server_port)
-
-        else:
-            print("invalid answer")
-            self.quit()
-
-        incoming_data_thread = threading.Thread(
-            target=self.network_manager.network_manager, daemon=True
-        )
-        incoming_data_thread.start()
-
-    def launch_solo(self):  # TODO adapt this function to make it work again
+    def launch_solo(self):
         self.network_manager.is_host = True
         self.network_manager.setup_server()
+        incoming_data_thread = threading.Thread(target=self.network_manager.network_manager, daemon=True)
+        incoming_data_thread.start()
+
 
     def launch_duo(self, ip: str, port: int):
         try:
             self.network_manager.client.connect((ip, port))
+        except socket.gaierror:
+            print("launch_duo: Error 4: impossible to find a valid host with the information given")
+            return 4
         except Exception as e:
             print("launch_duo: Error 1", e)
-            self.quit()
+            return 1
         else:
             try:
-                # TODO: !!! IMPORTANT !!!! this system is not stable, if the size of the package is greater than 20 KB
-                # it is undefined behavior we need to use a method that give us the length of the data
-                # data = self.network_manager.client.recv(20480).decode("utf-8")
                 raw_data = self.network_manager.receive_package_list()
+                if not raw_data:
+                    print("launch_duo: Error 5: no data to decode")
+                    self.network_manager.handle_disconnection()
+                    return 5
 
                 data = raw_data[0].decode("utf-8")
 
             except Exception as e:
                 print("launch_duo: Error 2", e)
-                self.quit()
+                self.network_manager.handle_disconnection()
+                return 2
             else:
                 try:
                     self.game_data = json.loads(data)
 
                 except JSONDecodeError as e:
                     print("launch_duo Error 3: ", e)
-                    self.quit()
+                    self.network_manager.handle_disconnection()
+                    return 3
                 else:
+                    # just a way to make sure that we start on the exit door to avoid any crash when playing in duo
+                    while self.current_wall_id != 0:
+                        self.change_wall("right")
+                    while self.current_room_id != 0:
+                        self.change_room(1)
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
+                    self.network_manager.server.close() # close the server socket definitively
+                    #------- recreate all the things that depends on wether we're host or client ------
+                    # recreate the walls. Since we changed is_host to False above, they will be created
+                    # with the data of the other player
+                    self.create_all_walls()
+                    self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # reset the inventory
+                    self.initialize_all_objects()
+        return 0
+
 
     def switch_back_to_solo_mode(self):
         self.network_manager.is_connected = False
@@ -301,6 +309,7 @@ class Game:
             for wall in room:
                 wall.update(event)
 
+
     def center_current_object(
         self,
     ):  # put the center of the current object at the mouse position
@@ -339,6 +348,7 @@ class Game:
         # x, y = mx / src_wall.delta, my / src_wall.delta
         object.raw_rect.center = mx, my
 
+
     def is_room_unlocked(self, room_id):
         if room_id == 0:
             return self.room_1_unlocked
@@ -350,6 +360,7 @@ class Game:
             return self.room_4_unlocked
         elif room_id == 4:
             return self.room_5_unlocked
+
 
     def unlock_room(self, room_id):
         if room_id == 0:
@@ -372,6 +383,7 @@ class Game:
             self.room_5_unlocked = True
             if self.network_manager.is_connected:
                 self.network_manager.send_package("variable", "game", "room_5_unlocked", True)
+
 
     def select_current_object(self, event):
         for obj in reversed(self.current_wall.objects.sprites()):  # reversed so we click the top object first
@@ -436,6 +448,7 @@ class Game:
         else:
             object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
+
     def get_reference(self, name):  # returns the reference to an object in the game
         # search in the walls
         for room in self.room_list:
@@ -453,6 +466,7 @@ class Game:
         print(f'get_reference error: no object with name {name} found in the game, exiting')
         self.quit()
 
+
     def get_reference_large(self, name):  # returns the reference to an object in the game
         res = []
         for room in self.room_list:
@@ -461,6 +475,7 @@ class Game:
                     if name in obj.name:
                         res.append(obj)
         return res
+
 
     def update_gui(self):
         if self.last_delta != self.delta:
@@ -477,6 +492,7 @@ class Game:
 
             self.font = pygame.font.Font(None, int(30 * delta))
 
+
     def display_room_counter(self):  # for debug purposes
         text_surface = self.font.render(
             f"room number {self.current_room_id + 1}",
@@ -487,6 +503,7 @@ class Game:
         y = 25 * self.delta
         self.screen.blit(text_surface, (x, y))
 
+
     def display_fps(self):  # for debug purposes
         text_surface = self.font.render(
             f"FPS {int(self.clock.get_fps())}",
@@ -496,6 +513,7 @@ class Game:
         x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
         y = 45 * self.delta
         self.screen.blit(text_surface, (x, y))
+
 
     def display_current_object_name(self):
         name = ""
@@ -514,6 +532,7 @@ class Game:
         y = 5 * self.delta
         self.screen.blit(text_surface, (x, y))
 
+
     def display_mouse_hover(self):
         pos = pygame.mouse.get_pos()
         if self.stash_rect.collidepoint(pos):
@@ -526,6 +545,7 @@ class Game:
                         self.screen.blit(self.mouse_hover_image, pos)  # draw the cursor
                     return
 
+
     def display_gui(self):
             self.update_gui()
             self.display_room_counter()
@@ -533,6 +553,7 @@ class Game:
             self.display_fps()
             self.screen.blit(self.stash, (0,0))
             self.display_mouse_hover()
+
 
     def recalculate_deltas(self):  # recalculate the delta values when the window is resized
         self.height = self.screen.get_height()
@@ -545,7 +566,8 @@ class Game:
         self.current_wall.delta_h = self.delta_h * (720 / 1080)
         self.current_wall.delta = min(self.current_wall.delta_w, self.current_wall.delta_h)
 
-    def handle_basic_game_events(self, event):
+
+    def handle_keyboard_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 self.change_wall("left")
@@ -557,6 +579,8 @@ class Game:
                 self.change_room(-1)
             elif event.key == pygame.K_i:
                 self.inventory.displayed = not self.inventory.displayed
+            elif event.key == pygame.K_r:
+                self.reset_game()
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             temp_inv_obj = self.inventory.current_object
@@ -580,8 +604,8 @@ class Game:
         elif event.type == pygame.MOUSEMOTION:
             self.center_current_object()
 
-    def handle_all_events(self):
-        events = pygame.event.get()
+    # TODO change this absolutely disgusting stuff
+    def handle_all_events(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 self.quit()
@@ -591,7 +615,7 @@ class Game:
                     swap_mini_game = True
                     if self.current_mini_game == "menu":
                         self.current_mini_game = "game"
-
+                        self.mini_game_menu.duo_error_code = -1
                     else:
                         if self.current_mini_game == "game":
                             wall = self.current_wall.objects
@@ -610,14 +634,16 @@ class Game:
 
             elif self.current_mini_game == "game":
                 self.update_walls(event)
-                self.handle_basic_game_events(event)
+                self.handle_keyboard_event(event)
                 self.dialogues.handle_event(event)
 
-            elif self.current_mini_game == "laboratory":  # TODO
+            elif self.current_mini_game == "laboratory":
                 self.laboratory_game.handle_click(event)
 
+
     def update_all(self):
-        self.handle_all_events()
+        events = pygame.event.get()
+        self.handle_all_events(events)
 
         self.screen.fill((0, 0, 0))  # clear the screen
 
@@ -632,12 +658,12 @@ class Game:
 
 
         elif self.current_mini_game == "menu":
-            self.mini_game_menu.update()  # TODO: separate update from display
+            self.mini_game_menu.update(events)
 
         elif self.current_mini_game == "laboratory":
             self.laboratory_game.update()
 
-        self.mouse_enabled = True
+        self.mouse_enabled = True # TODO useful ?
 
         pygame.display.flip()
 
