@@ -78,7 +78,7 @@ class Wall:
 
     def reset(self):
         # NOTE: full reset mode (reset the collisions)
-        #collisions_data = self.get_collision_data()
+        collisions_data = self.get_collision_data()
         objects_data = {}
         object_layers_path = [f for f in sorted(Path(self.object_layers_dir).iterdir())]
         for object_path in reversed(object_layers_path):  # reversed so we draw the object with the lowest layer id first
@@ -90,12 +90,12 @@ class Wall:
             relative_path = Path(f"assets/cropped_images/{cropped_name}")
 
             # NOTE: full reset mode (reset all the assets)
-            #save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
-            #converted_default_collision = create_cropped_object(object_path, save_path.as_posix())
+            save_path = Path(self.cropped_object_dir / cropped_name)  # place where we save the cropped image
+            converted_default_collision = create_cropped_object(object_path, save_path.as_posix())
 
             # NOTE: partial reset mode
-            object = self.game_context.get_reference(object_name)
-            converted_default_collision = convert_to_tuple_rect(object.default_collision)
+            #object = self.game_context.get_reference(object_name)
+            #converted_default_collision = convert_to_tuple_rect(object.default_collision)
 
             objects_data[object_name] = {}
             objects_data[object_name]["image"] = relative_path.as_posix()

@@ -206,9 +206,11 @@ class Inventory:
     def store_current_object(self, row, col):
         #can't put the magnet back in inventory
         current_obj = self.game_context.current_object
-        if current_obj.name == "magnet" and current_obj.collision_rect_id == 0:
+        if current_obj.name == "magnet" and self.game_context.current_wall_id == 3 and self.game_context.current_room_id == 0:
             print("already in grid")
             return
+        if current_obj.name == "stool":
+            current_obj.placed = False
         obj = self.game_context.current_object
         if self.slots[row][col] is None and obj.movable:
             self.slots[row][col] = obj

@@ -29,13 +29,14 @@ class Stool(Game_object):
         self.placed = False
         self.collisions = collisions
 
-    def update(self, event):
-        if self.rect.colliderect(self.collisions[0]) and self.game_context.current_wall_id == 2: #front wall
+    def handle_click(self, event):
+        code = super().handle_click(event)
+        if self.game_context.current_wall_id == 2 and self.game_context.current_room_id == 3:
             self.placed = True
             if self.game_context.network_manager.is_connected:
                     self.game_context.network_manager.send_package("variable", "stool", "placed", True)
-        else : 
+        else :
             self.placed = False
             if self.game_context.network_manager.is_connected:
                     self.game_context.network_manager.send_package("variable", "stool", "placed", False)
-
+        return code

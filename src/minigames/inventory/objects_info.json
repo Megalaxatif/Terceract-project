@@ -4,23 +4,7 @@
             null,
             null,
             null,
-            {
-                "name": "magnet",
-                "image": "assets/cropped_images/cropped_magnet.png",
-                "rect": [
-                    623,
-                    1161,
-                    62,
-                    62
-                ],
-                "default_collision": [
-                    626,
-                    202,
-                    62,
-                    62
-                ],
-                "default_wall_id": "12"
-            },
+            null,
             null,
             null,
             null,
