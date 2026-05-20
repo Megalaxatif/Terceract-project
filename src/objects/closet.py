@@ -58,3 +58,6 @@ class Closet(Game_object):
                             inv.slots[i][j].displayed = self.displayed
                             inv.slots[i][j].display_collision_rect_bool = self.displayed
             self.game_context.drop_current_object(event)
+        else :
+            self.game_context.dialogues.start_dialogue(7)  # THAT'S LOCKED
+

@@ -1,4 +1,21 @@
 {
+    "stool": {
+        "image": "assets/cropped_images/cropped_stool.png",
+        "rect": [
+            1663,
+            873,
+            232,
+            207
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1663,
+            873,
+            232,
+            207
+        ],
+        "default_wall_id": "43"
+    },
     "leak2": {
         "image": "assets/cropped_images/cropped_leak2.png",
         "rect": [
