@@ -39,7 +39,7 @@ class Network_manager:
 
     def setup_server(self):
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.setblocking(False) # TODO: I don't remember why I put this here, do we realy need the server socket to be non-blocking ?
+        self.server.setblocking(False)
         self.server.bind(("", self.server_port))
         self.server.listen(1)
 
