@@ -101,8 +101,8 @@
         ],
         "default_wall_id": "14"
     },
-    "obj_in_closet_screwdriver": {
-        "image": "assets/cropped_images/cropped_obj_in_closet_screwdriver.png",
+    "obj_in_closet_crowbar": {
+        "image": "assets/cropped_images/cropped_obj_in_closet_crowbar.png",
         "rect": [
             793,
             241,

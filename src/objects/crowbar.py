@@ -3,7 +3,7 @@ from pathlib import Path
 import pygame
 from object import Game_object
 
-class Screwdriver(Game_object):
+class Crowbar(Game_object):
     def __init__(
         self,
         game_context,

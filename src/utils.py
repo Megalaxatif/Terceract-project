@@ -100,7 +100,7 @@ def resize_rects(rects, raw_rects, delta): # resize a given list of rectangles u
 def display_debug_rects(debug_rects, screen):
     for rect in debug_rects:
         temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-        pygame.draw.rect(temp_surface, (255, 0, 0, 128), temp_surface.get_rect())
+        pygame.draw.rect(temp_surface, (0, 0, 0, 100), temp_surface.get_rect())
         screen.blit(temp_surface, rect)
 
 # returns the list of the paths of all the collision layers of an object
@@ -210,7 +210,7 @@ def create_object(
     from objects.library import Library
     from objects.padlock import Padlock
     from objects.padlock_door import Padlock_door
-    from objects.screwdriver import Screwdriver
+    from objects.crowbar import Crowbar
     from objects.paper import Paper
     from objects.fullscreen_paper import Fullscreen_paper
     from objects.grid_background import Grid_background
@@ -228,7 +228,6 @@ def create_object(
     from objects.leak import Leak
     from objects.secret_key import Secret_key
     from objects.exit_door import Exit_door
-    from minigames.end_screen.end_screen import End_screen
 
     if obj_name == "calculator":
         return Digicode(
@@ -390,8 +389,8 @@ def create_object(
         )
 
     elif "obj_in_closet" in obj_name:
-        if "screwdriver" in obj_name:
-            return Screwdriver(
+        if "crowbar" in obj_name:
+            return Crowbar(
                 game_context,
                 obj_name,
                 img_path,
@@ -819,18 +818,6 @@ def create_object(
             current_collision_id,
         )
 
-    elif obj_name == "end_screen":
-        return End_screen(
-            game_context,
-            obj_name,
-            img_path,
-            rect,
-            collision_rects,
-            default_collision,
-            default_wall,
-            current_collision_id,
-        )
-
     elif obj_name == "endlock_open":
         return Game_object(
             game_context,
@@ -844,7 +831,7 @@ def create_object(
             False,
             False,
         )
-    
+
     elif obj_name == "endlock_closed":
         return Game_object(
             game_context,
@@ -857,6 +844,20 @@ def create_object(
             current_collision_id,
             False,
             True,
+        )
+
+    elif obj_name == "end_screen":
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            False,
         )
 
     else:

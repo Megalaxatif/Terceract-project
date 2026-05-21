@@ -66,5 +66,22 @@
             79
         ],
         "default_wall_id": "11"
+    },
+    "end_screen": {
+        "image": "assets/cropped_images/cropped_end_screen.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "11"
     }
 }

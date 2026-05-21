@@ -25,26 +25,24 @@ class Secret_key(Game_object):
             movable=True,
             displayed=True,
         )
-        self.collisions = collisions
 
     def initialize(self):
         self.door_reference = self.game_context.get_reference("exit_door")
         self.open_lock = self.game_context.get_reference("endlock_open")
         self.closed_lock = self.game_context.get_reference("endlock_closed")
+        self.game_context.exit_door_opened = self.game_context.is_obj_in_wall(self.name, 0, 0) # init exit_door_opened
+        self.displayed = not self.game_context.exit_door_opened
 
     def handle_click(self, event):
-        #self.game_context.drop_current_object(event)
         if self.game_context.current_room_id == 0 and self.game_context.current_wall_id == 0 and self.door_reference.rect.collidepoint(event.pos):
-            self.game_context.dialogues.start_dialogue(26) #door open (il veut pas jsp pk)
+            self.game_context.dialogues.start_dialogue(26)
             self.displayed = False
-            self.door_reference.open = True
+            self.game_context.exit_door_opened = True
             self.open_lock.displayed = True
             self.closed_lock.displayed = False
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", "exit_door", "open", True)
+                self.game_context.network_manager.send_package("variable", "game", "exit_door_opened", True)
                 self.game_context.network_manager.send_package("variable", "secret_key", "displayed", False)
                 self.game_context.network_manager.send_package("variable", "endlock_open", "displayed", True)
                 self.game_context.network_manager.send_package("variable", "endlock_closed", "displayed", False)
-                return True
-
-        return False
+        return super().handle_click(event)

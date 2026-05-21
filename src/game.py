@@ -1,12 +1,11 @@
 import json
-import math
 import socket
 import sys
 import threading
-import time
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
+from numpy._core.numeric import False_
 import pygame
 from dialogues import Dialogue
 from minigames import *
@@ -52,17 +51,16 @@ class Game:
         self.name = "game"
         self.current_mini_game = "game"
 
-        self.mouse_enabled = True
         self.network_manager = Network_manager(self)
         self.sound_manager = SoundManager(self)
-        self.mouse_hover_image = pygame.image.load("../assets/gui/mouse_hover.png").convert_alpha()
-        self.mouse_hover_image = pygame.transform.scale(
-            self.mouse_hover_image, (40, 40)
-        )
+        self.mouse_hover_image = pygame.image.load(f"{self.root_dir}/assets/gui/mouse_hover.png").convert_alpha()
+        self.mouse_hover_image = pygame.transform.scale(self.mouse_hover_image, (40, 40))
+
         self.launch_solo() #launch solo by default
 
         self.create_all_walls()
 
+        self.exit_door_opened = False
         self.room_1_unlocked = True
         self.room_2_unlocked = True
         self.room_3_unlocked = True
@@ -80,7 +78,9 @@ class Game:
         self.laboratory_game = Laboratory(self)
         self.dialogues = Dialogue(self)
 
-        self.initialize_all_objects()  # NOTE: this line should always be at the end of __init__
+        self.end_screen_reference = self.get_reference("end_screen")
+
+        self.initialize_all_objects()
 
 
     def create_all_walls(self):
@@ -145,6 +145,14 @@ class Game:
         ]
 
         self.room_list = [self.R1, self.R2, self.R3, self.R4, self.R5]
+
+
+    def is_obj_in_wall(self, target_name, wall_id, room_id):
+        target_wall = self.room_list[room_id][wall_id]
+        for object in target_wall.objects:
+            if object.name == target_name:
+                return True
+        return False
 
 
     def quit(self):
@@ -225,9 +233,9 @@ class Game:
                 else:
                     # just a way to make sure that we start on the exit door to avoid any crash when playing in duo
                     while self.current_wall_id != 0:
-                        self.change_wall("right")
+                        self.change_wall(-1)
                     while self.current_room_id != 0:
-                        self.change_room(1)
+                        self.change_room()
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
                     self.network_manager.server.close() # close the server socket definitively
@@ -246,36 +254,37 @@ class Game:
         self.other_player_inventory_object_name = ""
         self.network_manager.reset_client()
 
-    def change_room(self, direction):  # change the room we are in
+
+    def change_room(self):  # change the room we are in
         # create a custom event
         mouse_x, mouse_y = pygame.mouse.get_pos()
         custom_event = pygame.event.Event(
             CUSTOM_DROP_EVENT, {"pos": (mouse_x, mouse_y)}
         )
 
-        if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5 and direction == 1:
+        if self.current_wall_id == FRONT_WALL and self.current_room_id < ROOM_5:
             if self.is_room_unlocked(self.current_room_id):
-                self.current_room_id += direction
+                self.current_room_id += 1
                 self.drop_current_object(custom_event)
                 self.change_current_wall()
             else:
                 self.sound_manager.play_sound("locked_door")
 
-        elif self.current_wall_id == BACK_WALL and self.current_room_id > 0 and direction == 1:
-            self.current_room_id -= direction
+        elif self.current_wall_id == BACK_WALL and self.current_room_id > 0:
+            self.current_room_id -= 1
             self.drop_current_object(custom_event)
             self.change_current_wall()
 
+        elif self.current_wall_id == BACK_WALL and self.current_room_id == 0 and self.exit_door_opened:
+            self.current_mini_game = "end_screen"
 
         else:
             print("change_room : Error, impossible to go in that direction")
             return 1
+        return 0
 
-    def change_wall(self, direction: str):  # change the wall we are facing
 
-        if direction != "right" and direction != "left":
-            print("change_wall : Error, invalid direction")
-            return 1
+    def change_wall(self, direction: int):  # change the wall we are facing : -1 to go right and 1 to go left
 
         # create a custom event
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -283,15 +292,11 @@ class Game:
             CUSTOM_DROP_EVENT, {"pos": (mouse_x, mouse_y)}
         )
 
-        if direction == "right":
-            self.current_wall_id = (
-                self.current_wall_id - 1
-            ) % ROOM_5  # python is magic
-        if direction == "left":
-            self.current_wall_id = (self.current_wall_id + 1) % ROOM_5
+        self.current_wall_id = (self.current_wall_id + direction) % 4
 
         self.drop_current_object(custom_event)
         self.change_current_wall()
+
 
     def change_current_wall(self):  # update the reference to the current wall
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
@@ -570,13 +575,13 @@ class Game:
     def handle_keyboard_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                self.change_wall("left")
+                self.change_wall(1)
             elif event.key == pygame.K_RIGHT:
-                self.change_wall("right")
+                self.change_wall(-1)
             elif event.key == pygame.K_UP:
-                self.change_room(1)
+                self.change_room()
             elif event.key == pygame.K_DOWN:
-                self.change_room(-1)
+                self.change_room()
             elif event.key == pygame.K_i:
                 self.inventory.displayed = not self.inventory.displayed
             elif event.key == pygame.K_r:
@@ -663,7 +668,9 @@ class Game:
         elif self.current_mini_game == "laboratory":
             self.laboratory_game.update()
 
-        self.mouse_enabled = True # TODO useful ?
+        elif self.current_mini_game == "end_screen":
+            self.end_screen_reference.resize_image()
+            self.end_screen_reference.draw()
 
         pygame.display.flip()
 

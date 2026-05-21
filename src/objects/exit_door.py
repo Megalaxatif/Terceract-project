@@ -25,10 +25,9 @@ class Exit_door(Game_object):
             movable=False,
             displayed=True,
         )
-        self.open = False
 
     def handle_click_selection(self, event):
-        if self.open:
+        if self.game_context.exit_door_opened:
             self.game_context.current_mini_game = "end_screen"
         else:
             self.game_context.dialogues.start_dialogue(7) #door locked
