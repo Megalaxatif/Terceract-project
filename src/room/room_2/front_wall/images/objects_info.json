@@ -2,17 +2,17 @@
     "padlock_door": {
         "image": "assets/cropped_images/cropped_padlock_door.png",
         "rect": [
-            696,
-            128,
-            529,
-            952
+            726,
+            185,
+            497,
+            895
         ],
         "collision_id": -1,
         "default_collision": [
-            696,
-            128,
-            529,
-            952
+            726,
+            185,
+            497,
+            895
         ],
         "default_wall_id": "23"
     },
@@ -30,40 +30,6 @@
             666,
             238,
             414
-        ],
-        "default_wall_id": "23"
-    },
-    "sainte_victoire": {
-        "image": "assets/cropped_images/cropped_sainte_victoire.png",
-        "rect": [
-            124,
-            165,
-            413,
-            401
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            124,
-            165,
-            413,
-            401
-        ],
-        "default_wall_id": "23"
-    },
-    "freedom_frame": {
-        "image": "assets/cropped_images/cropped_freedom_frame.png",
-        "rect": [
-            1343,
-            209,
-            347,
-            332
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1343,
-            209,
-            347,
-            332
         ],
         "default_wall_id": "23"
     },

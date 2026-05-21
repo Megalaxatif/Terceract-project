@@ -41,7 +41,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.game_running = True
         self.root_dir = Path(__file__).resolve().parent.parent
-        self.raw_stash = pygame.image.load(Path(f"{self.root_dir}/assets/images/stash.png")).convert_alpha()
+        self.raw_stash = pygame.image.load(Path(f"{self.root_dir}/assets/gui/stash.png")).convert_alpha()
         self.stash = self.raw_stash
         self.stash_raw_rect = self.raw_stash.get_rect()
         self.stash_rect = self.stash_raw_rect
@@ -55,7 +55,7 @@ class Game:
         self.mouse_enabled = True
         self.network_manager = Network_manager(self)
         self.sound_manager = SoundManager(self)
-        self.mouse_hover_image = pygame.image.load("../assets/images/mouse_hover.png").convert_alpha()
+        self.mouse_hover_image = pygame.image.load("../assets/gui/mouse_hover.png").convert_alpha()
         self.mouse_hover_image = pygame.transform.scale(
             self.mouse_hover_image, (40, 40)
         )

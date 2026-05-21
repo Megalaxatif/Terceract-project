@@ -16,8 +16,25 @@
         ],
         "default_wall_id": "24"
     },
-    "mirror": {
-        "image": "assets/cropped_images/cropped_mirror.png",
+    "little_frame": {
+        "image": "assets/cropped_images/cropped_little_frame.png",
+        "rect": [
+            1050,
+            552,
+            159,
+            187
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1050,
+            552,
+            159,
+            187
+        ],
+        "default_wall_id": "24"
+    },
+    "empty_frame": {
+        "image": "assets/cropped_images/cropped_empty_frame.png",
         "rect": [
             1396,
             233,
@@ -33,20 +50,20 @@
         ],
         "default_wall_id": "24"
     },
-    "gray_bg_table": {
-        "image": "assets/cropped_images/cropped_gray_bg_table.png",
+    "clock": {
+        "image": "assets/cropped_images/cropped_clock.png",
         "rect": [
-            0,
-            0,
-            1920,
-            1080
+            404,
+            87,
+            266,
+            993
         ],
         "collision_id": -1,
         "default_collision": [
-            0,
-            0,
-            1920,
-            1080
+            404,
+            87,
+            266,
+            993
         ],
         "default_wall_id": "24"
     },
@@ -55,15 +72,15 @@
         "rect": [
             0,
             0,
-            1672,
-            941
+            1920,
+            1080
         ],
         "collision_id": -1,
         "default_collision": [
             0,
             0,
-            1672,
-            941
+            1920,
+            1080
         ],
         "default_wall_id": "24"
     },
@@ -118,6 +135,40 @@
         ],
         "default_wall_id": "24"
     },
+    "obj_in_table_handle": {
+        "image": "assets/cropped_images/cropped_obj_in_table_handle.png",
+        "rect": [
+            1230,
+            394,
+            414,
+            289
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1230,
+            394,
+            414,
+            289
+        ],
+        "default_wall_id": "24"
+    },
+    "gray_bg_table": {
+        "image": "assets/cropped_images/cropped_gray_bg_table.png",
+        "rect": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "default_wall_id": "24"
+    },
     "paper": {
         "image": "assets/cropped_images/cropped_paper.png",
         "rect": [
@@ -132,23 +183,6 @@
             502,
             99,
             109
-        ],
-        "default_wall_id": "24"
-    },
-    "clock": {
-        "image": "assets/cropped_images/cropped_clock.png",
-        "rect": [
-            310,
-            86,
-            439,
-            994
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            310,
-            86,
-            439,
-            994
         ],
         "default_wall_id": "24"
     },

@@ -3,10 +3,58 @@
         [
             null,
             null,
+            {
+                "name": "water_bottle",
+                "image": "assets/cropped_images/cropped_water_bottle.png",
+                "rect": [
+                    490,
+                    1058,
+                    68,
+                    153
+                ],
+                "default_collision": [
+                    281,
+                    510,
+                    68,
+                    153
+                ],
+                "default_wall_id": "12"
+            },
             null,
-            null,
-            null,
-            null,
+            {
+                "name": "keycard",
+                "image": "assets/cropped_images/cropped_keycard.png",
+                "rect": [
+                    679,
+                    1089,
+                    281,
+                    207
+                ],
+                "default_collision": [
+                    580,
+                    302,
+                    281,
+                    207
+                ],
+                "default_wall_id": "13"
+            },
+            {
+                "name": "scotch",
+                "image": "assets/cropped_images/cropped_scotch.png",
+                "rect": [
+                    958,
+                    1091,
+                    164,
+                    161
+                ],
+                "default_collision": [
+                    264,
+                    912,
+                    164,
+                    161
+                ],
+                "default_wall_id": "42"
+            },
             null,
             null,
             null,

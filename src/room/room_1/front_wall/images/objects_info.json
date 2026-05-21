@@ -1,15 +1,15 @@
 {
-    "door": {
-        "image": "assets/cropped_images/cropped_door.png",
+    "closed_metal_door": {
+        "image": "assets/cropped_images/cropped_closed_metal_door.png",
         "rect": [
-            727,
+            716,
             242,
             477,
             838
         ],
         "collision_id": -1,
         "default_collision": [
-            727,
+            716,
             242,
             477,
             838
@@ -53,17 +53,17 @@
     "wallet": {
         "image": "assets/cropped_images/cropped_wallet.png",
         "rect": [
-            1523,
-            1022,
-            162,
-            58
+            1134,
+            797,
+            680,
+            283
         ],
         "collision_id": -1,
         "default_collision": [
-            1523,
-            1022,
-            162,
-            58
+            1134,
+            797,
+            680,
+            283
         ],
         "default_wall_id": "13"
     },
@@ -121,34 +121,17 @@
     "opened_wallet": {
         "image": "assets/cropped_images/cropped_opened_wallet.png",
         "rect": [
-            406,
-            263,
-            1109,
-            555
+            580,
+            295,
+            583,
+            216
         ],
         "collision_id": -1,
         "default_collision": [
-            406,
-            263,
-            1109,
-            555
-        ],
-        "default_wall_id": "13"
-    },
-    "keycard": {
-        "image": "assets/cropped_images/cropped_keycard.png",
-        "rect": [
-            1012,
-            406,
-            356,
-            268
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1012,
-            406,
-            356,
-            268
+            580,
+            295,
+            583,
+            216
         ],
         "default_wall_id": "13"
     }

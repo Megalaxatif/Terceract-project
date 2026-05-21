@@ -1,15 +1,49 @@
 {
+    "mirror": {
+        "image": "assets/cropped_images/cropped_mirror.png",
+        "rect": [
+            1351,
+            160,
+            380,
+            572
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1351,
+            160,
+            380,
+            572
+        ],
+        "default_wall_id": "11"
+    },
+    "exit_door": {
+        "image": "assets/cropped_images/cropped_exit_door.png",
+        "rect": [
+            729,
+            16,
+            476,
+            1064
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            729,
+            16,
+            476,
+            1064
+        ],
+        "default_wall_id": "11"
+    },
     "padlock_open": {
         "image": "assets/cropped_images/cropped_padlock_open.png",
         "rect": [
-            1074,
+            753,
             760,
             93,
             60
         ],
         "collision_id": -1,
         "default_collision": [
-            1074,
+            753,
             760,
             93,
             60
@@ -19,68 +53,17 @@
     "padlock_closed": {
         "image": "assets/cropped_images/cropped_padlock_closed.png",
         "rect": [
-            1070,
+            753,
             760,
             97,
             79
         ],
         "collision_id": -1,
         "default_collision": [
-            1070,
+            753,
             760,
             97,
             79
-        ],
-        "default_wall_id": "11"
-    },
-    "mirror": {
-        "image": "assets/cropped_images/cropped_mirror.png",
-        "rect": [
-            1363,
-            255,
-            380,
-            572
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1363,
-            255,
-            380,
-            572
-        ],
-        "default_wall_id": "11"
-    },
-    "door": {
-        "image": "assets/cropped_images/cropped_door.png",
-        "rect": [
-            715,
-            16,
-            476,
-            1064
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            715,
-            16,
-            476,
-            1064
-        ],
-        "default_wall_id": "11"
-    },
-    "big_frame3": {
-        "image": "assets/cropped_images/cropped_big_frame3.png",
-        "rect": [
-            26,
-            210,
-            566,
-            377
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            26,
-            210,
-            566,
-            377
         ],
         "default_wall_id": "11"
     },

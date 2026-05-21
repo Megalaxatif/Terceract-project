@@ -1,15 +1,15 @@
 {
-    "door": {
-        "image": "assets/cropped_images/cropped_door.png",
+    "opened_metal_door": {
+        "image": "assets/cropped_images/cropped_opened_metal_door.png",
         "rect": [
-            727,
+            716,
             242,
             477,
             838
         ],
         "collision_id": -1,
         "default_collision": [
-            727,
+            716,
             242,
             477,
             838

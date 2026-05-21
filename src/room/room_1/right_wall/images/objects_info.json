@@ -2,16 +2,16 @@
     "grid_wall": {
         "image": "assets/cropped_images/cropped_grid_wall.png",
         "rect": [
-            1282,
+            813,
             352,
-            79,
+            103,
             207
         ],
         "collision_id": -1,
         "default_collision": [
-            1282,
+            813,
             352,
-            79,
+            103,
             207
         ],
         "default_wall_id": "14"
@@ -19,51 +19,34 @@
     "closed_closet": {
         "image": "assets/cropped_images/cropped_closed_closet.png",
         "rect": [
-            1336,
+            886,
             37,
             561,
             1043
         ],
         "collision_id": -1,
         "default_collision": [
-            1336,
+            886,
             37,
             561,
             1043
         ],
         "default_wall_id": "14"
     },
-    "big_frame": {
-        "image": "assets/cropped_images/cropped_big_frame.png",
+    "hint": {
+        "image": "assets/cropped_images/cropped_hint.png",
         "rect": [
-            152,
-            47,
-            353,
-            338
+            141,
+            233,
+            503,
+            405
         ],
         "collision_id": -1,
         "default_collision": [
-            152,
-            47,
-            353,
-            338
-        ],
-        "default_wall_id": "14"
-    },
-    "grid_background": {
-        "image": "assets/cropped_images/cropped_grid_background.png",
-        "rect": [
-            0,
-            0,
-            1920,
-            1080
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            0,
-            0,
-            1920,
-            1080
+            141,
+            233,
+            503,
+            405
         ],
         "default_wall_id": "14"
     },
@@ -87,17 +70,34 @@
     "grid": {
         "image": "assets/cropped_images/cropped_grid.png",
         "rect": [
-            450,
-            20,
-            1025,
-            1032
+            0,
+            0,
+            1920,
+            1080
         ],
         "collision_id": -1,
         "default_collision": [
-            450,
-            20,
-            1025,
-            1032
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "14"
+    },
+    "grid_background": {
+        "image": "assets/cropped_images/cropped_grid_background.png",
+        "rect": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1806,
+            21,
+            89,
+            89
         ],
         "default_wall_id": "14"
     },
