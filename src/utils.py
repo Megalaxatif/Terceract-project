@@ -792,6 +792,20 @@ def create_object(
             True,
         )
 
+    elif obj_name == "secret_key":
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            True,
+            True,
+        )
+
     else:
         return Game_object(
             game_context,

@@ -1,1 +1,19 @@
-{}
+{
+    "secret_key": {
+        "image": "assets/cropped_images/cropped_secret_key.png",
+        "rect": [
+            908,
+            433,
+            61,
+            184
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            908,
+            433,
+            61,
+            184
+        ],
+        "default_wall_id": "53"
+    }
+}

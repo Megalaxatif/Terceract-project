@@ -34,9 +34,9 @@ class Stool(Game_object):
         if self.game_context.current_wall_id == 2 and self.game_context.current_room_id == 3:
             self.placed = True
             if self.game_context.network_manager.is_connected:
-                    self.game_context.network_manager.send_package("variable", "stool", "placed", True)
+                self.game_context.network_manager.send_package("variable", "stool", "placed", True)
         else :
             self.placed = False
             if self.game_context.network_manager.is_connected:
-                    self.game_context.network_manager.send_package("variable", "stool", "placed", False)
+                self.game_context.network_manager.send_package("variable", "stool", "placed", False)
         return code

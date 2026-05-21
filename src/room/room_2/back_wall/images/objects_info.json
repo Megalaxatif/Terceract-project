@@ -2,85 +2,68 @@
     "door": {
         "image": "assets/cropped_images/cropped_door.png",
         "rect": [
-            726,
-            131,
-            467,
-            949
+            727,
+            242,
+            477,
+            838
         ],
         "collision_id": -1,
         "default_collision": [
-            726,
-            131,
-            467,
-            949
-        ],
-        "default_wall_id": "21"
-    },
-    "box": {
-        "image": "assets/cropped_images/cropped_box.png",
-        "rect": [
-            6,
-            219,
-            865,
-            684
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            6,
-            219,
-            865,
-            684
+            727,
+            242,
+            477,
+            838
         ],
         "default_wall_id": "21"
     },
     "broken_box": {
         "image": "assets/cropped_images/cropped_broken_box.png",
         "rect": [
-            5,
-            220,
-            824,
-            683
+            232,
+            275,
+            271,
+            566
         ],
         "collision_id": -1,
         "default_collision": [
-            5,
-            220,
-            824,
-            683
+            232,
+            275,
+            271,
+            566
         ],
         "default_wall_id": "21"
     },
     "axe": {
         "image": "assets/cropped_images/cropped_axe.png",
         "rect": [
-            239,
-            343,
-            312,
-            469
+            285,
+            327,
+            181,
+            452
         ],
         "collision_id": -1,
         "default_collision": [
-            239,
-            343,
-            312,
-            469
+            285,
+            327,
+            181,
+            452
         ],
         "default_wall_id": "21"
     },
     "water_vase": {
         "image": "assets/cropped_images/cropped_water_vase.png",
         "rect": [
-            1521,
-            749,
-            159,
-            331
+            1411,
+            718,
+            472,
+            362
         ],
         "collision_id": -1,
         "default_collision": [
-            1521,
-            749,
-            159,
-            331
+            1411,
+            718,
+            472,
+            362
         ],
         "default_wall_id": "21"
     }

@@ -19,17 +19,17 @@
     "vase": {
         "image": "assets/cropped_images/cropped_vase.png",
         "rect": [
-            1453,
-            737,
-            172,
-            343
+            1577,
+            666,
+            238,
+            414
         ],
         "collision_id": -1,
         "default_collision": [
-            1453,
-            737,
-            172,
-            343
+            1577,
+            666,
+            238,
+            414
         ],
         "default_wall_id": "23"
     },

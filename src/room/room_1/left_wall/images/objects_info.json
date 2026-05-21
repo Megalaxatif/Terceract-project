@@ -1,86 +1,52 @@
 {
-    "table": {
-        "image": "assets/cropped_images/cropped_table.png",
+    "painting": {
+        "image": "assets/cropped_images/cropped_painting.png",
         "rect": [
-            898,
-            605,
-            963,
-            475
+            85,
+            98,
+            801,
+            584
         ],
         "collision_id": -1,
         "default_collision": [
-            898,
-            605,
-            963,
-            475
+            85,
+            98,
+            801,
+            584
         ],
         "default_wall_id": "12"
     },
     "little_frame": {
         "image": "assets/cropped_images/cropped_little_frame.png",
         "rect": [
-            1063,
-            432,
-            164,
-            183
+            1050,
+            552,
+            159,
+            187
         ],
         "collision_id": -1,
         "default_collision": [
-            1063,
-            432,
-            164,
-            183
+            1050,
+            552,
+            159,
+            187
         ],
         "default_wall_id": "12"
     },
     "drawer": {
         "image": "assets/cropped_images/cropped_drawer.png",
         "rect": [
-            85,
-            529,
-            761,
-            551
+            139,
+            660,
+            767,
+            420
         ],
         "collision_id": -1,
         "default_collision": [
-            85,
-            529,
-            761,
-            551
-        ],
-        "default_wall_id": "12"
-    },
-    "big_frame2": {
-        "image": "assets/cropped_images/cropped_big_frame2.png",
-        "rect": [
-            980,
-            77,
-            275,
-            318
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            980,
-            77,
-            275,
-            318
-        ],
-        "default_wall_id": "12"
-    },
-    "big_frame1": {
-        "image": "assets/cropped_images/cropped_big_frame1.png",
-        "rect": [
-            265,
-            56,
-            347,
-            500
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            265,
-            56,
-            347,
-            500
+            139,
+            660,
+            767,
+            420
         ],
         "default_wall_id": "12"
     },
@@ -101,23 +67,6 @@
         ],
         "default_wall_id": "12"
     },
-    "gray_bg_table": {
-        "image": "assets/cropped_images/cropped_gray_bg_table.png",
-        "rect": [
-            0,
-            0,
-            1920,
-            1080
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            0,
-            0,
-            1920,
-            1080
-        ],
-        "default_wall_id": "12"
-    },
     "gray_bg_drawer": {
         "image": "assets/cropped_images/cropped_gray_bg_drawer.png",
         "rect": [
@@ -135,122 +84,71 @@
         ],
         "default_wall_id": "12"
     },
-    "opened_table": {
-        "image": "assets/cropped_images/cropped_opened_table.png",
-        "rect": [
-            212,
-            58,
-            1497,
-            960
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            212,
-            58,
-            1497,
-            960
-        ],
-        "default_wall_id": "12"
-    },
     "drawer_up_view_withoutFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withoutFB.png",
         "rect": [
-            212,
-            58,
-            1497,
-            960
+            0,
+            0,
+            1920,
+            1080
         ],
         "collision_id": -1,
         "default_collision": [
-            212,
-            58,
-            1497,
-            960
-        ],
-        "default_wall_id": "12"
-    },
-    "obj_in_table_plush": {
-        "image": "assets/cropped_images/cropped_obj_in_table_plush.png",
-        "rect": [
-            1049,
-            231,
-            111,
-            124
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            1049,
-            231,
-            111,
-            124
-        ],
-        "default_wall_id": "12"
-    },
-    "obj_in_table_lightbulb": {
-        "image": "assets/cropped_images/cropped_obj_in_table_lightbulb.png",
-        "rect": [
-            680,
-            611,
-            94,
-            56
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            680,
-            611,
-            94,
-            56
+            0,
+            0,
+            1920,
+            1080
         ],
         "default_wall_id": "12"
     },
     "magnet": {
         "image": "assets/cropped_images/cropped_magnet.png",
         "rect": [
-            626,
-            202,
-            62,
-            62
+            624,
+            201,
+            66,
+            65
         ],
         "collision_id": -1,
         "default_collision": [
-            626,
-            202,
-            62,
-            62
+            624,
+            201,
+            66,
+            65
         ],
         "default_wall_id": "12"
     },
     "drawer_up_view_withFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
         "rect": [
-            212,
-            58,
-            1497,
-            960
+            0,
+            0,
+            1920,
+            1080
         ],
         "collision_id": -1,
         "default_collision": [
-            212,
-            58,
-            1497,
-            960
+            0,
+            0,
+            1920,
+            1080
         ],
         "default_wall_id": "12"
     },
     "obj_in_drawer_glue": {
         "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
         "rect": [
-            846,
-            420,
-            320,
-            138
+            1053,
+            346,
+            229,
+            241
         ],
         "collision_id": -1,
         "default_collision": [
-            846,
-            420,
-            320,
-            138
+            1053,
+            346,
+            229,
+            241
         ],
         "default_wall_id": "12"
     },

@@ -211,6 +211,9 @@ class Inventory:
             return
         if current_obj.name == "stool":
             current_obj.placed = False
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "stool", "placed", False)
+
         obj = self.game_context.current_object
         if self.slots[row][col] is None and obj.movable:
             self.slots[row][col] = obj
@@ -426,12 +429,12 @@ class Inventory:
     def draw_current_object(self):
         if self.current_object:  # if not None
             mx, my = pygame.mouse.get_pos()
-            scaled_image = pygame.transform.scale(
-                self.current_object.image,
-                (int(self.block_size * 0.9), int(self.block_size * 0.9)),
-            )
+            # scaled_image = pygame.transform.scale(
+            #     self.current_object.image,
+            #     (int(self.block_size * 0.9), int(self.block_size * 0.9)),
+            # )
             self.game_context.screen.blit(
-                scaled_image, (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
+                self.current_object.image, (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
             if self.game_context.network_manager.is_connected:
                 self.game_context.network_manager.send_package(

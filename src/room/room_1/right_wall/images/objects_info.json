@@ -2,34 +2,34 @@
     "grid_wall": {
         "image": "assets/cropped_images/cropped_grid_wall.png",
         "rect": [
-            846,
-            191,
-            271,
-            271
+            1282,
+            352,
+            79,
+            207
         ],
         "collision_id": -1,
         "default_collision": [
-            846,
-            191,
-            271,
-            271
+            1282,
+            352,
+            79,
+            207
         ],
         "default_wall_id": "14"
     },
     "closed_closet": {
         "image": "assets/cropped_images/cropped_closed_closet.png",
         "rect": [
-            1148,
-            84,
-            671,
-            996
+            1336,
+            37,
+            561,
+            1043
         ],
         "collision_id": -1,
         "default_collision": [
-            1148,
-            84,
-            671,
-            996
+            1336,
+            37,
+            561,
+            1043
         ],
         "default_wall_id": "14"
     },
@@ -87,17 +87,17 @@
     "grid": {
         "image": "assets/cropped_images/cropped_grid.png",
         "rect": [
-            449,
-            28,
-            1022,
-            1024
+            450,
+            20,
+            1025,
+            1032
         ],
         "collision_id": -1,
         "default_collision": [
-            449,
-            28,
-            1022,
-            1024
+            450,
+            20,
+            1025,
+            1032
         ],
         "default_wall_id": "14"
     },
@@ -155,17 +155,17 @@
     "obj_in_closet_screwdriver": {
         "image": "assets/cropped_images/cropped_obj_in_closet_screwdriver.png",
         "rect": [
-            1077,
-            967,
-            180,
-            31
+            1408,
+            241,
+            215,
+            641
         ],
         "collision_id": -1,
         "default_collision": [
-            1077,
-            967,
-            180,
-            31
+            1408,
+            241,
+            215,
+            641
         ],
         "default_wall_id": "14"
     },
@@ -308,17 +308,17 @@
     "key": {
         "image": "assets/cropped_images/cropped_key.png",
         "rect": [
-            700,
+            693,
             542,
-            93,
-            76
+            97,
+            91
         ],
         "collision_id": -1,
         "default_collision": [
-            700,
+            693,
             542,
-            93,
-            76
+            97,
+            91
         ],
         "default_wall_id": "14"
     }

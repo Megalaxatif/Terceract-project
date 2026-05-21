@@ -2,17 +2,17 @@
     "library": {
         "image": "assets/cropped_images/cropped_library.png",
         "rect": [
-            121,
-            22,
-            1676,
-            1058
+            234,
+            111,
+            1504,
+            969
         ],
         "collision_id": -1,
         "default_collision": [
-            121,
-            22,
-            1676,
-            1058
+            234,
+            111,
+            1504,
+            969
         ],
         "default_wall_id": "22"
     },

@@ -1,67 +1,135 @@
 {
-    "mirror": {
-        "image": "assets/cropped_images/cropped_mirror.png",
+    "table": {
+        "image": "assets/cropped_images/cropped_table.png",
         "rect": [
-            1416,
-            45,
-            310,
-            636
+            965,
+            723,
+            937,
+            357
         ],
         "collision_id": -1,
         "default_collision": [
-            1416,
-            45,
-            310,
-            636
+            965,
+            723,
+            937,
+            357
         ],
         "default_wall_id": "24"
     },
-    "bathtub": {
-        "image": "assets/cropped_images/cropped_bathtub.png",
+    "mirror": {
+        "image": "assets/cropped_images/cropped_mirror.png",
         "rect": [
-            764,
-            616,
-            715,
-            464
+            1396,
+            233,
+            379,
+            440
         ],
         "collision_id": -1,
         "default_collision": [
-            764,
-            616,
-            715,
-            464
+            1396,
+            233,
+            379,
+            440
+        ],
+        "default_wall_id": "24"
+    },
+    "gray_bg_table": {
+        "image": "assets/cropped_images/cropped_gray_bg_table.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "24"
+    },
+    "opened_table": {
+        "image": "assets/cropped_images/cropped_opened_table.png",
+        "rect": [
+            0,
+            0,
+            1672,
+            941
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1672,
+            941
         ],
         "default_wall_id": "24"
     },
     "hole": {
         "image": "assets/cropped_images/cropped_hole.png",
         "rect": [
-            486,
-            479,
-            165,
-            267
+            358,
+            321,
+            332,
+            340
         ],
         "collision_id": -1,
         "default_collision": [
-            486,
-            479,
-            165,
-            267
+            358,
+            321,
+            332,
+            340
+        ],
+        "default_wall_id": "24"
+    },
+    "obj_in_table_plush": {
+        "image": "assets/cropped_images/cropped_obj_in_table_plush.png",
+        "rect": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "default_wall_id": "24"
+    },
+    "obj_in_table_lightbulb": {
+        "image": "assets/cropped_images/cropped_obj_in_table_lightbulb.png",
+        "rect": [
+            680,
+            611,
+            94,
+            56
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            680,
+            611,
+            94,
+            56
         ],
         "default_wall_id": "24"
     },
     "paper": {
         "image": "assets/cropped_images/cropped_paper.png",
         "rect": [
-            510,
-            622,
+            467,
+            502,
             99,
             109
         ],
         "collision_id": -1,
         "default_collision": [
-            510,
-            622,
+            467,
+            502,
             99,
             109
         ],
@@ -70,17 +138,17 @@
     "clock": {
         "image": "assets/cropped_images/cropped_clock.png",
         "rect": [
-            411,
-            19,
-            292,
-            1061
+            310,
+            86,
+            439,
+            994
         ],
         "collision_id": -1,
         "default_collision": [
-            411,
-            19,
-            292,
-            1061
+            310,
+            86,
+            439,
+            994
         ],
         "default_wall_id": "24"
     },
