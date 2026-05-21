@@ -31,7 +31,7 @@ class Dialogue:
             "I CAN'T REACH !", #(fait)
             "I FILLED THE BOTTLE", #(fait)
             "I EMPTIED THE BOTTLE IN THE PUMP", #(fait)
-            "WATER IS MISSING", #(fait)
+            "WATER IS STILL MISSING", #(fait)
             "IT'S LEAKING EVERYWHERE", #(fait)
             "THE PIPE IS MISSING A PIECE", #(fait)
             "IT'S FULL", #(fait)

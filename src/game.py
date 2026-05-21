@@ -66,7 +66,7 @@ class Game:
         self.room_1_unlocked = True
         self.room_2_unlocked = True
         self.room_3_unlocked = True
-        self.room_4_unlocked = True
+        self.room_4_unlocked = False
 
         self.current_room_id = 0
         self.current_wall_id = 0
