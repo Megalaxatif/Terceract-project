@@ -138,17 +138,17 @@
     "drawer_up_view_withFB_trigger": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withFB_trigger.png",
         "rect": [
-            318,
-            360,
-            59,
-            133
+            290,
+            183,
+            45,
+            121
         ],
         "collision_id": -1,
         "default_collision": [
-            318,
-            360,
-            59,
-            133
+            290,
+            183,
+            45,
+            121
         ],
         "default_wall_id": "12"
     }
