@@ -66,39 +66,5 @@
             79
         ],
         "default_wall_id": "11"
-    },
-    "plank2": {
-        "image": "assets/cropped_images/cropped_plank2.png",
-        "rect": [
-            475,
-            709,
-            856,
-            333
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            475,
-            709,
-            856,
-            333
-        ],
-        "default_wall_id": "11"
-    },
-    "plank1": {
-        "image": "assets/cropped_images/cropped_plank1.png",
-        "rect": [
-            547,
-            386,
-            792,
-            338
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            547,
-            386,
-            792,
-            338
-        ],
-        "default_wall_id": "11"
     }
 }

@@ -134,5 +134,22 @@
             216
         ],
         "default_wall_id": "13"
+    },
+    "keycard": {
+        "image": "assets/cropped_images/cropped_keycard.png",
+        "rect": [
+            580,
+            302,
+            281,
+            207
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            580,
+            302,
+            281,
+            207
+        ],
+        "default_wall_id": "13"
     }
 }

@@ -41,7 +41,8 @@ class Dialogue:
             "THE BOTTLE IS EMPTY", #(fait)
             "IT'S EMPTY.. I THINK I SAW A WATER BOTTLE IN THE FIRST ROOM", #(fait)
 
-            "THERE WAS SOMETHING BEHIND THE WALL !" #index 25 (fait)
+            "THERE WAS SOMETHING BEHIND THE WALL !", #index 25 (fait)
+            "THE DOOR.. IS FINALLY OPEN" #(fait)
             ]
 
         self.visible = True

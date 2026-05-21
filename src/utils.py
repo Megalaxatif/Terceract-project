@@ -226,6 +226,9 @@ def create_object(
     from objects.water_bottle import Water_bottle
     from objects.water_vase import Water_vase
     from objects.leak import Leak
+    from objects.secret_key import Secret_key
+    from objects.exit_door import Exit_door
+    from minigames.end_screen.end_screen import End_screen
 
     if obj_name == "calculator":
         return Digicode(
@@ -793,7 +796,7 @@ def create_object(
         )
 
     elif obj_name == "secret_key":
-        return Game_object(
+        return Secret_key(
             game_context,
             obj_name,
             img_path,
@@ -802,8 +805,30 @@ def create_object(
             default_collision,
             default_wall,
             current_collision_id,
-            True,
-            True,
+        )
+
+    elif obj_name == "exit_door":
+        return Exit_door(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+        )
+
+    elif obj_name == "end_screen":
+        return End_screen(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
         )
 
     else:
