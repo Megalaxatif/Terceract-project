@@ -831,6 +831,34 @@ def create_object(
             current_collision_id,
         )
 
+    elif obj_name == "endlock_open":
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            False,
+        )
+    
+    elif obj_name == "endlock_closed":
+        return Game_object(
+            game_context,
+            obj_name,
+            img_path,
+            rect,
+            collision_rects,
+            default_collision,
+            default_wall,
+            current_collision_id,
+            False,
+            True,
+        )
+
     else:
         return Game_object(
             game_context,

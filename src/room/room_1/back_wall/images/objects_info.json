@@ -33,8 +33,8 @@
         ],
         "default_wall_id": "11"
     },
-    "padlock_open": {
-        "image": "assets/cropped_images/cropped_padlock_open.png",
+    "endlock_open": {
+        "image": "assets/cropped_images/cropped_endlock_open.png",
         "rect": [
             753,
             760,
@@ -50,8 +50,8 @@
         ],
         "default_wall_id": "11"
     },
-    "padlock_closed": {
-        "image": "assets/cropped_images/cropped_padlock_closed.png",
+    "endlock_closed": {
+        "image": "assets/cropped_images/cropped_endlock_closed.png",
         "rect": [
             753,
             760,

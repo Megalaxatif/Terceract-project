@@ -29,6 +29,8 @@ class Secret_key(Game_object):
 
     def initialize(self):
         self.door_reference = self.game_context.get_reference("exit_door")
+        self.open_lock = self.game_context.get_reference("endlock_open")
+        self.closed_lock = self.game_context.get_reference("endlock_closed")
 
     def handle_click(self, event):
         #self.game_context.drop_current_object(event)
@@ -36,9 +38,13 @@ class Secret_key(Game_object):
             self.game_context.dialogues.start_dialogue(26) #door open (il veut pas jsp pk)
             self.displayed = False
             self.door_reference.open = True
+            self.open_lock.displayed = True
+            self.closed_lock.displayed = False
             if self.game_context.network_manager.is_connected:
                 self.game_context.network_manager.send_package("variable", "exit_door", "open", True)
                 self.game_context.network_manager.send_package("variable", "secret_key", "displayed", False)
+                self.game_context.network_manager.send_package("variable", "endlock_open", "displayed", True)
+                self.game_context.network_manager.send_package("variable", "endlock_closed", "displayed", False)
                 return True
 
         return False
