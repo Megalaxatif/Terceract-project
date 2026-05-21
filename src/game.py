@@ -499,13 +499,23 @@ class Game:
 
 
     def display_room_counter(self):  # for debug purposes
+        room_name = "Denial"
+        if self.current_room_id == 1:
+            room_name = "Anger"
+        elif self.current_room_id == 2:
+            room_name = "Bargaining"
+        elif self.current_room_id == 3:
+            room_name = "Depression"
+        elif self.current_room_id == 4:
+            room_name = "Acceptance"
+
         text_surface = self.font.render(
-            f"room number {self.current_room_id + 1}",
+            f"{room_name} room",
             True,  # anti-aliasing
-            (0, 0, 0),
+            (255, 255, 255),
         )
-        x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
-        y = 25 * self.delta
+        x = 0
+        y = 100 * self.delta
         self.screen.blit(text_surface, (x, y))
 
 
@@ -513,10 +523,10 @@ class Game:
         text_surface = self.font.render(
             f"FPS {int(self.clock.get_fps())}",
             True,  # anti-aliasing
-            (0, 0, 0),
+            (255, 255, 255),
         )
-        x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
-        y = 45 * self.delta
+        x = 0
+        y = 125 * self.delta
         self.screen.blit(text_surface, (x, y))
 
 
@@ -531,10 +541,10 @@ class Game:
         text_surface = self.font.render(
             f"selected object : {name}",
             True,  # anti-aliasing
-            (0, 0, 0),
+            (255, 255, 255),
         )
-        x = self.current_wall.background.get_width() - text_surface.get_width() - 5 * self.delta
-        y = 5 * self.delta
+        x = 0
+        y = 75 * self.delta
         self.screen.blit(text_surface, (x, y))
 
 
@@ -552,12 +562,12 @@ class Game:
 
 
     def display_gui(self):
-            self.update_gui()
-            self.display_room_counter()
-            self.display_current_object_name()
-            self.display_fps()
-            self.screen.blit(self.stash, (0,0))
-            self.display_mouse_hover()
+        self.update_gui()
+        self.display_room_counter()
+        self.display_current_object_name()
+        self.display_fps()
+        self.screen.blit(self.stash, (0,0))
+        self.display_mouse_hover()
 
 
     def recalculate_deltas(self):  # recalculate the delta values when the window is resized
