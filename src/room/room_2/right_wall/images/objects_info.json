@@ -172,17 +172,17 @@
     "paper": {
         "image": "assets/cropped_images/cropped_paper.png",
         "rect": [
-            467,
-            502,
-            99,
-            109
+            462,
+            498,
+            108,
+            122
         ],
         "collision_id": -1,
         "default_collision": [
-            467,
-            502,
-            99,
-            109
+            462,
+            498,
+            108,
+            122
         ],
         "default_wall_id": "24"
     },
@@ -190,16 +190,16 @@
         "image": "assets/cropped_images/cropped_fullscreen_paper.png",
         "rect": [
             0,
-            0,
+            3,
             1920,
-            1080
+            1077
         ],
         "collision_id": -1,
         "default_collision": [
             0,
-            0,
+            3,
             1920,
-            1080
+            1077
         ],
         "default_wall_id": "24"
     }

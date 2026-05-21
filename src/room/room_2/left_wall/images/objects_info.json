@@ -19,17 +19,17 @@
     "book_closed": {
         "image": "assets/cropped_images/cropped_book_closed.png",
         "rect": [
-            497,
-            845,
-            20,
-            57
+            1577,
+            698,
+            27,
+            70
         ],
         "collision_id": -1,
         "default_collision": [
-            497,
-            845,
-            20,
-            57
+            1577,
+            698,
+            27,
+            70
         ],
         "default_wall_id": "22"
     },
