@@ -71,7 +71,7 @@ class Game:
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_object = None
         self.other_player_object_name = ""
-        self.other_player_inventory_object_name = ""  # TODO
+        self.other_player_inventory_object_name = ""
         self.other_player_inventory_object = None
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # Create inventory (it's a line here)
@@ -239,6 +239,14 @@ class Game:
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
                     self.network_manager.server.close() # close the server socket definitively
+
+                    # reset the access
+                    self.exit_door_opened = False
+                    self.room_1_unlocked = False
+                    self.room_2_unlocked = False
+                    self.room_3_unlocked = True
+                    self.room_4_unlocked = False
+
                     #------- recreate all the things that depends on wether we're host or client ------
                     # recreate the walls. Since we changed is_host to False above, they will be created
                     # with the data of the other player

@@ -25,6 +25,7 @@ class Stool(Game_object):
             movable=True,
             displayed=True,
         )
+        self.placed = False
 
     def initialize(self):
         self.placed = self.game_context.is_obj_in_wall(self.name, 2, 3)

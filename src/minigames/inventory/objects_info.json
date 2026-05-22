@@ -19,6 +19,7 @@
                 ],
                 "default_wall_id": "21"
             },
+            null,
             {
                 "name": "obj_in_closet_crowbar",
                 "image": "assets/cropped_images/cropped_obj_in_closet_crowbar.png",
@@ -53,7 +54,6 @@
                 ],
                 "default_wall_id": "12"
             },
-            null,
             {
                 "name": "obj_in_drawer_glue",
                 "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
