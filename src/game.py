@@ -70,6 +70,7 @@ class Game:
         self.current_wall_id = 0
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_object = None
+        self.stool_placed = False # NOTE: I put this variable here because if I put it in stool directly it crashes and I have no idea why
         self.other_player_object_name = ""
         self.other_player_inventory_object_name = ""
         self.other_player_inventory_object = None
@@ -602,8 +603,7 @@ class Game:
                 self.change_room()
             elif event.key == pygame.K_i:
                 self.inventory.displayed = not self.inventory.displayed
-            elif event.key == pygame.K_r:
-                self.reset_game()
+
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             temp_inv_obj = self.inventory.current_object

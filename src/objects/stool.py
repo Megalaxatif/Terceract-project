@@ -25,19 +25,18 @@ class Stool(Game_object):
             movable=True,
             displayed=True,
         )
-        self.placed = False
 
     def initialize(self):
-        self.placed = self.game_context.is_obj_in_wall(self.name, 2, 3)
+        self.game_context.stool_placed = self.game_context.is_obj_in_wall(self.name, 2, 3)
 
     def handle_click(self, event):
         code = super().handle_click(event)
         if self.game_context.current_wall_id == 2 and self.game_context.current_room_id == 3:
-            self.placed = True
+            self.game_context.stool_placed = True
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", self.name, "placed", True)
+                self.game_context.network_manager.send_package("variable", "game", "stool_placed", True)
         else :
-            self.placed = False
+            self.game_context.stool_placed = False
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", self.name, "placed", False)
+                self.game_context.network_manager.send_package("variable", "game", "stool_placed", False)
         return code

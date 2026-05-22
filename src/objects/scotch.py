@@ -52,7 +52,7 @@ class Scotch(Game_object):
     def handle_click(self, event):
         if self.game_context.current_wall.room_id == 3:
             for obj in self.leak_reference:
-                if not obj.displayed and obj.rect.collidepoint(event.pos) and (not obj.name == "leak2" or self.stool_reference.placed):
+                if not obj.displayed and obj.rect.collidepoint(event.pos) and (not obj.name == "leak2" or self.game_context.stool_placed):
                     obj.displayed = True
                     #print("caché")
                     #print(f"{i}")
@@ -72,7 +72,7 @@ class Scotch(Game_object):
                                 if self.game_context.network_manager.is_connected:
                                     self.game_context.network_manager.send_package("variable", "water_pump", "leaking", False)
                     return True
-                elif not obj.displayed and obj.rect.collidepoint(event.pos) and not self.stool_reference.placed:
+                elif not obj.displayed and obj.rect.collidepoint(event.pos) and not self.game_context.stool_placed:
                     self.game_context.dialogues.start_dialogue(13)
                     return True
 

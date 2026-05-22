@@ -210,9 +210,9 @@ class Inventory:
             print("already in grid")
             return
         if current_obj.name == "stool":
-            current_obj.placed = False
+            self.game_context.stool_placed = False
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", "stool", "placed", False)
+                self.game_context.network_manager.send_package("variable", "game", "stool_placed", False)
 
         obj = self.game_context.current_object
         if self.slots[row][col] is None and obj.movable:
