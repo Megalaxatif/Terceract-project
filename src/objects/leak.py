@@ -26,6 +26,5 @@ class Leak(Game_object):
             displayed=False,
         )
 
-        self.collisions = collisions
         if object_name == "leak1":
             self.displayed = True

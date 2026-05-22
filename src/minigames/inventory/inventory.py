@@ -210,9 +210,9 @@ class Inventory:
             print("already in grid")
             return
         if current_obj.name == "stool":
-            current_obj.placed = False
+            self.game_context.stool_placed = False
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", "stool", "placed", False)
+                self.game_context.network_manager.send_package("variable", "game", "stool_placed", False)
 
         obj = self.game_context.current_object
         if self.slots[row][col] is None and obj.movable:
@@ -429,10 +429,6 @@ class Inventory:
     def draw_current_object(self):
         if self.current_object:  # if not None
             mx, my = pygame.mouse.get_pos()
-            # scaled_image = pygame.transform.scale(
-            #     self.current_object.image,
-            #     (int(self.block_size * 0.9), int(self.block_size * 0.9)),
-            # )
             self.game_context.screen.blit(
                 self.current_object.image, (mx - 0.4 * self.block_size, my - 0.4 * self.block_size)
             )
@@ -457,6 +453,7 @@ class Inventory:
         object.rect.x = mx * self.game_context.delta
         object.rect.y = my * self.game_context.delta
 
+
     def draw_other_player_current_object(self):
         obj = self.game_context.other_player_inventory_object
         pos = obj.rect.x, obj.rect.y
@@ -465,8 +462,7 @@ class Inventory:
             return
 
         mx, my = pos
-        scaled_image = pygame.transform.scale(obj.image, (int(self.block_size * 0.9), int(self.block_size * 0.9)))
-        self.game_context.screen.blit(scaled_image, (mx - 0.4 * self.block_size, my - 0.4 * self.block_size))
+        self.game_context.screen.blit(obj.image, (mx - 0.4 * self.block_size, my - 0.4 * self.block_size))
 
     def display_collision_rects(self):
         for i in range(len(self.slots)):

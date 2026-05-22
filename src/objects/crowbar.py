@@ -42,6 +42,8 @@ class Crowbar(Game_object):
             for obj in self.removable_planks_reference:
                 if obj.displayed and obj.rect.collidepoint(event.pos):
                     obj.displayed = False
+                    if self.game_context.network_manager.is_connected:
+                        self.game_context.network_manager.send_package("variable", obj.name, "displayed", False)
                     if not any([v.displayed for v in self.removable_planks_reference]):
                         self.game_context.unlock_room(self.game_context.current_room_id)
                         self.game_context.dialogues.start_dialogue(21) #door open

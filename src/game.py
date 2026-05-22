@@ -60,18 +60,19 @@ class Game:
 
         self.create_all_walls()
 
-        self.exit_door_opened = True
-        self.room_1_unlocked = True
-        self.room_2_unlocked = True
+        self.exit_door_opened = False
+        self.room_1_unlocked = False
+        self.room_2_unlocked = False
         self.room_3_unlocked = True
-        self.room_4_unlocked = True
+        self.room_4_unlocked = False
 
         self.current_room_id = 0
         self.current_wall_id = 0
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
         self.current_object = None
+        self.stool_placed = False # NOTE: I put this variable here because if I put it in stool directly it crashes and I have no idea why
         self.other_player_object_name = ""
-        self.other_player_inventory_object_name = ""  # TODO
+        self.other_player_inventory_object_name = ""
         self.other_player_inventory_object = None
         self.mini_game_menu = Menu(self)
         self.inventory = Inventory(self, 40, 615, 1, 10, 100, True)  # Create inventory (it's a line here)
@@ -239,6 +240,14 @@ class Game:
                     self.network_manager.is_connected = True
                     self.network_manager.is_host = False
                     self.network_manager.server.close() # close the server socket definitively
+
+                    # reset the access
+                    self.exit_door_opened = False
+                    self.room_1_unlocked = False
+                    self.room_2_unlocked = False
+                    self.room_3_unlocked = True
+                    self.room_4_unlocked = False
+
                     #------- recreate all the things that depends on wether we're host or client ------
                     # recreate the walls. Since we changed is_host to False above, they will be created
                     # with the data of the other player
@@ -454,7 +463,7 @@ class Game:
             object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
 
-    def get_reference(self, name):  # returns the reference to an object in the game
+    def get_reference(self, name, asker = "undefined"):  # returns the reference to an object in the game
         # search in the walls
         for room in self.room_list:
             for wall in room:
@@ -468,7 +477,7 @@ class Game:
                     if obj.name == name:
                         return obj
 
-        print(f'get_reference error: no object with name {name} found in the game, exiting')
+        print(f'get_reference error: no object with name {name} asked by {asker} found in the game, exiting')
         self.quit()
 
 
@@ -594,8 +603,7 @@ class Game:
                 self.change_room()
             elif event.key == pygame.K_i:
                 self.inventory.displayed = not self.inventory.displayed
-            elif event.key == pygame.K_r:
-                self.reset_game()
+
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             temp_inv_obj = self.inventory.current_object

@@ -36,14 +36,13 @@ class Keycard(Game_object):
         self.wallet_reference = self.game_context.get_reference("wallet")
 
     def handle_click(self, event):
-        #print(f"{self.rect.colliderect(self.lock_reference.rect)}")
         if self.lock_reference_off.rect.collidepoint(event.pos) and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 2:
-            #self.game_context.room_5_unlocked = True
             self.game_context.unlock_room(self.game_context.current_room_id)
-            #if self.game_context.network_manager.is_connected:        # a voir comment on peut faire
-            #        self.game_context.network_manager.send_package("variable", "game_context", "room_5_unlocked", True)
             self.lock_reference_off.displayed = False
             self.lock_reference_on.displayed = True
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", "keycard_reader_off", "displayed", False)
+                self.game_context.network_manager.send_package("variable", "keycard_reader_on", "displayed", True)
             self.game_context.dialogues.start_dialogue(21) #unlock the door
             return True
         else:

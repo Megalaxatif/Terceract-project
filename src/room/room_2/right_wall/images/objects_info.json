@@ -50,6 +50,40 @@
         ],
         "default_wall_id": "24"
     },
+    "hole": {
+        "image": "assets/cropped_images/cropped_hole.png",
+        "rect": [
+            358,
+            321,
+            332,
+            340
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            358,
+            321,
+            332,
+            340
+        ],
+        "default_wall_id": "24"
+    },
+    "paper": {
+        "image": "assets/cropped_images/cropped_paper.png",
+        "rect": [
+            462,
+            498,
+            108,
+            122
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            462,
+            498,
+            108,
+            122
+        ],
+        "default_wall_id": "24"
+    },
     "clock": {
         "image": "assets/cropped_images/cropped_clock.png",
         "rect": [
@@ -81,23 +115,6 @@
             0,
             1920,
             1080
-        ],
-        "default_wall_id": "24"
-    },
-    "hole": {
-        "image": "assets/cropped_images/cropped_hole.png",
-        "rect": [
-            358,
-            321,
-            332,
-            340
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            358,
-            321,
-            332,
-            340
         ],
         "default_wall_id": "24"
     },
@@ -166,23 +183,6 @@
             21,
             89,
             89
-        ],
-        "default_wall_id": "24"
-    },
-    "paper": {
-        "image": "assets/cropped_images/cropped_paper.png",
-        "rect": [
-            462,
-            498,
-            108,
-            122
-        ],
-        "collision_id": -1,
-        "default_collision": [
-            462,
-            498,
-            108,
-            122
         ],
         "default_wall_id": "24"
     },
