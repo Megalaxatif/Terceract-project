@@ -87,12 +87,12 @@
     "clock": {
         "image": "assets/cropped_images/cropped_clock.png",
         "rect": [
-            101,
-            53,
+            404,
+            87,
             266,
             993
         ],
-        "collision_id": 1,
+        "collision_id": -1,
         "default_collision": [
             404,
             87,

@@ -33,6 +33,23 @@
         ],
         "default_wall_id": "12"
     },
+    "water_bottle": {
+        "image": "assets/cropped_images/cropped_water_bottle.png",
+        "rect": [
+            281,
+            510,
+            68,
+            153
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            281,
+            510,
+            68,
+            153
+        ],
+        "default_wall_id": "12"
+    },
     "drawer_up_view_withoutFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withoutFB.png",
         "rect": [
@@ -50,6 +67,23 @@
         ],
         "default_wall_id": "12"
     },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            624,
+            201,
+            66,
+            65
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            624,
+            201,
+            66,
+            65
+        ],
+        "default_wall_id": "12"
+    },
     "drawer_up_view_withFB": {
         "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
         "rect": [
@@ -64,6 +98,23 @@
             0,
             1920,
             1080
+        ],
+        "default_wall_id": "12"
+    },
+    "obj_in_drawer_glue": {
+        "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
+        "rect": [
+            1053,
+            346,
+            229,
+            241
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1053,
+            346,
+            229,
+            241
         ],
         "default_wall_id": "12"
     },

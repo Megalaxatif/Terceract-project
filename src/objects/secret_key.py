@@ -42,7 +42,12 @@ class Secret_key(Game_object):
             self.closed_lock.displayed = False
             if self.game_context.network_manager.is_connected:
                 self.game_context.network_manager.send_package("variable", "game", "exit_door_opened", True)
-                self.game_context.network_manager.send_package("variable", "secret_key", "displayed", False)
+                #self.game_context.network_manager.send_package("variable", "secret_key", "displayed", False) #NOTE: just like with stool, this line makes the game crash idk why
                 self.game_context.network_manager.send_package("variable", "endlock_open", "displayed", True)
                 self.game_context.network_manager.send_package("variable", "endlock_closed", "displayed", False)
         return super().handle_click(event)
+
+    # NOTE: this is just a quick repair normally this should be replaced by the line that doesn't work above
+    def update(self, event):
+        if self.game_context.is_obj_in_wall(self.name, 0, 0):
+            self.displayed = False

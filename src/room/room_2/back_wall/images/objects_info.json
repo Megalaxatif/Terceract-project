@@ -33,6 +33,23 @@
         ],
         "default_wall_id": "21"
     },
+    "axe": {
+        "image": "assets/cropped_images/cropped_axe.png",
+        "rect": [
+            285,
+            327,
+            181,
+            452
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            285,
+            327,
+            181,
+            452
+        ],
+        "default_wall_id": "21"
+    },
     "water_vase": {
         "image": "assets/cropped_images/cropped_water_vase.png",
         "rect": [
