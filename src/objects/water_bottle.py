@@ -30,11 +30,11 @@ class Water_bottle(Game_object):
         )
         self.empty = False
         self.interactible = True   #si je synchro empty en multi ca casse tout ?? "center_object_error: invalid object name, the name water_bottle was not found in the inventory"
-    
+
     def initialize(self):
         self.vase_reference = self.game_context.get_reference("water_vase")
         self.water_pump_reference = self.game_context.get_reference("water_pump")
-    
+
     def handle_click(self, event):
         if not self.empty and self.water_pump_reference.rect.collidepoint(event.pos) and self.water_pump_reference.water_count < 3 and self.game_context.current_room_id == 3 and self.game_context.current_wall_id == 0:
             self.empty = True
@@ -51,7 +51,7 @@ class Water_bottle(Game_object):
             self.game_context.dialogues.start_dialogue(19) #pump full
 
         elif self.empty and self.vase_reference.rect.collidepoint(event.pos) and self.game_context.current_room_id == 1 and self.game_context.current_wall_id == 0:
-        
+
             self.empty = False
             self.vase_reference.water_count -= 1
             self.game_context.dialogues.start_dialogue(14) #steal water from the vase
@@ -62,4 +62,6 @@ class Water_bottle(Game_object):
         elif not self.empty and self.vase_reference.rect.collidepoint(event.pos) and self.game_context.current_room_id == 1 and self.game_context.current_wall_id == 0:
             self.game_context.dialogues.start_dialogue(22) #already filled
         #self.game_context.drop_current_object(event)
-        
+        else:
+            return super().handle_click(event)
+        return False # NOTE: no impact on the game : I just wrote that to avoid warnings

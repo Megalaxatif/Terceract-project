@@ -60,11 +60,11 @@ class Game:
 
         self.create_all_walls()
 
-        self.exit_door_opened = False
-        self.room_1_unlocked = False
-        self.room_2_unlocked = False
+        self.exit_door_opened = True
+        self.room_1_unlocked = True
+        self.room_2_unlocked = True
         self.room_3_unlocked = True
-        self.room_4_unlocked = False
+        self.room_4_unlocked = True
 
         self.current_room_id = 0
         self.current_wall_id = 0

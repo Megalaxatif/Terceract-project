@@ -19,17 +19,17 @@
     "borne": {
         "image": "assets/cropped_images/cropped_borne.png",
         "rect": [
-            151,
-            273,
-            274,
-            595
+            35,
+            322,
+            596,
+            422
         ],
         "collision_id": -1,
         "default_collision": [
-            151,
-            273,
-            274,
-            595
+            35,
+            322,
+            596,
+            422
         ],
         "default_wall_id": "13"
     },
