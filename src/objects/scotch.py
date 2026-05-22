@@ -32,8 +32,8 @@ class Scotch(Game_object):
         self.collisions = collisions #pas de pb, ca marche :D
 
     def initialize(self):
-        self.stool_reference = self.game_context.get_reference("stool")
-        self.leak_reference = self.game_context.get_reference_large("leak") 
+        self.stool_reference = self.game_context.get_reference("stool", asker="scotch")
+        self.leak_reference = self.game_context.get_reference_large("leak")
         if self.leak_reference == []:
             print(f"initialize of object named \"{self.name}\" error: no object with \"leak\" in its name found in the game, exiting")
             self.game_context.quit()
@@ -50,7 +50,7 @@ class Scotch(Game_object):
         pass
 
     def handle_click(self, event):
-        if self.game_context.current_wall.room_id == 3: 
+        if self.game_context.current_wall.room_id == 3:
             for obj in self.leak_reference:
                 if not obj.displayed and obj.rect.collidepoint(event.pos) and (not obj.name == "leak2" or self.stool_reference.placed):
                     obj.displayed = True

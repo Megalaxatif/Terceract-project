@@ -28,13 +28,7 @@ class Paper(Game_object):
         )
 
     def initialize(self):
-        # useful to change the visibility
         self.fullscreen_paper_reference = self.game_context.get_reference("fullscreen_paper")
-        if self.fullscreen_paper_reference is None:
-            print(
-                f'initialize of object named "{self.name}" error: no object with name "fullscreen_paper" found in the game, exiting'
-            )
-            self.game_context.quit()
 
     def handle_click_selection(self, event):
         self.fullscreen_paper_reference.displayed = True

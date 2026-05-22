@@ -24,19 +24,19 @@ class Stool(Game_object):
             collision_index,
             movable=True,
             displayed=True,
-                           #problemes : manque collisions du stool mais c ok
         )
-        self.placed = False
-        self.collisions = collisions
+
+    def initialize(self):
+        self.placed = self.game_context.is_obj_in_wall(self.name, 2, 3)
 
     def handle_click(self, event):
         code = super().handle_click(event)
         if self.game_context.current_wall_id == 2 and self.game_context.current_room_id == 3:
             self.placed = True
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", "stool", "placed", True)
+                self.game_context.network_manager.send_package("variable", self.name, "placed", True)
         else :
             self.placed = False
             if self.game_context.network_manager.is_connected:
-                self.game_context.network_manager.send_package("variable", "stool", "placed", False)
+                self.game_context.network_manager.send_package("variable", self.name, "placed", False)
         return code

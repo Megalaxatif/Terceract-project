@@ -43,6 +43,9 @@ class Axe(Game_object):
                 return True
             self.hole_reference.displayed = True
             self.paper_reference.displayed = True
+            if self.game_context.network_manager.is_connected:
+                self.game_context.network_manager.send_package("variable", self.hole_reference.name, "displayed", True)
+                self.game_context.network_manager.send_package("variable", self.paper_reference.name, "displayed", True)
             self.game_context.dialogues.start_dialogue(25)  # break the wall
             return False
 

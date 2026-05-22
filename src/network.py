@@ -66,47 +66,16 @@ class Network_manager:
 
                 else:
                     package_type = data["type"]
-                    location = data["location"]
+                    location_str = data["location"]
                     name = data["name"]
                     args = data["args"]
 
-                    # TODO optimize this
-                    match location:
-                        case "game":
-                            location = self.game_context
-                        case "inventory":
-                            location = self.game_context.inventory
-                        case "magnet":
-                            location = self.game_context.get_reference("magnet")
-                        case "key":
-                            location = self.game_context.get_reference("key")
-                        case "closed_closet":
-                            location = self.game_context.get_reference("closed_closet")
-                        case "water_pump":
-                            location = self.game_context.get_reference("water_pump")
-                        case "wallet":
-                            location = self.game_context.get_reference("wallet")
-                        case "water_vase":
-                            location = self.game_context.get_reference("water_vase")
-                        case "broken_pipe":
-                            location = self.game_context.get_reference("broken_pipe")
-                        case "stool":
-                            location = self.game_context.get_reference("stool")
-                        case "leak1":
-                            location = self.game_context.get_reference("leak1")
-                        case "leak2":
-                            location = self.game_context.get_reference("leak2")
-                        case "leak3":
-                            location = self.game_context.get_reference("leak3")
-                        case "leak4":
-                            location = self.game_context.get_reference("leak4")
-                        case _: # TODO
-                            print("check_incoming_client_data error: the location you gave is not taken in charge for the moment, you need to code it you lazy bastard")
-                            return
-
-                    if location is None:
-                        print(f"check_incoming_client_data error: no object with name {name} found in the game")
-                        return
+                    if location_str == "game":
+                        location = self.game_context
+                    elif location_str == "inventory":
+                        location = self.game_context.inventory
+                    else:
+                        location = self.game_context.get_reference(location_str, asker="network_manager")
 
                     if package_type == "function":
                         target_function = None

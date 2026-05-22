@@ -60,11 +60,11 @@ class Game:
 
         self.create_all_walls()
 
-        self.exit_door_opened = True
-        self.room_1_unlocked = True
-        self.room_2_unlocked = True
+        self.exit_door_opened = False
+        self.room_1_unlocked = False
+        self.room_2_unlocked = False
         self.room_3_unlocked = True
-        self.room_4_unlocked = True
+        self.room_4_unlocked = False
 
         self.current_room_id = 0
         self.current_wall_id = 0
@@ -454,7 +454,7 @@ class Game:
             object.drop_in_collision_rect(collision_rect_id)  # set the new collision rect id of the object and put it inside
 
 
-    def get_reference(self, name):  # returns the reference to an object in the game
+    def get_reference(self, name, asker = "undefined"):  # returns the reference to an object in the game
         # search in the walls
         for room in self.room_list:
             for wall in room:
@@ -468,7 +468,7 @@ class Game:
                     if obj.name == name:
                         return obj
 
-        print(f'get_reference error: no object with name {name} found in the game, exiting')
+        print(f'get_reference error: no object with name {name} asked by {asker} found in the game, exiting')
         self.quit()
 
 

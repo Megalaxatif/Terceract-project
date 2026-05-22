@@ -2,12 +2,92 @@
     "data": [
         [
             null,
+            {
+                "name": "axe",
+                "image": "assets/cropped_images/cropped_axe.png",
+                "rect": [
+                    391,
+                    790,
+                    181,
+                    452
+                ],
+                "default_collision": [
+                    285,
+                    327,
+                    181,
+                    452
+                ],
+                "default_wall_id": "21"
+            },
+            {
+                "name": "obj_in_closet_crowbar",
+                "image": "assets/cropped_images/cropped_obj_in_closet_crowbar.png",
+                "rect": [
+                    835,
+                    621,
+                    215,
+                    641
+                ],
+                "default_collision": [
+                    793,
+                    241,
+                    215,
+                    641
+                ],
+                "default_wall_id": "14"
+            },
+            {
+                "name": "water_bottle",
+                "image": "assets/cropped_images/cropped_water_bottle.png",
+                "rect": [
+                    743,
+                    908,
+                    68,
+                    153
+                ],
+                "default_collision": [
+                    281,
+                    510,
+                    68,
+                    153
+                ],
+                "default_wall_id": "12"
+            },
             null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            {
+                "name": "obj_in_drawer_glue",
+                "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
+                "rect": [
+                    972,
+                    869,
+                    229,
+                    241
+                ],
+                "default_collision": [
+                    1053,
+                    346,
+                    229,
+                    241
+                ],
+                "default_wall_id": "12"
+            },
+            {
+                "name": "scotch",
+                "image": "assets/cropped_images/cropped_scotch.png",
+                "rect": [
+                    579,
+                    924,
+                    164,
+                    161
+                ],
+                "default_collision": [
+                    264,
+                    912,
+                    164,
+                    161
+                ],
+                "default_wall_id": "42"
+            },
             null,
             null,
             null

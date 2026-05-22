@@ -101,32 +101,32 @@
         ],
         "default_wall_id": "14"
     },
-    "obj_in_closet_crowbar": {
-        "image": "assets/cropped_images/cropped_obj_in_closet_crowbar.png",
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
         "rect": [
-            793,
-            241,
-            215,
-            641
+            709,
+            548,
+            66,
+            65
         ],
-        "collision_id": -1,
+        "collision_id": 1,
         "default_collision": [
-            793,
-            241,
-            215,
-            641
+            624,
+            201,
+            66,
+            65
         ],
-        "default_wall_id": "14"
+        "default_wall_id": "12"
     },
     "key": {
         "image": "assets/cropped_images/cropped_key.png",
         "rect": [
-            693,
-            542,
+            1115,
+            461,
             97,
             91
         ],
-        "collision_id": -1,
+        "collision_id": 1,
         "default_collision": [
             693,
             542,
