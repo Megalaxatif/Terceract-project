@@ -1,0 +1,53 @@
+{
+    "leak3": {
+        "image": "assets/cropped_images/cropped_leak3.png",
+        "rect": [
+            285,
+            264,
+            92,
+            60
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            285,
+            264,
+            92,
+            60
+        ],
+        "default_wall_id": "42"
+    },
+    "leak4": {
+        "image": "assets/cropped_images/cropped_leak4.png",
+        "rect": [
+            991,
+            400,
+            73,
+            56
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            991,
+            400,
+            73,
+            56
+        ],
+        "default_wall_id": "42"
+    },
+    "scotch": {
+        "image": "assets/cropped_images/cropped_scotch.png",
+        "rect": [
+            264,
+            912,
+            164,
+            161
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            264,
+            912,
+            164,
+            161
+        ],
+        "default_wall_id": "42"
+    }
+}

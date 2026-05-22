@@ -1,0 +1,9 @@
+{
+  "languages": {
+    "Python": {
+      "formatter": "off",
+      "format_on_save": "off"
+    }
+  },
+  "format_on_save": "off"
+}

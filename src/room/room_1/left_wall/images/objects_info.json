@@ -1,0 +1,155 @@
+{
+    "painting": {
+        "image": "assets/cropped_images/cropped_painting.png",
+        "rect": [
+            1145,
+            100,
+            695,
+            507
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1145,
+            100,
+            695,
+            507
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer": {
+        "image": "assets/cropped_images/cropped_drawer.png",
+        "rect": [
+            139,
+            660,
+            767,
+            420
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            139,
+            660,
+            767,
+            420
+        ],
+        "default_wall_id": "12"
+    },
+    "water_bottle": {
+        "image": "assets/cropped_images/cropped_water_bottle.png",
+        "rect": [
+            281,
+            510,
+            68,
+            153
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            281,
+            510,
+            68,
+            153
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer_up_view_withoutFB": {
+        "image": "assets/cropped_images/cropped_drawer_up_view_withoutFB.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "12"
+    },
+    "magnet": {
+        "image": "assets/cropped_images/cropped_magnet.png",
+        "rect": [
+            624,
+            201,
+            66,
+            65
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            624,
+            201,
+            66,
+            65
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer_up_view_withFB": {
+        "image": "assets/cropped_images/cropped_drawer_up_view_withFB.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "12"
+    },
+    "obj_in_drawer_glue": {
+        "image": "assets/cropped_images/cropped_obj_in_drawer_glue.png",
+        "rect": [
+            1053,
+            346,
+            229,
+            241
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1053,
+            346,
+            229,
+            241
+        ],
+        "default_wall_id": "12"
+    },
+    "gray_bg_drawer": {
+        "image": "assets/cropped_images/cropped_gray_bg_drawer.png",
+        "rect": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "default_wall_id": "12"
+    },
+    "drawer_up_view_withFB_trigger": {
+        "image": "assets/cropped_images/cropped_drawer_up_view_withFB_trigger.png",
+        "rect": [
+            290,
+            183,
+            45,
+            121
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            290,
+            183,
+            45,
+            121
+        ],
+        "default_wall_id": "12"
+    }
+}

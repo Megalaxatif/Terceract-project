@@ -1,0 +1,70 @@
+{
+    "opened_metal_door": {
+        "image": "assets/cropped_images/cropped_opened_metal_door.png",
+        "rect": [
+            716,
+            242,
+            477,
+            838
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            716,
+            242,
+            477,
+            838
+        ],
+        "default_wall_id": "21"
+    },
+    "broken_box": {
+        "image": "assets/cropped_images/cropped_broken_box.png",
+        "rect": [
+            232,
+            275,
+            271,
+            566
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            232,
+            275,
+            271,
+            566
+        ],
+        "default_wall_id": "21"
+    },
+    "axe": {
+        "image": "assets/cropped_images/cropped_axe.png",
+        "rect": [
+            285,
+            327,
+            181,
+            452
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            285,
+            327,
+            181,
+            452
+        ],
+        "default_wall_id": "21"
+    },
+    "water_vase": {
+        "image": "assets/cropped_images/cropped_water_vase.png",
+        "rect": [
+            1411,
+            718,
+            472,
+            362
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1411,
+            718,
+            472,
+            362
+        ],
+        "default_wall_id": "21"
+    }
+}

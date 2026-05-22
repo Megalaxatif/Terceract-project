@@ -1,0 +1,70 @@
+{
+    "library": {
+        "image": "assets/cropped_images/cropped_library.png",
+        "rect": [
+            234,
+            111,
+            1504,
+            969
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            234,
+            111,
+            1504,
+            969
+        ],
+        "default_wall_id": "22"
+    },
+    "book_closed": {
+        "image": "assets/cropped_images/cropped_book_closed.png",
+        "rect": [
+            1577,
+            698,
+            27,
+            70
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1577,
+            698,
+            27,
+            70
+        ],
+        "default_wall_id": "22"
+    },
+    "book_opened": {
+        "image": "assets/cropped_images/cropped_book_opened.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "22"
+    },
+    "book_bait1": {
+        "image": "assets/cropped_images/cropped_book_bait1.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "22"
+    }
+}

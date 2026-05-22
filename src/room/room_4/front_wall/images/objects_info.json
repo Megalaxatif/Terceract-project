@@ -1,0 +1,53 @@
+{
+    "leak2": {
+        "image": "assets/cropped_images/cropped_leak2.png",
+        "rect": [
+            1451,
+            46,
+            36,
+            48
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1451,
+            46,
+            36,
+            48
+        ],
+        "default_wall_id": "43"
+    },
+    "keycard_reader_on": {
+        "image": "assets/cropped_images/cropped_keycard_reader_on.png",
+        "rect": [
+            1234,
+            518,
+            82,
+            144
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1234,
+            518,
+            82,
+            144
+        ],
+        "default_wall_id": "43"
+    },
+    "keycard_reader_off": {
+        "image": "assets/cropped_images/cropped_keycard_reader_off.png",
+        "rect": [
+            1234,
+            518,
+            82,
+            144
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1234,
+            518,
+            82,
+            144
+        ],
+        "default_wall_id": "43"
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "broken_pipe": {
+        "image": "assets/cropped_images/cropped_broken_pipe.png",
+        "rect": [
+            1207,
+            937,
+            713,
+            143
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1207,
+            937,
+            713,
+            143
+        ],
+        "default_wall_id": "44"
+    }
+}

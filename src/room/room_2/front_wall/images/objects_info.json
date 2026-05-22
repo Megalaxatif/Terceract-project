@@ -1,0 +1,53 @@
+{
+    "padlock_door": {
+        "image": "assets/cropped_images/cropped_padlock_door.png",
+        "rect": [
+            726,
+            185,
+            497,
+            895
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            726,
+            185,
+            497,
+            895
+        ],
+        "default_wall_id": "23"
+    },
+    "vase": {
+        "image": "assets/cropped_images/cropped_vase.png",
+        "rect": [
+            1577,
+            666,
+            238,
+            414
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1577,
+            666,
+            238,
+            414
+        ],
+        "default_wall_id": "23"
+    },
+    "padlock": {
+        "image": "assets/cropped_images/cropped_padlock.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "23"
+    }
+}

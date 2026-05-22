@@ -1,0 +1,87 @@
+{
+    "mirror": {
+        "image": "assets/cropped_images/cropped_mirror.png",
+        "rect": [
+            1351,
+            160,
+            380,
+            572
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1351,
+            160,
+            380,
+            572
+        ],
+        "default_wall_id": "11"
+    },
+    "exit_door": {
+        "image": "assets/cropped_images/cropped_exit_door.png",
+        "rect": [
+            729,
+            16,
+            476,
+            1064
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            729,
+            16,
+            476,
+            1064
+        ],
+        "default_wall_id": "11"
+    },
+    "endlock_open": {
+        "image": "assets/cropped_images/cropped_endlock_open.png",
+        "rect": [
+            753,
+            760,
+            93,
+            60
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            753,
+            760,
+            93,
+            60
+        ],
+        "default_wall_id": "11"
+    },
+    "endlock_closed": {
+        "image": "assets/cropped_images/cropped_endlock_closed.png",
+        "rect": [
+            753,
+            760,
+            97,
+            79
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            753,
+            760,
+            97,
+            79
+        ],
+        "default_wall_id": "11"
+    },
+    "end_screen": {
+        "image": "assets/cropped_images/cropped_end_screen.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "11"
+    }
+}

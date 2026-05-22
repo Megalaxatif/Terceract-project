@@ -1,0 +1,206 @@
+{
+    "table": {
+        "image": "assets/cropped_images/cropped_table.png",
+        "rect": [
+            965,
+            723,
+            937,
+            357
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            965,
+            723,
+            937,
+            357
+        ],
+        "default_wall_id": "24"
+    },
+    "little_frame": {
+        "image": "assets/cropped_images/cropped_little_frame.png",
+        "rect": [
+            1050,
+            552,
+            159,
+            187
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1050,
+            552,
+            159,
+            187
+        ],
+        "default_wall_id": "24"
+    },
+    "empty_frame": {
+        "image": "assets/cropped_images/cropped_empty_frame.png",
+        "rect": [
+            1396,
+            233,
+            379,
+            440
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1396,
+            233,
+            379,
+            440
+        ],
+        "default_wall_id": "24"
+    },
+    "clock": {
+        "image": "assets/cropped_images/cropped_clock.png",
+        "rect": [
+            404,
+            87,
+            266,
+            993
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            404,
+            87,
+            266,
+            993
+        ],
+        "default_wall_id": "24"
+    },
+    "opened_table": {
+        "image": "assets/cropped_images/cropped_opened_table.png",
+        "rect": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            0,
+            1920,
+            1080
+        ],
+        "default_wall_id": "24"
+    },
+    "hole": {
+        "image": "assets/cropped_images/cropped_hole.png",
+        "rect": [
+            358,
+            321,
+            332,
+            340
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            358,
+            321,
+            332,
+            340
+        ],
+        "default_wall_id": "24"
+    },
+    "obj_in_table_plush": {
+        "image": "assets/cropped_images/cropped_obj_in_table_plush.png",
+        "rect": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1049,
+            231,
+            111,
+            124
+        ],
+        "default_wall_id": "24"
+    },
+    "obj_in_table_lightbulb": {
+        "image": "assets/cropped_images/cropped_obj_in_table_lightbulb.png",
+        "rect": [
+            680,
+            611,
+            94,
+            56
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            680,
+            611,
+            94,
+            56
+        ],
+        "default_wall_id": "24"
+    },
+    "obj_in_table_handle": {
+        "image": "assets/cropped_images/cropped_obj_in_table_handle.png",
+        "rect": [
+            1230,
+            394,
+            414,
+            289
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1230,
+            394,
+            414,
+            289
+        ],
+        "default_wall_id": "24"
+    },
+    "gray_bg_table": {
+        "image": "assets/cropped_images/cropped_gray_bg_table.png",
+        "rect": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            1806,
+            21,
+            89,
+            89
+        ],
+        "default_wall_id": "24"
+    },
+    "paper": {
+        "image": "assets/cropped_images/cropped_paper.png",
+        "rect": [
+            462,
+            498,
+            108,
+            122
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            462,
+            498,
+            108,
+            122
+        ],
+        "default_wall_id": "24"
+    },
+    "fullscreen_paper": {
+        "image": "assets/cropped_images/cropped_fullscreen_paper.png",
+        "rect": [
+            0,
+            3,
+            1920,
+            1077
+        ],
+        "collision_id": -1,
+        "default_collision": [
+            0,
+            3,
+            1920,
+            1077
+        ],
+        "default_wall_id": "24"
+    }
+}

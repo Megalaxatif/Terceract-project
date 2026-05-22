@@ -1,5 +1,4 @@
 import pygame
-import pytmx
 from pytmx.util_pygame import load_pygame
 import pyscroll
 
@@ -20,6 +19,6 @@ class Map:
             obj_class = getattr(obj, 'class')
             if obj_class == "collision":
                 self.collision_rects.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
-    
+
     def map_collision(self, rect):
         return rect.collidelist(self.collision_rects) > -1
