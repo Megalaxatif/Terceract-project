@@ -30,7 +30,7 @@ class Book(Game_object):
             displayed=displayed,
         )
 
-        self.interactible = True
+        self.interactible = False
         self.open = self.displayed
         self.bait = bait
 
