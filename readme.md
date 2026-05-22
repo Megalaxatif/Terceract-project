@@ -6,6 +6,7 @@ then launch the game
 
 2. If for any reason the server port doesn't work, you can change it at line *11* in src/network.py 
 
+3. If you want to play on the internet you need to open your port and use TCP protocol
 ----------------------------------------
 
 made by:
