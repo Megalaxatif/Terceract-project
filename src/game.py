@@ -184,6 +184,12 @@ class Game:
 
 
     def save_game(self):  # save all the game data
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        custom_event = pygame.event.Event(
+            CUSTOM_DROP_EVENT, {"pos": (mouse_x, mouse_y)}
+        )
+        self.drop_current_object(custom_event)
+
         if self.network_manager.is_host:
             print("save game")
             for room in self.room_list:
@@ -309,6 +315,11 @@ class Game:
 
     def change_current_wall(self):  # update the reference to the current wall
         self.current_wall = self.room_list[self.current_room_id][self.current_wall_id]
+
+        #update the collisions (normally this is only useful for magnet)
+        for obj in self.current_wall.objects:
+            obj.change_collision_rects(self.current_wall.json_collisions_path, self.current_wall.wall_id_str)
+
         self.recalculate_deltas()
 
         # change the collision rects of the objects in the inventory
@@ -324,9 +335,7 @@ class Game:
                 wall.update(event)
 
 
-    def center_current_object(
-        self,
-    ):  # put the center of the current object at the mouse position
+    def center_current_object(self):  # put the center of the current object at the mouse position
         if self.current_object and self.current_object.movable:
             mx, my = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
             x, y = mx / self.current_wall.delta, my / self.current_wall.delta

@@ -44,7 +44,7 @@ class Magnet(Game_object):
     def use_grid_collisions(self):
         #json_path = self.game_context.room_list[0][3].json_collisions_path
         # if we are on the right wall of room 1 where the grid minigame is located
-        self.grid_collisions = self.collision_rects[:-2] # we start at 1 because the first element in the json is the default rect
+        self.grid_collisions = self.collision_rects[:-2]
         self.raw_grid_collisions = self.grid_collisions.copy()
         grid_start_rect = self.collision_rects[-1]
         end_rect = self.collision_rects[-2]
