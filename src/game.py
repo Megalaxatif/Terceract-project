@@ -5,7 +5,7 @@ import threading
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
-from numpy._core.numeric import False_
+#from numpy._core.numeric import False_
 import pygame
 from dialogues import Dialogue
 from minigames import *
